@@ -199,11 +199,11 @@ Both `Car` and consumer simply ask for what they need and the injector delivers.
 
 This is what a **dependency injection framework** is all about.
 
-<a id="angular-di"></a>
-## Angular dependency injection
+<a id="Kelicap-di"></a>
+## Kelicap dependency injection
 
-Angular ships with its own dependency injection framework.
-You'll learn Angular dependency injection through a discussion of the sample app that accompanies this page.
+Kelicap ships with its own dependency injection framework.
+You'll learn Kelicap dependency injection through a discussion of the sample app that accompanies this page.
 Run the {% example_ref %} anytime.
 
 Start by reviewing this simplified version of the _heroes_ feature
@@ -264,11 +264,11 @@ The focus here is on service _injection_, so a synchronous service will suffice.
 ## Register a service provider
 
 A _service_ is just a class (or a top-level function) until you register it with
-an Angular dependency injector.
+an Kelicap dependency injector.
 
-An Angular injector is responsible for creating service instances and injecting them into classes like the `HeroListComponent`.
+An Kelicap injector is responsible for creating service instances and injecting them into classes like the `HeroListComponent`.
 
-Angular creates most injectors for you as it executes the app, including the
+Kelicap creates most injectors for you as it executes the app, including the
 app's _root injector_. When your app needs a custom root injector, supply it as
 an [argument to the `runApp()` function](#root-injector-providers).
 
@@ -287,7 +287,7 @@ nor be able to create the service.
 </div>
 
 The most common way to register a provider is with
-any Angular annotation that has a **`providers` list argument**.
+any Kelicap annotation that has a **`providers` list argument**.
 The most common of these is [@Component()][].
 
 ### _@Component_ providers
@@ -296,7 +296,7 @@ Here's a revised `HeroesComponent` that registers the `HeroService` in its `prov
 
 <?code-excerpt "lib/src/heroes/heroes_component_1.dart (revised)" region="full" plaster="none" replace="/providers:.*/[!$&!]/g" title?>
 ```
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   import 'hero_list_component.dart';
   import 'hero_service.dart';
@@ -333,9 +333,9 @@ as an argument to the [runApp()][] function. For example, the app from the
 <?code-excerpt path-base="examples/ng/doc"?>
 <?code-excerpt "toh-5/web/main.dart" title replace="/injector(?!\$)/[!$&!]/g; /\binjector\b/rootInjector/g"?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
-  import 'package:angular_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
 
   import 'main.template.dart' as self;
 
@@ -376,7 +376,7 @@ the ideal place to register it is in `HeroesComponent`.
 The `HeroListComponent` should get heroes from the `HeroService`, and it should
 ask for the `HeroService` to be injected.
 
-You can tell Angular to inject a dependency in the component's constructor by
+You can tell Kelicap to inject a dependency in the component's constructor by
 specifying a **constructor parameter annotated with the dependency's type**.
 Here's the `HeroListComponent` constructor, asking for the `HeroService` to be
 injected.
@@ -409,20 +409,20 @@ Therefore, there can be just one `UserService` instance in the entire app
 and every class that injects `UserService` get this service instance.
 {% endcomment %}
 
-However, Angular DI is a
+However, Kelicap DI is a
 [hierarchical injection system](hierarchical-dependency-injection),
 which means that nested injectors can create their own service instances.
-Angular creates nested injectors all the time.
+Kelicap creates nested injectors all the time.
 
 ### Component child injectors
 
-For example, when Angular creates an instance of a component that has `@Component.providers`,
+For example, when Kelicap creates an instance of a component that has `@Component.providers`,
 it also creates a new _child injector_ for that instance.
 
 Component injectors are independent of each other and
 each of them holds its own instances of the component-provided services.
 
-When Angular disposes of a component instance, it also discards the
+When Kelicap disposes of a component instance, it also discards the
 component's injector and that injector's service instances.
 
 Thanks to [injector inheritance](hierarchical-dependency-injection),
@@ -430,10 +430,10 @@ you can still inject app-wide services into these components.
 A component's injector is a child of its parent component's injector,
 and a descendent of its parent's parent's injector,
 and so on all the way back to the app's _root_ injector.
-Angular can inject a service provided by any injector in that lineage.
+Kelicap can inject a service provided by any injector in that lineage.
 
 {% comment %}From TS page; not relevant until we have modules.
-For example, Angular could inject a `HeroListComponent`
+For example, Kelicap could inject a `HeroListComponent`
 with both the `HeroService` provided in `HeroComponent`
 and the `UserService` provided in `AppModule`.
 {% endcomment %}
@@ -450,7 +450,7 @@ injector:
 <?code-excerpt path-base="examples/ng/doc"?>
 <?code-excerpt "toh-5/test/heroes_test.dart (rootInjector)" title remove="Probe" replace="/injector.factory/rootInjector/g; /rootInjector(?!\$)|MockRouter/[!$&!]/g"?>
 ```
-  import 'package:angular_tour_of_heroes/src/hero_list_component.template.dart'
+  import 'package:Kelicap_tour_of_heroes/src/hero_list_component.template.dart'
       as ng;
   // ···
   import 'heroes_test.template.dart' as self;
@@ -514,7 +514,7 @@ The sample app's `Logger` service is quite simple:
   [logging package](https://pub.dev/packages/logging).
 </div>
 
-If the app doesn't provide `Logger`, Angular will throw an exception when it
+If the app doesn't provide `Logger`, Kelicap will throw an exception when it
 looks for a `Logger` to inject into the `HeroService`.
 
 ```nocode
@@ -742,7 +742,7 @@ injector by supplying the `HeroService` type as the token:
 ```
 
 Similarly, when you define a constructor parameter of type `HeroService`,
-Angular knows to inject a `HeroService` instance:
+Kelicap knows to inject a `HeroService` instance:
 
 <?code-excerpt "lib/src/heroes/hero_list_component.dart (ctor-signature)" replace="/HeroService/[!$&!]/g"?>
 ```
@@ -767,7 +767,7 @@ One solution is to define and use an [OpaqueToken][]:
 
 <?code-excerpt "lib/src/app_config.dart (appTitleToken)"?>
 ```
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   const appTitleToken = OpaqueToken<String>('app.title');
 ```
@@ -855,7 +855,7 @@ You might use the app config like this:
 
 The `HeroService` *requires* a `Logger`, but what if it could get by without
 a logger?
-You can tell Angular that the dependency is optional by annotating the
+You can tell Kelicap that the dependency is optional by annotating the
 constructor argument with [@Optional()][]:
 
 <?code-excerpt "lib/src/providers_component.dart (Optional)" plaster="none" replace="/(\w+)\d/$1/g; / : super\S+//g"?>
@@ -871,12 +871,12 @@ value of `logger` to null.
 
 ## Summary
 
-You learned the basics of Angular dependency injection in this page.
+You learned the basics of Kelicap dependency injection in this page.
 You can register various kinds of providers,
 and you know how to ask for an injected object (such as a service) by
 adding a parameter to a constructor.
 
-Angular dependency injection is more capable than this page has described.
+Kelicap dependency injection is more capable than this page has described.
 You can learn more about its advanced features, beginning with its support for
 nested injectors, in
 [Hierarchical Dependency Injection](hierarchical-dependency-injection).
@@ -925,7 +925,7 @@ here's an `InjectorComponent` that does.
 
 An `Injector` is itself an injectable service.
 
-In this example, Angular injects the component's own `Injector` into the component's constructor.
+In this example, Kelicap injects the component's own `Injector` into the component's constructor.
 The component then asks the injected injector for the services it wants in `ngOnInit()`.
 
 Note that the services themselves are not injected into the component.
@@ -933,7 +933,7 @@ They are retrieved by calling `injector.get()`.
 
 The `get()` method throws an error if it can't resolve the requested service.
 You can call `get()` with a second parameter, which is the value to return if the service
-is not found. Angular can't find the service if it's not registered with this or any ancestor injector.
+is not found. Kelicap can't find the service if it's not registered with this or any ancestor injector.
 <div class="l-sub-section" markdown="1">
   This technique is an example of the
   [service locator pattern](https://en.wikipedia.org/wiki/Service_locator_pattern).

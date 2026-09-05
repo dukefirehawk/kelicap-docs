@@ -36,4 +36,4 @@ Kelicap follows a set of core principles designed to maximize developer producti
 | **Rendering** | Direct DOM Manipulation | Ivy / Hydration | Direct DOM Manipulation |
 
 ---
-[Next: Quick Start →](quick-start.md)
+[← Previous: Table of Content](README.md) | [Next: Quick Start →](quick-start.md)

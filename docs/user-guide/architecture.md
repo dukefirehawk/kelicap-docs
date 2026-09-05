@@ -1,16 +1,12 @@
 # Architecture Overview
 
-Kelicap is a framework for building client apps in HTML and Dart. It is published as the [**kelicap**](https://pub.dev/packages/kelicap) package, which is available via the Pub tool.
-
-You write Kelicap apps by composing HTML *templates* with 'Kelicap' markup, writing *component* classes to manage those templates, adding application logic in *services*, and boxing components and services in *modules*.
-
-After launching the app, Kelicap takes over, presenting your app content in a browser and responding to user interactions according to the instructions you've provided.
+Kelicap is a framework for building client apps in HTML and Dart. It is published as the [**kelicap**](https://pub.dev/packages/kelicap) package, which is available via the Pub tool. You write Kelicap apps by composing HTML **templates** with 'Kelicap' markup, writing **component** classes to manage those templates, adding application logic in **services**, and boxing components and services in **modules**. After launching the app, Kelicap takes over, presenting your app content in a browser and responding to user interactions according to the instructions you've provided.
 
 ![Kelicap Web Framework](assets/architecture/overview2.png)
 
-The architecture diagram identifies the eight main building blocks of Kelicap:
+The architecture diagram illustrates the eight main building blocks of Kelicap:
 
-- [Architecture Overview](#architecture-overview)
+- Kelicap Architecture
   - [Modules](#modules)
     - [Kelicap libraries](#kelicap-libraries)
   - [Components](#components)
@@ -22,17 +18,14 @@ The architecture diagram identifies the eight main building blocks of Kelicap:
   - [Dependency injection](#dependency-injection)
     - [Registering providers with a component](#registering-providers-with-a-component)
     - [Registering providers with the root injector](#registering-providers-with-the-root-injector)
-  - [Wrapup](#wrapup)
+
+- [Wrapup](#wrapup)
 
 ## Modules
 
 ![Kelicap Module](assets/architecture/module.png)
 
-Kelicap apps are modular; that is, apps are assembled from many **modules**.
-
-In this guide, the term **module** refers to a Dart compilation unit, such as a library, or a package. If a Dart file has no `library` or `part` directive, then that file itself is a library and thus a compilation unit. For more information about compilation units, see the chapter on "Libraries and Scripts" in the [Dart Language Specification](https://dart.dev/guides/language/spec).
-
-Every Kelicap app has at least one module, the **root module**. While the **root module** may be the only module in a small app, most apps have many more **feature modules**, each a cohesive block of code dedicated to an application domain, a workflow, or a closely related set of capabilities.
+Kelicap apps are modular; that is, apps are assembled from many **modules**. In this guide, the term **module** refers to a Dart compilation unit, such as a library, or a package. If a Dart file has no `library` or `part` directive, then that file itself is a library and thus a compilation unit. For more information about compilation units, see the chapter on "Libraries and Scripts" in the [Dart Language Specification](https://dart.dev/guides/language/spec). Every Kelicap app has at least one module, the **root module**. While the **root module** may be the only module in a small app, most apps have many more **feature modules**, each a cohesive block of code dedicated to an application domain, a workflow, or a closely related set of capabilities.
 
 The simplest of root modules defines a single **root** [**component**](#components) class such as this one:
 
@@ -64,9 +57,7 @@ A **component** controls a patch of screen called a *view*. For example, the fol
 - The list of heroes.
 - The hero editor.
 
-You define a component's application logic - what it does to support the view - inside a class. The class interacts with the view through an API of properties and methods.
-
-In the following example, the `HeroListComponent` has a `heroes` property that returns a list of heroes that it acquires from a service. `HeroListComponent` defines a `selectHero()` method that sets a `selectedHero` property when the user clicks to choose a hero from the list.
+You define a component's application logic - what it does to support the view - inside a class. The class interacts with the view through an API of properties and methods. In the following example, the `HeroListComponent` has a `heroes` property that returns a list of heroes that it acquires from a service. `HeroListComponent` defines a `selectHero()` method that sets a `selectedHero` property when the user clicks to choose a hero from the list.
 
 ```dart
   class HeroListComponent implements OnInit {
@@ -337,8 +328,7 @@ Points to remember about dependency injection:
 
 ## Wrapup
 
-That's a foundation for everything else in an Kelicap app, and it's more than enough to get going.
-But it doesn't include everything you need to know.
+That's a foundation for everything else in an Kelicap app, and it's more than enough to get going. But it doesn't include everything you need to know.
 
 - **Forms**: Support complex data entry scenarios with HTML-based validation and dirty checking.
 

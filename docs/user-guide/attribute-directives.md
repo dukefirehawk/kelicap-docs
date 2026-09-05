@@ -1,23 +1,10 @@
----
-title: Attribute Directives
-description: Attribute directives attach behavior to elements.
-sideNavGroup: advanced
-prevpage:
-  title: Template Syntax
-  url: /guide/template-syntax
-nextpage:
-  title: Component Styles
-  url: /guide/component-styles
----
-<?code-excerpt path-base="examples/ng/doc/attribute-directives"?>
+# Attribute Directives
 
-An **attribute** directive changes the appearance or behavior of a DOM element.
-
-Try the {% example_ref %}.
+Attribute directives attach behavior to elements. An **attribute** directive changes the appearance or behavior of a DOM element.
 
 ## Directives overview
 
-There are three kinds of directives in Angular:
+There are three kinds of directives in Kelicap:
 
 1. Components&mdash;directives with a template.
 1. Structural directives&mdash;change the DOM layout by adding and removing DOM elements.
@@ -42,7 +29,6 @@ There are two kinds of attribute directive:
 - [Functional](#functional): A stateless attribute directive, implemented using
   a top-level function.
 
-<a id="create-a-directive"></a>
 ## Create a class-based attribute directive
 
 Creating a class-based attribute directive requires writing a controller class
@@ -50,12 +36,11 @@ annotated with [@Directive()][], which specifies the selector that identifies
 the attribute.
 The controller class implements the desired directive behavior.
 
-This page demonstrates building a simple _myHighlight_ attribute
+This page demonstrates building a simple *myHighlight* attribute
 directive to set an element's background color
 when the user hovers over that element. You can apply it like this:
 
-<?code-excerpt "lib/app_component_1.html (applied)"?>
-```
+```html
   <p myHighlight>Highlight me!</p>
 ```
 
@@ -66,11 +51,10 @@ named `attribute_directives`.
 
 Create the following source file in the indicated folder:
 
-<?code-excerpt "lib/src/highlight_directive_1.dart" title?>
-```
+```dart
   import 'dart:html';
 
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
@@ -85,7 +69,7 @@ the HTML in the template that is associated with the directive.
 The [CSS selector for an attribute](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors)
 is the attribute name in square brackets.
 Here, the directive's selector is `[myHighlight]`.
-Angular locates all elements in the template that have an attribute named `myHighlight`.
+Kelicap locates all elements in the template that have an attribute named `myHighlight`.
 
 <div class="l-sub-section" markdown="1">
 ### Why not call it "highlight"?
@@ -96,40 +80,43 @@ Angular locates all elements in the template that have an attribute named `myHig
   This also reduces the risk of colliding with third-party directive names.
 
   Make sure you do **not** prefix the `highlight` directive name with **`ng`** because
-  that prefix is reserved for Angular and using it could cause bugs that are difficult to diagnose.
+  that prefix is reserved for Kelicap and using it could cause bugs that are difficult to diagnose.
   For a simple demo, the short prefix, `my`, helps distinguish your custom directive.
 </div>
 
 After the `@Directive()` metadata comes the directive's controller class,
 called `HighlightDirective`, which contains the logic for the directive.
 
-Angular creates a new instance of the directive's controller class for
+Kelicap creates a new instance of the directive's controller class for
 each matching element, injecting an HTML [Element]({{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-html/Element-class.html)
 into the constructor.
 
 <a id="apply-directive"></a>
+
 ## Apply the attribute directive
 
 To use the new `HighlightDirective`, create a template that
 applies the directive as an attribute to a paragraph (`<p>`) element.
-In Angular terms, the `<p>` element is the attribute **host**.
+In Kelicap terms, the `<p>` element is the attribute **host**.
 
 Put the template in its own `app_component.html`
 file that looks like this:
 
 <?code-excerpt "lib/app_component_1.html" title?>
+
 ```
   <h1>My First Attribute Directive</h1>
   <p myHighlight>Highlight me!</p>
 ```
 
 Now reference this template in the `AppComponent`, and
-add the `Highlight` directive to the `directives` list. This way Angular
+add the `Highlight` directive to the `directives` list. This way Kelicap
 recognizes the directive when it encounters `myHighlight` in the template.
 
 <?code-excerpt "lib/app_component.dart" title?>
+
 ```
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   import 'src/auto_id_directive.dart';
   import 'src/highlight_directive.dart';
@@ -160,17 +147,18 @@ The app runs, and the `myHighlight` directive highlights the paragraph text.
     EXCEPTION: Template parse errors:
     Can't bind to 'myHighlight' since it isn't a known property of 'p'.
 
-  Angular detects that you're trying to bind to *something*
+  Kelicap detects that you're trying to bind to *something*
   but it can't find this directive.
-  You let Angular know by listing `HighlightDirective` in the `directives` list.
+  You let Kelicap know by listing `HighlightDirective` in the `directives` list.
 </div>
 
-To summarize, Angular found the `myHighlight` attribute on the `<p>` element.
+To summarize, Kelicap found the `myHighlight` attribute on the `<p>` element.
 It created an instance of the `HighlightDirective` class and
 injected a reference to the `<p>` element into the directive's constructor
 which sets the `<p>` element's background style to yellow.
 
 <a id="respond-to-user"></a>
+
 ## Respond to user-initiated events
 
 Currently, `myHighlight` simply sets an element color.
@@ -182,6 +170,7 @@ Add two eventhandlers that respond when the mouse enters or leaves,
 each adorned by the `HostListener` annotation.
 
 <?code-excerpt "lib/src/highlight_directive_2.dart (mouse-methods)"?>
+
 ```
   @HostListener('mouseenter')
   void onMouseEnter() {
@@ -208,12 +197,14 @@ element that hosts an attribute directive, the `<p>` in this case.
   1. You have to write the listeners correctly.
   1. The code must *detach* the listener when the directive is destroyed to avoid memory leaks.
   1. Talking to DOM API directly isn't a best practice.
+
 </div>
 
 The handlers delegate to a helper method that sets the color on the DOM element, `_el`,
 which you declare and initialize in the constructor.
 
 <?code-excerpt "lib/src/highlight_directive_2.dart (constructor)" region="ctor" title?>
+
 ```
   final Element _el;
 
@@ -223,10 +214,11 @@ which you declare and initialize in the constructor.
 Here's the updated directive in full:
 
 <?code-excerpt "lib/src/highlight_directive_2.dart" plaster="none" title?>
+
 ```
   import 'dart:html';
 
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
@@ -257,30 +249,34 @@ the mouse hovers over the `p` and disappears as it moves out.
 <img class="image-display" src="{% asset ng/devguide/attribute-directives/highlight-directive-anim.gif @path %}" alt="Second Highlight">
 
 <a id="bindings"></a>
-## Pass values into the directive with an _@Input_ data binding
 
-Currently the highlight color is hard-coded _within_ the directive. That's inflexible.
+## Pass values into the directive with an *@Input* data binding
+
+Currently the highlight color is hard-coded *within* the directive. That's inflexible.
 In this section, you give the developer the power to set the highlight color while applying the directive.
 
 Start by adding a `highlightColor` property to the directive class like this:
 
 <?code-excerpt "lib/src/highlight_directive_2.dart (highlightColor)" region="color" title?>
+
 ```
   @Input()
   String highlightColor;
 ```
 
 <a id="input"></a>
-### Binding to an _@Input_ property
+
+### Binding to an *@Input* property
 
 Notice the `@Input` annotation. It adds metadata to the class that makes the directive's `highlightColor` property available for binding.
 
-It's called an *input* property because data flows from the binding expression _into_ the directive.
-Without that input metadata, Angular rejects the binding; see [below](#why-input "Why add @Input?") for more about that.
+It's called an *input* property because data flows from the binding expression *into* the directive.
+Without that input metadata, Kelicap rejects the binding; see [below](#why-input "Why add @Input?") for more about that.
 
 Try it by adding the following directive binding variations to the `AppComponent` template:
 
 <?code-excerpt "lib/app_component_1.html (excerpt)" region="color-1" title?>
+
 ```
   <p myHighlight highlightColor="yellow">Highlighted in yellow</p>
   <p myHighlight [highlightColor]="'orange'">Highlighted in orange</p>
@@ -289,6 +285,7 @@ Try it by adding the following directive binding variations to the `AppComponent
 Add a `color` property to the `AppComponent`.
 
 <?code-excerpt "lib/app_component_1.dart (class)" title?>
+
 ```
   class AppComponent {
     String color = 'yellow';
@@ -298,13 +295,15 @@ Add a `color` property to the `AppComponent`.
 Let it control the highlight color with a property binding.
 
 <?code-excerpt "lib/app_component_1.html (excerpt)" region="color-2" title?>
+
 ```
   <p myHighlight [highlightColor]="color">Highlighted with parent component's color</p>
 ```
 
-That's good, but it would be nice to _simultaneously_ apply the directive and set the color _in the same attribute_ like this.
+That's good, but it would be nice to *simultaneously* apply the directive and set the color *in the same attribute* like this.
 
 <?code-excerpt "lib/app_component.html (color)"?>
+
 ```
   <p [myHighlight]="color">Highlight me!</p>
 ```
@@ -317,6 +316,7 @@ That's a crisp, compact syntax.
 You'll have to rename the directive's `highlightColor` property to `myHighlight` because that's now the color property binding name.
 
 <?code-excerpt "lib/src/highlight_directive_2.dart (renamed to match directive selector)" region="color-2" title?>
+
 ```
   @Input()
   String myHighlight;
@@ -325,24 +325,27 @@ You'll have to rename the directive's `highlightColor` property to `myHighlight`
 This is disagreeable. The word, `myHighlight`, is a terrible property name and it doesn't convey the property's intent.
 
 <a id="input-alias"></a>
-### Bind to an _@Input_ alias
 
-Fortunately you can name the directive property whatever you want _and_ **_alias it_** for binding purposes.
+### Bind to an *@Input* alias
+
+Fortunately you can name the directive property whatever you want *and* ***alias it*** for binding purposes.
 
 Restore the original property name and specify the selector as the alias in the argument to `@Input`.
 
 <?code-excerpt "lib/src/highlight_directive.dart (color property with alias)" region="color" title?>
+
 ```
   @Input('myHighlight')
   String highlightColor;
 ```
 
-_Inside_ the directive the property is known as `highlightColor`.
-_Outside_ the directive, where you bind to it, it's known as `myHighlight`.
+*Inside* the directive the property is known as `highlightColor`.
+*Outside* the directive, where you bind to it, it's known as `myHighlight`.
 
 You get the best of both worlds: the property name you want and the binding syntax you want:
 
 <?code-excerpt "lib/app_component.html (color)"?>
+
 ```
   <p [myHighlight]="color">Highlight me!</p>
 ```
@@ -351,6 +354,7 @@ Now that you're binding to `highlightColor`, modify the `onMouseEnter()` method 
 If someone neglects to bind to `highlightColor`, highlight in red:
 
 <?code-excerpt "lib/src/highlight_directive_3.dart (mouse enter)" region="mouse-enter" title?>
+
 ```
   @HostListener('mouseenter')
   void onMouseEnter() => _highlight(highlightColor ?? 'red');
@@ -359,10 +363,11 @@ If someone neglects to bind to `highlightColor`, highlight in red:
 Here's the latest version of the directive class.
 
 <?code-excerpt "lib/src/highlight_directive_3.dart" title?>
+
 ```
   import 'dart:html';
 
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
@@ -394,6 +399,7 @@ lets you pick the highlight color with a radio button and bind your color choice
 Update `app_component.html` as follows:
 
 <?code-excerpt "lib/app_component.html (v2)"?>
+
 ```
   <h1>My First Attribute Directive</h1>
 
@@ -409,6 +415,7 @@ Update `app_component.html` as follows:
 Revise the `AppComponent.color` so that it has no initial value.
 
 <?code-excerpt "lib/app_component.dart (class)"?>
+
 ```
   class AppComponent {
     String color;
@@ -422,6 +429,7 @@ Here are the harness and directive in action.
 <img class="image-display" src="{% asset ng/devguide/attribute-directives/highlight-directive-v2-anim.gif @path %}" alt="Highlight v.2">
 
 <a id="second-property"></a>
+
 ## Bind to a second property
 
 This highlight directive has a single customizable property. In a real app, it may need more.
@@ -433,6 +441,7 @@ Let the template developer set the default color.
 Add a second **input** property to `HighlightDirective` called `defaultColor`:
 
 <?code-excerpt "lib/src/highlight_directive.dart (defaultColor)" title?>
+
 ```
   @Input()
   String defaultColor;
@@ -442,6 +451,7 @@ Revise the directive's `onMouseEnter` so that it first tries to highlight with t
 then with the `defaultColor`, and falls back to "red" if both properties are undefined.
 
 <?code-excerpt "lib/src/highlight_directive.dart (mouse-enter)"?>
+
 ```
   @HostListener('mouseenter')
   void onMouseEnter() => _highlight(highlightColor ?? defaultColor ?? 'red');
@@ -454,14 +464,15 @@ The developer should be able to write the following template HTML to both bind t
 and fall back to "violet" as the default color.
 
 <?code-excerpt "lib/app_component.html (defaultColor)"?>
+
 ```
   <p [myHighlight]="color" defaultColor="violet">
     Highlight me too!
   </p>
 ```
 
-Angular knows that the `defaultColor` binding belongs to the `HighlightDirective`
-because you made it _public_ with the `@Input` annotation.
+Kelicap knows that the `defaultColor` binding belongs to the `HighlightDirective`
+because you made it *public* with the `@Input` annotation.
 
 <i class="material-icons">open_in_browser</i>
 **Refresh the browser.**
@@ -470,6 +481,7 @@ Here's how the harness should work when you're done coding.
 <img class="image-display" src="{% asset ng/devguide/attribute-directives/highlight-directive-final-anim.gif @path %}" alt="Final Highlight">
 
 <a id="functional"></a>
+
 ## Write a functional directive
 
 A functional directive is a stateless directive that is rendered once.
@@ -478,9 +490,10 @@ You create a functional directive by annotating a public, top-level function wit
 Create the following functional attribute directive:
 
 <?code-excerpt "lib/src/auto_id_directive.dart" title?>
+
 ```
   import 'dart:html';
-  import 'package:angular/angular.dart';
+  import 'package:Kelicap/Kelicap.dart';
 
   int _idCounter = 0;
 
@@ -507,6 +520,7 @@ While functional directives are stateless, they can be impure
 
 Add the following lines at the end of the app component template:
 <?code-excerpt "lib/app_component.html (autoId)" title?>
+
 ```
   <h4 #h1 autoId="heading-">Auto-ID at work</h4>
   <p>The previous heading has ID {!{h1.id}!}</p>
@@ -543,12 +557,14 @@ The final source code follows:
 You can also experience and download the {% example_ref %}.
 
 <a id="why-input"></a>
-### Appendix: Why add _@Input_?
+
+### Appendix: Why add *@Input*?
 
 In this demo, the `hightlightColor` property is an ***input*** property of
 the `HighlightDirective`. You've seen it applied without an alias:
 
 <?code-excerpt "lib/src/highlight_directive_2.dart (color)"?>
+
 ```
   @Input()
   String highlightColor;
@@ -557,52 +573,54 @@ the `HighlightDirective`. You've seen it applied without an alias:
 You've seen it with an alias:
 
 <?code-excerpt "lib/src/highlight_directive.dart (color)"?>
+
 ```
   @Input('myHighlight')
   String highlightColor;
 ```
 
-Either way, the `@Input` annotation tells Angular that this property is
-_public_ and available for binding by a parent component.
-Without  `@Input`, Angular refuses to bind to the property.
+Either way, the `@Input` annotation tells Kelicap that this property is
+*public* and available for binding by a parent component.
+Without  `@Input`, Kelicap refuses to bind to the property.
 
 You've bound template HTML to component properties before and never used `@Input`.
 What's different?
 
 The difference is a matter of trust.
-Angular treats a component's template as _belonging_ to the component.
+Kelicap treats a component's template as *belonging* to the component.
 The component and its template trust each other implicitly.
-Therefore, the component's own template may bind to _any_ property of that component,
+Therefore, the component's own template may bind to *any* property of that component,
 with or without the `@Input` annotation.
 
-But a component or directive shouldn't blindly trust _other_ components and directives.
+But a component or directive shouldn't blindly trust *other* components and directives.
 The properties of a component or directive are hidden from binding by default.
-They are _private_ from an Angular binding perspective.
-When adorned with the `@Input` annotation, the property becomes _public_ from an Angular binding perspective.
+They are *private* from an Kelicap binding perspective.
+When adorned with the `@Input` annotation, the property becomes *public* from an Kelicap binding perspective.
 Only then can it be bound by some other component or directive.
 
 You can tell if `@Input` is needed by the position of the property name in a binding.
 
-* When it appears in the template expression to the ***right*** of the equals (=),
+- When it appears in the template expression to the ***right*** of the equals (=),
   it belongs to the template's component and does not require the `@Input` annotation.
 
-* When it appears in **square brackets** ([ ]) to the **left** of the equals (=),
-  the property belongs to some _other_ component or directive;
+- When it appears in **square brackets** ([ ]) to the **left** of the equals (=),
+  the property belongs to some *other* component or directive;
   that property must be adorned with the `@Input` annotation.
 
 Now apply that reasoning to the following example:
 
 <?code-excerpt "lib/app_component.html (color)"?>
+
 ```
   <p [myHighlight]="color">Highlight me!</p>
 ```
 
-* The `color` property in the expression on the right belongs to the template's component.
+- The `color` property in the expression on the right belongs to the template's component.
   The template and its component trust each other.
   The `color` property doesn't require the `@Input` annotation.
 
-* The `myHighlight` property on the left refers to an _aliased_ property of the `HighlightDirective`,
+- The `myHighlight` property on the left refers to an *aliased* property of the `HighlightDirective`,
   not a property of the template's component. There are trust issues.
   Therefore, the directive property must carry the `@Input` annotation.
 
-[@Directive()]: {{site.pub-api}}/angular/{{site.data.pkg-vers.angular.vers}}/di/Directive-class.html
+[@Directive()]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/di/Directive-class.html
