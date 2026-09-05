@@ -1,5 +1,7 @@
 # Kelicap User Guide
 
+[![Kelicap Web Framework](../../assets/branding/kelicap_1_banner.jpeg)](https://github.com/dukefirehawk/kelicap)
+
 Welcome to the **Kelicap User Guide**. This document explains the different parts of the Kelicap framework and how they can be used for building web applications.
 
 ## Table of Contents

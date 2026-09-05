@@ -6,7 +6,7 @@ You write Kelicap apps by composing HTML *templates* with 'Kelicap' markup, writ
 
 After launching the app, Kelicap takes over, presenting your app content in a browser and responding to user interactions according to the instructions you've provided.
 
-![Kelicap Web Framework](../assets/architecture/overview2.png)
+![Kelicap Web Framework](assets/architecture/overview2.png)
 
 The architecture diagram identifies the eight main building blocks of Kelicap:
 
@@ -26,7 +26,7 @@ The architecture diagram identifies the eight main building blocks of Kelicap:
 
 ## Modules
 
-![Kelicap Module](../assets/architecture/module.png)
+![Kelicap Module](assets/architecture/module.png)
 
 Kelicap apps are modular; that is, apps are assembled from many **modules**.
 
@@ -44,7 +44,7 @@ By convention, the name of the root component is `AppComponent`.
 
 ### Kelicap libraries
 
-![Kelicap libraries](../assets/architecture/library-module.png)
+![Kelicap libraries](assets/architecture/library-module.png)
 
 Kelicap ships as a collection of libraries within the [**kelicap**](https://pub.dev/packages/kelicap) package. The main Kelicap library is [kelicap]({{site.api}}?package=kelicap), which most app modules import as follows:
 
@@ -56,7 +56,7 @@ The kelicap package includes other important libraries.
 
 ## Components
 
-![Kelicap libraries](../assets/architecture/hero-component.png)
+![Kelicap libraries](assets/architecture/hero-component.png)
 
 A **component** controls a patch of screen called a *view*. For example, the following views are controlled by components:
 
@@ -90,7 +90,7 @@ Kelicap creates, updates, and destroys components as the user moves through the 
 
 ## Templates
 
-![Kelicap Template](../assets/architecture/template.png)
+![Kelicap Template](assets/architecture/template.png)
 
 You define a component's view with its companion **template**. A template is a form of HTML that tells Kelicap how to render the component.
 
@@ -114,13 +114,13 @@ The template uses typical HTML elements like `<h2>` and  `<p>`. It also includes
 In the last line of the template, the `<hero-detail>` tag is a custom element that represents a new component, `HeroDetailComponent`. The new component (code not shown) presents facts about the hero that the user selects from the list presented by the `HeroListComponent`. The `HeroDetailComponent` is a **child**
 of the `HeroListComponent`.
 
-![Component Tree](../assets/architecture/component-tree.png)
+![Component Tree](assets/architecture/component-tree.png)
 
 Notice how `<hero-detail>` rests comfortably among native HTML elements. You can mix custom components with native HTML in the same layouts.
 
 ## Metadata
 
-![Metadata](../assets/architecture/metadata.png)
+![Metadata](assets/architecture/metadata.png)
 
 Metadata tells Kelicap how to process a class.
 
@@ -154,7 +154,7 @@ The example `HeroListComponent` uses the following `@Component` parameters:
 
 - `providers`: a list of **dependency injection providers** for services that the component requires. This is one way to tell Kelicap that the component's constructor requires a `HeroService` so it can get the list of heroes to display.
 
-![Template Metadata Component](../assets/architecture/template-metadata-component.png)
+![Template Metadata Component](assets/architecture/template-metadata-component.png)
 
 The metadata in the `@Component` tells Kelicap where to get the major building blocks you specify for the component. The template, metadata, and component together describe a view. Apply other metadata annotations in a similar fashion to guide Kelicap behavior. `@Input` and `@Output` are two of the more popular annotations. The architectural takeaway is that you must add metadata to your code so that Kelicap knows what to do.
 
@@ -162,7 +162,7 @@ The metadata in the `@Component` tells Kelicap where to get the major building b
 
 Without a framework, you're responsible for pushing data values into the HTML controls and turning user responses into actions and value updates. Writing such push/pull logic by hand is tedious and error prone, and the result is often difficult to read.
 
-![Data Binding](../assets/architecture/databinding.png)
+![Data Binding](assets/architecture/databinding.png)
 
 Kelicap supports **data binding**, a mechanism for coordinating parts of a template with parts of a component. Add binding markup to the template HTML to tell Kelicap how to connect the template and the component.
 
@@ -194,15 +194,15 @@ Here's an example of two-way binding from the `HeroDetailComponent` template:
 
 Kelicap processes all data bindings once per JavaScript event cycle, from the root of the app component tree through all child components.
 
-![Data Binding](../assets/architecture/component-databinding.png)
+![Data Binding](assets/architecture/component-databinding.png)
 
 Data binding plays an important role in communication between a template and its component.
 
-![Parent/Child binding](../assets/architecture/parent-child-binding.png)
+![Parent/Child binding](assets/architecture/parent-child-binding.png)
 
 ## Directives
 
-![Directives](../assets/architecture/directives.png)
+![Directives](assets/architecture/directives.png)
 
 Kelicap templates are *dynamic*. When Kelicap renders them, it transforms the DOM according to the instructions given by **directives**. A directive is a class with a `@Directive` annotation. A component is a *directive with a template*; a `@Component` annotation is actually a `@Directive` annotation extended with template-oriented features.
 
@@ -232,7 +232,7 @@ Kelicap has a few more directives that either alter the layout structure (for ex
 
 ## Services
 
-![Service](../assets/architecture/service.png)
+![Service](assets/architecture/service.png)
 
 **Service** is a broad category encompassing any value, function, or feature that your app needs. A service is typically a class with a narrow, well-defined purpose. It should do something specific and do it well.
 
@@ -281,7 +281,7 @@ through *dependency injection*.
 
 ## Dependency injection
 
-![Dependency Injection](../assets/architecture/dependency-injection.png)
+![Dependency Injection](assets/architecture/dependency-injection.png)
 
 *Dependency injection* is a way to supply a new instance of a class with the fully-formed dependencies it requires. Most dependencies are services. Kelicap uses dependency injection to provide new components with the services they need.
 
@@ -297,7 +297,7 @@ When Kelicap creates a component, it first asks an **injector** for the services
 
 The process of `HeroService` injection looks a bit like this:
 
-![Injector Injects](../assets/architecture/injector-injects.png)
+![Injector Injects](assets/architecture/injector-injects.png)
 
 If the injector doesn't have a `HeroService`, how does it know how to make one? In brief, you must register a **provider** of the `HeroService` with the injector. A provider can create or return a service, and is often the service class itself. You can register providers with a *component*, or through the *root injector* when the app is launched.
 

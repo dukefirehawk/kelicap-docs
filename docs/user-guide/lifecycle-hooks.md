@@ -2,7 +2,7 @@
 
 Kelicap calls lifecycle hook methods on directives and components as it creates, changes, and destroys them.
 
-![Lifecycle Hooks Sequence](../assets/lifecycle-hooks/hooks-in-sequence.png)
+![Lifecycle Hooks Sequence](assets/lifecycle-hooks/hooks-in-sequence.png)
 
 A component has a lifecycle managed by Kelicap itself. Kelicap creates it, renders it, creates and renders its children, checks it when its data-bound properties change, and destroys it before removing it from the DOM. Kelicap offers **lifecycle hooks** that provide visibility into these key life moments and the ability to act when they occur. A directive has the same set of lifecycle hooks, minus the hooks that are specific to component content and views.
 
@@ -79,7 +79,7 @@ The remainder of this chapter discusses selected exercises in further detail.
 
 The `PeekABooComponent` demonstrates all of the hooks in one component. You would rarely, if ever, implement all of the interfaces like this. The peek-a-boo exists to show how Kelicap calls the hooks in the expected order. The following snapshot reflects the state of the log after the user clicked the *Create...* button and then the *Destroy...* button.
 
-![Peek A Boo](../assets/lifecycle-hooks/peek-a-boo.png)
+![Peek A Boo](assets/lifecycle-hooks/peek-a-boo.png)
 
 The sequence of log messages follows the prescribed hook calling order: `AfterChanges`, `OnInit`, `DoCheck`&nbsp;(3x), `AfterContentInit`, `AfterContentChecked`&nbsp;(3x), `AfterViewInit`, `AfterViewChecked`&nbsp;(3x), and `OnDestroy`. The constructor isn't a Kelicap hook *per se*. The log confirms that input properties (the `name` property in this case) have no assigned values at construction. Had the user clicked the *Update Hero* button, the log would show another `AfterChanges` and two more triplets of `DoCheck`, `AfterContentChecked` and `AfterViewChecked`. Clearly these three hooks fire a *often*. Keep the logic in these hooks as lean as possible!
 
@@ -124,7 +124,7 @@ You can apply the spy to any native or component element and it'll be initialize
 
 Each spy's birth and death marks the birth and death of the attached hero `<div>` with an entry in the *Hook Log* as seen here:
 
-![Spy Directive](../assets/lifecycle-hooks/spy-directive.gif)
+![Spy Directive](assets/lifecycle-hooks/spy-directive.gif)
 
 Adding a hero results in a new hero `<div>`. The spy's `ngOnInit` logs that event. The *Reset* button clears the `heroes` list. Kelicap removes all hero `<div>` elements from the DOM and destroys their spy directives at the same time. The spy's `ngOnDestroy` method reports its last moments. The `ngOnInit` and `ngOnDestroy` methods have more vital roles to play in real apps.
 
@@ -174,7 +174,7 @@ The host `AfterChangesParentComponent` binds to them like this:
 
 Here's the sample in action as the user makes changes.
 
-![AfterChanges](../assets/lifecycle-hooks/after-changes-anim.gif)
+![AfterChanges](assets/lifecycle-hooks/after-changes-anim.gif)
 
 The log entry appear as the string value of the *power* property changes.
 But the `ngAfterChanges` does not catch changes to `hero.name`. That's surprising at first! Kelicap only calls the hook when the value of the input property changes. The value of the `hero` property is the **reference to the hero object**. Kelicap doesn't care that the hero's own `name` property changed.The hero object *reference* didn't change so, from Kelicap's perspective, there is no change to report!
@@ -222,7 +222,7 @@ Use the `DoCheck` hook to detect and act upon changes that Kelicap doesn't catch
 This code inspects certain **values-of-interest**, capturing and comparing their current state against previous values. It writes a special message to the log when there are no substantive changes to the `hero` or the `power`
 so you can see how often `DoCheck` is called. The results are illuminating:
 
-![DoCheck](../assets/lifecycle-hooks/do-check-anim.gif)
+![DoCheck](assets/lifecycle-hooks/do-check-anim.gif)
 
 While the `ngDoCheck` hook can detect when the hero's `name` has changed, it has a frightful cost. This hook is called with enormous frequency after **every** change detection cycle no matter where the change occurred. It's called over twenty times in this example before the user can do anything.
 
@@ -306,7 +306,7 @@ Kelicap's unidirectional data flow rule forbids updates to the view **after** it
 
 Here's *AfterView* in action
 
-![AfterView](../assets/lifecycle-hooks/after-view-anim.gif)
+![AfterView](assets/lifecycle-hooks/after-view-anim.gif)
 
 Notice that Kelicap frequently calls `AfterViewChecked`, often when there are no changes of interest. Write lean hook methods to avoid performance problems.
 
@@ -352,7 +352,7 @@ Now look at the component's template:
 The `<ng-content>` tag is a *placeholder* for the external content.
 It tells Kelicap where to insert that content. In this case, the projected content is the `<my-child>` from the parent.
 
-![Projected Content](../assets/lifecycle-hooks/projected-child-view.png)
+![Projected Content](assets/lifecycle-hooks/projected-child-view.png)
 
 The tell-tale signs of *content projection* are:
 

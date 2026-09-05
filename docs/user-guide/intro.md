@@ -1,6 +1,6 @@
 # Introduction
 
-Welcome to the **Kelicap Web Framework**. This guide provides an overview of Kelicap, its core philosophy, and how it fits into the Dart web ecosystem.
+Welcome to the **Kelicap Web Framework**. This guide provides an overview of what is Kelicap, its core components, and how they works together to build web applications.
 
 ## What is Kelicap?
 
@@ -34,3 +34,6 @@ Kelicap follows a set of core principles designed to maximize developer producti
 | **Build Tooling** | `webdev` / `build_runner` | Angular CLI / Vite / Webpack | `build_runner` |
 | **State Primitives** | Streams | Signals / RxJS | Streams |
 | **Rendering** | Direct DOM Manipulation | Ivy / Hydration | Direct DOM Manipulation |
+
+---
+[Next: Quick Start →](quick-start.md)
