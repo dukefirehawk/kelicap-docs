@@ -1,5 +1,7 @@
 # Kelicap — Documentation
 
+[![Kelicap Web Framework](assets/branding/kelicap_1_banner.jpeg)](https://github.com/dukefirehawk/kelicap)
+
 Documentation and user guides for the Kelicap Web framework.
 
 ## ⚡ Quick Start
