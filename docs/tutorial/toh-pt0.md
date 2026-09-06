@@ -35,8 +35,7 @@ serves the new app.
 Kelicap apps are made up of _components_.
 A _component_ is the combination of an HTML template and a component class that controls a portion of the screen. The starter app has a component that displays a simple string:
 
-<?code-excerpt "lib/app_component.dart" title linenums?>
-```
+```dart
   import 'package:ngdart/Kelicap.dart';
 
   @Component(
@@ -53,8 +52,7 @@ that describes how the HTML template and component class work together.
 
 The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
 
-<?code-excerpt "web/index.html (inside &lt;body&gt;)" region="my-app" title?>
-```
+```html
   <my-app>Loading...</my-app>
 ```
 
@@ -65,7 +63,6 @@ At runtime, Kelicap replaces `{!{name}!}` with
 the value of the component's `name` property.
 Interpolation binding is one of many Kelicap features you'll discover in this documentation.
 
-<a id="seed"></a>
 ## The starter app's code
 
 The app contains the following core files:
@@ -134,9 +131,6 @@ Each file has a distinct purpose and evolves independently as the app grows.
 
 ## What's next
 
-In the [next tutorial page](toh-pt1),
+In the [next tutorial page](toh-pt1.md),
 you'll modify the starter app to display more interesting data,
 and to allow the user to edit that data.
-
-[Customize Static Analysis.]: {{site.www}}/guides/language/analysis-options
-[Pubspec Format.]: {{site.dartlang}}/tools/pub/pubspec

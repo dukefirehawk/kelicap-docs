@@ -12,12 +12,12 @@ When you're done with this page, the app should look like this {% example_ref %}
 
 ## Where you left off
 
-In the [previous page](toh-pt5), you learned to navigate between the dashboard and the fixed heroes list, editing a selected hero along the way. That's the starting point for this page.
+In the [previous page](toh-pt5.md), you learned to navigate between the dashboard and the fixed heroes list, editing a selected hero along the way. That's the starting point for this page.
 
 Before continuing with the Tour of Heroes, verify that you have the following structure.
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```text
+tour_of_heroes
   - lib
     - app_component.{css,dart}
     - src
@@ -37,51 +37,33 @@ Before continuing with the Tour of Heroes, verify that you have the following st
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
-
-{% include_relative_keep-app-running.md %}
-
-<a id="http-providers"></a>
+```
 
 ## Providing HTTP services
 
-You'll be using the Dart [http][] package's client classes to communicate with a server.
+You'll be using the Dart [http] package's client classes to communicate with a server.
 
 ### Pubspec updates
 
-Update package dependencies by adding the Dart [http][] and
-[stream_transform][] packages:
+Update package dependencies by adding the Dart [http] and
+[stream_transform] packages:
 
-<?code-excerpt path-base="examples/ng/doc"?>
-
-<?code-excerpt "toh-5/pubspec.yaml" diff-with="toh-6/pubspec.yaml" from="Kelicap:" to="stream_transform"?>
-
-```diff
---- toh-5/pubspec.yaml
-+++ toh-6/pubspec.yaml
-@@ -9,6 +9,8 @@
-   ngdart: ^7.1.1
-   ngforms: ^4.1.1
-   ngrouter: ^3.1.1
-+  http: ^0.13.4
-+  stream_transform: ^2.0.0
+```yaml
+   kelicap: ^1.1.0
+   kelicap_forms: ^1.1.0
+   kelicap_router: ^1.1.0
++  http: ^0.16.0
++  stream_transform: ^3.1.0
 
  dev_dependencies:
-   ngtest: ^4.1.1
+   kelicap_test: ^1.1.0
 ```
-
-<?code-excerpt path-base="examples/ng/doc/toh-6"?>
 
 ## Register for HTTP services
 
-Before the app can use `BrowserClient`, you have to register it as a service provider.
+Before the app can use `BrowserClient`, you have to register it as a service provider. You should be able to access `BrowserClient` services from anywhere in the app, so provide it through the app's root injector:
 
-You should be able to access `BrowserClient` services from anywhere in the app,
-so provide it through the app's root injector:
-
-<?code-excerpt "web/main_1.dart" title linenums replace="/_\d//g"?>
-
-```
+```dart
   import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
   import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
@@ -100,26 +82,17 @@ so provide it through the app's root injector:
   }
 ```
 
-Notice that you supply `BrowserClient` as a class provider in list argument of
-the generated injector. This has the same effect as the `providers` list in
-`@Component` annotation.
+Notice that you supply `BrowserClient` as a class provider in list argument of the generated injector. This has the same effect as the `providers` list in `@Component` annotation.
 
-<aside class="alert alert-warning" markdown="1">
-**Note:** Unless you have an appropriately configured backend server (or a mock server),
-this app doesn't work. The next section shows how to mock interaction with a backend server.
-</aside>
+>**[Note]** Unless you have an appropriately configured backend server (or a mock server), this app doesn't work. The next section shows how to mock interaction with a backend server.
 
 ## Simulate the web API
 
-Until you have a web server that can handle requests for hero data,
-the HTTP client will fetch and save data from
-a mock service, the *in-memory web API*.
+Until you have a web server that can handle requests for hero data, the HTTP client will fetch and save data from a mock service, the *in-memory web API*.
 
 Update `web/main.dart` with this version, which uses the mock service:
 
-<?code-excerpt "web/main.dart" title linenums?>
-
-```
+```dart
   import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
   import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
@@ -142,17 +115,10 @@ Update `web/main.dart` with this version, which uses the mock service:
   }
 ```
 
-Replace `BrowserClient`, the service that talks to the remote server,
-with the in-memory web API service.
-The in-memory web API service, shown below, is implemented using the
-`http` library `MockClient` class.
-All `http` client implementations share a common `Client` interface, so
-you'll have the app use the `Client` type so that you can freely switch between
+Replace `BrowserClient`, the service that talks to the remote server, with the in-memory web API service. The in-memory web API service, shown below, is implemented using the `http` library `MockClient` class. All `http` client implementations share a common `Client` interface, so you'll have the app use the `Client` type so that you can freely switch between
 implementations.
 
-<?code-excerpt "lib/in_memory_data_service.dart (init)" title linenums?>
-
-```
+```dart
   import 'dart:async';
   import 'dart:convert';
   import 'dart:math';
@@ -234,13 +200,9 @@ implementations.
 
 This file replaces `mock_heroes.dart`, which is now safe to delete.
 
-As is common for web API services, the mock in-memory service will be
-encoding and decoding heroes in JSON format, so enhance the `Hero`
-class with these capabilities:
+As is common for web API services, the mock in-memory service will be encoding and decoding heroes in JSON format, so enhance the `Hero` class with these capabilities:
 
-<?code-excerpt "lib/src/hero.dart" title linenums?>
-
-```
+```dart
   class Hero {
     final int id;
     String name;
@@ -260,9 +222,7 @@ class with these capabilities:
 
 In the current `HeroService` implementation, a Future resolved with mock heroes is returned.
 
-<?code-excerpt "../toh-4/lib/src/hero_service.dart (old getAll)" region="getAll"?>
-
-```
+```dart
   Future<List<Hero>> getAll() async => mockHeroes;
 ```
 
@@ -271,9 +231,7 @@ fetching heroes with an HTTP client, which must be an asynchronous operation.
 
 Now convert `getAll()` to use HTTP.
 
-<?code-excerpt "lib/src/hero_service.dart (updated getAll and new class members)" region="getAll" title?>
-
-```
+```dart
   static const _heroesUrl = 'api/heroes'; // URL to web API
 
   final Client _http;
@@ -302,9 +260,7 @@ Now convert `getAll()` to use HTTP.
 
 Update the import statements as follows:
 
-<?code-excerpt "lib/src/hero_service.dart (updated imports)" region="imports" title?>
-
-```
+```dart
   import 'dart:async';
   import 'dart:convert';
 
@@ -325,11 +281,7 @@ The response JSON has a single `data` property, which
 holds the list of heroes that the caller wants.
 So you grab that list and return it as the resolved Future value.
 
-<div class="alert alert-info" markdown="1">
-  Note the shape of the data that the server returns.
-  This particular in-memory web API example returns an object with a `data` property.
-  Your API might return something else. Adjust the code to match your web API.
-</div>
+> **[Note]** the shape of the data that the server returns. This particular in-memory web API example returns an object with a `data` property. Your API might return something else. Adjust the code to match your web API.
 
 The caller is unaware that you fetched the heroes from the (mock) server.
 It receives a Future of *heroes* just as it did before.
@@ -338,9 +290,7 @@ It receives a Future of *heroes* just as it did before.
 
 At the end of `getAll()`, you `catch` server failures and pass them to an error handler.
 
-<?code-excerpt "lib/src/hero_service.dart (catch)"?>
-
-```
+```dart
   } catch (e) {
     throw _handleError(e);
   }
@@ -348,9 +298,7 @@ At the end of `getAll()`, you `catch` server failures and pass them to an error 
 
 This is a critical step. You must anticipate HTTP failures, as they happen frequently for reasons beyond your control.
 
-<?code-excerpt "lib/src/hero_service.dart (handleError)"?>
-
-```
+```dart
   Exception _handleError(dynamic e) {
     print(e); // for demo purposes only
     return Exception('Server error; cause: $e');
@@ -372,9 +320,7 @@ Most web APIs support a *get-by-id* request in the form `api/hero/:id` (such as 
 
 Update the `HeroService.get()` method to make a *get-by-id* request:
 
-<?code-excerpt "lib/src/hero_service.dart (get)" title?>
-
-```
+```dart
   Future<Hero> get(int id) async {
     try {
       final response = await _http.get(Uri.parse('$_heroesUrl/$id'));
@@ -416,18 +362,14 @@ the server.
 At the end of the hero detail template, add a save button with a `click` event
 binding that invokes a new component method named `save()`.
 
-<?code-excerpt "lib/src/hero_component.html (save)" title?>
-
-```
+```html
   <button (click)="save()">Save</button>
 ```
 
 Add the following `save()` method, which persists hero name changes using the hero service
 `update()` method and then navigates back to the previous view.
 
-<?code-excerpt "lib/src/hero_component.dart (save)" title?>
-
-```
+```dart
   Future<void> save() async {
     await _heroService.update(hero!);
     goBack();
@@ -439,9 +381,7 @@ Add the following `save()` method, which persists hero name changes using the he
 The overall structure of the `update()` method is similar to that of
 `getAll()`, but it uses an HTTP `put()` to persist server-side changes.
 
-<?code-excerpt "lib/src/hero_service.dart (update)" title?>
-
-```
+```dart
   static final _headers = {'Content-Type': 'application/json'};
   // ···
   Future<Hero> update(Hero hero) async {
@@ -472,9 +412,7 @@ element paired with an add button.
 Insert the following into the heroes component HTML, just after
 the heading:
 
-<?code-excerpt "lib/src/hero_list_component.html (add)" title?>
-
-```
+```dart
   <div>
     <label>Hero name:</label> <input #heroName />
     <button (click)="add(heroName)">
@@ -486,9 +424,7 @@ the heading:
 In response to a click event, call the component's click handler and then
 clear the input field so that it's ready for another name.
 
-<?code-excerpt "lib/src/hero_list_component.dart (add)" title?>
-
-```
+```dart
   Future<void> add(InputElement event) async {
     final String? name = event.value?.trim();
     if (name == null || name.isEmpty) return;
@@ -503,9 +439,7 @@ named hero to the hero service, and then adds the new hero to the list.
 
 Implement the `create()` method in the `HeroService` class.
 
-<?code-excerpt "lib/src/hero_service.dart (create)" title?>
-
-```
+```dart
   Future<Hero> create(String name) async {
     try {
       final response = await _http.post(Uri.parse(_heroesUrl),
@@ -523,21 +457,16 @@ Refresh the browser and create some heroes.
 
 Each hero in the heroes view should have a delete button.
 
-Add the following button element to the heroes component HTML, after the hero
-name in the repeated `<li>` element.
+Add the following button element to the heroes component HTML, after the hero name in the repeated `<li>` element.
 
-<?code-excerpt "lib/src/hero_list_component.html (delete)"?>
-
-```
+```dart
   <button class="delete"
     (click)="delete(hero, $event)">x</button>
 ```
 
 The `<li>` element should now look like this:
 
-<?code-excerpt "lib/src/hero_list_component.html (li element)" title?>
-
-```
+```dart
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
       (click)="onSelect(hero)">
@@ -555,9 +484,7 @@ select the hero that the user will delete.
 
 The logic of the `delete()` handler is a bit trickier:
 
-<?code-excerpt "lib/src/hero_list_component.dart (delete)" title?>
-
-```
+```dart
   Future<void> delete(Hero hero, Event event) async {
     await _heroService.delete(hero.id);
     heroes.remove(hero);
@@ -575,9 +502,7 @@ from the list and resets the selected hero, if necessary.
 To place the delete button at the far right of the hero entry,
 add this CSS:
 
-<?code-excerpt "lib/src/hero_list_component.css (additions)" title?>
-
-```
+```dart
   button.delete {
     float:right;
     margin-top: 2px;
@@ -591,9 +516,7 @@ add this CSS:
 
 Add the hero service's `delete()` method, which uses the `delete()` HTTP method to remove the hero from the server:
 
-<?code-excerpt "lib/src/hero_service.dart (delete)" title?>
-
-```
+```dart
   Future<void> delete(int id) async {
     try {
       final url = '$_heroesUrl/$id';
@@ -625,9 +548,7 @@ As the user types a name into a search box, you'll make repeated HTTP requests f
 
 Start by creating `HeroSearchService` that sends search queries to the server's web API.
 
-<?code-excerpt "lib/src/hero_search_service.dart" title?>
-
-```
+```dart
   import 'dart:async';
   import 'dart:convert';
 
@@ -669,9 +590,7 @@ Create a `HeroSearchComponent` that calls the new `HeroSearchService`.
 
 The component template is simple&mdash;just a text box and a list of matching search results.
 
-<?code-excerpt "lib/src/hero_search_component.html" title?>
-
-```
+```dart
   <div id="search-component">
     <h4>Hero Search</h4>
     <input #searchBox id="search-box"
@@ -688,9 +607,7 @@ The component template is simple&mdash;just a text box and a list of matching se
 
 Also, add styles for the new component.
 
-<?code-excerpt "lib/src/hero_search_component.css" title?>
-
-```
+```dart
   .search-result {
     border-bottom: 1px solid gray;
     border-left: 1px solid gray;
@@ -719,9 +636,7 @@ The `async` pipe subscribes to the `Stream` and produces the list of heroes to `
 
 Create the `HeroSearchComponent` class and metadata.
 
-<?code-excerpt "lib/src/hero_search_component.dart" title linenums?>
-
-```
+```dart
   import 'dart:async';
 
   import 'package:ngdart/Kelicap.dart';
@@ -775,9 +690,7 @@ Create the `HeroSearchComponent` class and metadata.
 
 Focus on `_searchTerms`:
 
-<?code-excerpt "lib/src/hero_search_component.dart (searchTerms)"?>
-
-```
+```dart
   StreamController<String> _searchTerms = StreamController<String>.broadcast();
   // ···
   void search(String term) => _searchTerms.add(term);
@@ -794,9 +707,7 @@ the stream by calling `add()` over the controller.
 
 You can turn the stream of search terms into a stream of `Hero` lists and assign the result to the `heroes` property.
 
-<?code-excerpt "lib/src/hero_search_component.dart (search)"?>
-
-```
+```dart
   late Stream<List<Hero>> heroes;
   // ···
   void ngOnInit() async {
@@ -833,9 +744,7 @@ You'll make fewer calls to the `HeroSearchService` and still get timely results.
 
 Add the hero search HTML element to the bottom of the `DashboardComponent` template.
 
-<?code-excerpt "lib/src/dashboard_component.html" title?>
-
-```
+```dart
   <h3>Top Heroes</h3>
   <div class="grid grid-pad">
     <a *ngFor="let hero of heroes" class="col-1-4"
@@ -850,9 +759,7 @@ Add the hero search HTML element to the bottom of the `DashboardComponent` templ
 
 Finally, import `HeroSearchComponent` from `hero_search_component.dart` and add it to the `directives` list.
 
-<?code-excerpt "lib/src/dashboard_component.dart (search)" plaster="none" title?>
-
-```
+```dart
   import 'hero_search_component.dart';
 
   @Component(
@@ -866,15 +773,15 @@ Finally, import `HeroSearchComponent` from `hero_search_component.dart` and add 
 Run the app again. In the Dashboard, enter some text in the search box.
 If you enter characters that match any existing hero names, you'll see something like this.
 
-<img class="image-display" src="{% asset ng/devguide/toh/toh-hero-search.png @path %}" alt="Hero Search Component">
+![Hero Search](assets/toh/toh-hero-search.png)
 
 ## App structure and code
 
 Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```text
+tour_of_heroes
   - lib
     - app_component.{css,dart}
     - in_memory_data_service.dart (new)
@@ -896,7 +803,7 @@ Verify that you have the following structure:
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
+```
 
 ## Home stretch
 
@@ -909,35 +816,9 @@ You're at the end of your journey, and you've accomplished a lot.
 - You configured an in-memory web API.
 - You learned how to use Streams.
 
-Here are the files you added or changed in this page.
-
-<code-tabs>
-  <?code-pane "lib/src/dashboard_component.dart" linenums?>
-  <?code-pane "lib/src/dashboard_component.html" linenums?>
-  <?code-pane "lib/src/hero.dart" linenums?>
-  <?code-pane "lib/src/hero_component.dart" linenums?>
-  <?code-pane "lib/src/hero_component.html" linenums?>
-  <?code-pane "lib/src/hero_service.dart" linenums?>
-  <?code-pane "lib/src/hero_list_component.css" linenums?>
-  <?code-pane "lib/src/hero_list_component.dart" linenums?>
-  <?code-pane "lib/in_memory_data_service.dart" linenums?>
-</code-tabs>
-
-<code-tabs>
-  <?code-pane "lib/src/hero_search_component.css" linenums?>
-  <?code-pane "lib/src/hero_search_component.dart" linenums?>
-  <?code-pane "lib/src/hero_search_component.html" linenums?>
-  <?code-pane "lib/src/hero_search_service.dart" linenums?>
-</code-tabs>
-
-<code-tabs>
-  <?code-pane "pubspec.yaml" linenums?>
-  <?code-pane "web/main.dart" linenums?>
-</code-tabs>
-
 ## Next step
 
-Return to the [learning path](/guide/learning-Kelicap), where
+Return to the [learning path](/guide/learning-kelicap), where
 you can read more about the concepts and practices found in this tutorial.
 
 [http]: https://pub.dev/packages/http

@@ -71,7 +71,6 @@ is the attribute name in square brackets.
 Here, the directive's selector is `[myHighlight]`.
 Kelicap locates all elements in the template that have an attribute named `myHighlight`.
 
-<div class="l-sub-section" markdown="1">
 ### Why not call it "highlight"?
 
   Though *highlight* is a more concise name than *myHighlight* and would work,
@@ -91,8 +90,6 @@ Kelicap creates a new instance of the directive's controller class for
 each matching element, injecting an HTML [Element]({{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-html/Element-class.html)
 into the constructor.
 
-<a id="apply-directive"></a>
-
 ## Apply the attribute directive
 
 To use the new `HighlightDirective`, create a template that
@@ -102,9 +99,7 @@ In Kelicap terms, the `<p>` element is the attribute **host**.
 Put the template in its own `app_component.html`
 file that looks like this:
 
-<?code-excerpt "lib/app_component_1.html" title?>
-
-```
+```html
   <h1>My First Attribute Directive</h1>
   <p myHighlight>Highlight me!</p>
 ```
@@ -113,9 +108,7 @@ Now reference this template in the `AppComponent`, and
 add the `Highlight` directive to the `directives` list. This way Kelicap
 recognizes the directive when it encounters `myHighlight` in the template.
 
-<?code-excerpt "lib/app_component.dart" title?>
-
-```
+```html
   import 'package:Kelicap/Kelicap.dart';
 
   import 'src/auto_id_directive.dart';
@@ -131,13 +124,11 @@ recognizes the directive when it encounters `myHighlight` in the template.
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.**
 The app runs, and the `myHighlight` directive highlights the paragraph text.
 
 <img class="image-display" src="{% asset ng/devguide/attribute-directives/first-highlight.png @path %}" alt="First Highlight">
 
-<div class="l-sub-section" markdown="1">
 ### Your directive isn't working?
 
   Did you remember to set the `directives` attribute of `@Component`?
