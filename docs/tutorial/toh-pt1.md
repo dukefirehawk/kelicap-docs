@@ -6,11 +6,11 @@ When you're done, the app should look like this {% example_ref %}.
 
 ## Where you left off
 
-Before you start writing code, let's verify that you have the following structure. If not, you'll need to go back and follow the [setup](toh-pt0) instructions
+Before you start writing code, let's verify that you have the following structure. If not, you'll need to go back and follow the [setup](toh-pt0.md) instructions
 on the previous page.
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.dart
   - test
@@ -21,9 +21,7 @@ on the previous page.
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
-
-{% include_relative _keep-app-running.md %}
+```
 
 ## Show the hero
 
@@ -33,11 +31,10 @@ Make the following changes to `AppComponent`:
 - Add a `title` property initialized as shown below.
 - Drop the `name` property.
 
-<?code-excerpt "lib/app_component_1.dart (class)" replace="/final.*|var.*/[!$&!]/g" title?>
-```
+```dart
   class AppComponent {
-    [!final title = 'Tour of Heroes';!]
-    [!var hero = 'Windstorm';!]
+    final title = 'Tour of Heroes';
+    var hero = 'Windstorm';
   }
 ```
 
@@ -46,15 +43,13 @@ Make the following changes to `AppComponent`:
 Update the template parameter in the `@Component` annotation with data bindings
 to these new properties:
 
-<?code-excerpt "lib/app_component_1.dart (template)" title?>
-```
+```dart
   template: '''
-    <h1>{!{title}!}</h1>
-    <h2>{!{hero}!}</h2>
+    <h1>{{title}}</h1>
+    <h2>{{hero}}</h2>
   ''',
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app displays the title and hero name.
 
 The double curly braces are Kelicap's [interpolation syntax][]. These
@@ -70,8 +65,7 @@ values, as strings, inside the HTML header tags.
 Create a `Hero` class with `id` and `name` properties and
 save it to the following new file:
 
-<?code-excerpt "lib/hero.dart" title?>
-```
+```dart
   class Hero {
     final int id;
     String name;
@@ -86,26 +80,23 @@ Make these changes to `app_component.dart`:
 - In the `AppComponent` class, declare the type of `hero` to be `Hero`, and
   initialize it with a new `Hero` having an ID of `1` and the name "Windstorm".
 
-<?code-excerpt "lib/app_component_2.dart (import and class)" replace="/import.*|Hero(?= )|Hero.1.*/[!$&!]/g" title?>
-```
-  [!import 'hero.dart';!]
+```dart
+  import 'hero.dart';
   // ···
   class AppComponent {
     final title = 'Tour of Heroes';
-    [!Hero!] hero = [!Hero(1, 'Windstorm');!]
+    var hero = Hero(1, 'Windstorm');
   }
 ```
 
 Because you changed the hero from a string to an object, update the binding in
 the template to refer to the hero's `name` property.
 
-<?code-excerpt "lib/app_component_2.dart (template)" remove="/'|div/" replace="/\.name/[!$&!]/g"?>
 ```html
-  <h1>{!{title}!}</h1>
-  <h2>{!{hero[!.name!]}!}</h2>
+  <h1>{{title}}</h1>
+  <h2>{{hero.name}}</h2>
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app continues to display the hero's name.
 
 ### Show all hero properties
@@ -113,15 +104,13 @@ the template to refer to the hero's `name` property.
 Update the template to show all of the hero's properties: add a `<div>` for the
 hero's `id` property and another `<div>` for the hero's `name`.
 
-<?code-excerpt "lib/app_component_2.dart (template)" remove="'" title?>
 ```html
-  <h1>{!{title}!}</h1>
-  <h2>{!{hero.name}!}</h2>
-  <div><label>id: </label>{!{hero.id}!}</div>
-  <div><label>name: </label>{!{hero.name}!}</div>
+  <h1>{{title}}</h1>
+  <h2>{{hero.name}}</h2>
+  <div><label>id: </label>{{hero.id}}</div>
+  <div><label>name: </label>{{hero.name}}</div>
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app shows all the hero's details.
 
 ## Enable editing the hero name
@@ -136,7 +125,6 @@ You need a two-way binding between the `<input>` form element and the `hero.name
 
 Refactor the hero name in the template so it looks like this:
 
-<?code-excerpt "lib/app_component.dart (template)" remove="/h\d|id|'/"?>
 ```html
   <div>
     <label>name: </label>
@@ -161,13 +149,10 @@ Unfortunately, immediately after this change, the **app breaks**!
 
 ### Template parse error
 
-<i class="material-icons">open_in_browser</i>
 If you **refresh the browser,** the app won't load.
-To know why, look at the [webdev serve][] output. The template
-compiler doesn't recognize `ngModel`, and issues a parse error for
-`AppComponent`:
+To know why, look at the [webdev serve][] output. The template compiler doesn't recognize `ngModel`, and issues a parse error for `AppComponent`:
 
-```nocode
+```terminal
   Error running TemplateGenerator for forms|lib/src/hero_form_component.dart.
   Error: Template parse errors:
   Can't bind to 'ngModel' since it isn't a known native property or known directive. Please fix typo or add to directives list.
@@ -177,52 +162,37 @@ compiler doesn't recognize `ngModel`, and issues a parse error for
 
 ### Update the pubspec
 
-<?code-excerpt path-base="examples/ng/doc"?>
+The `kelicap_forms` library comes in its own package. Add the package to the pubspec dependencies:
 
-The `ngforms` (also called `Kelicap_forms`) library comes in its own package. Add the package to the pubspec dependencies:
-
-<?code-excerpt "toh-0/pubspec.yaml" diff-with="toh-1/pubspec.yaml" from="dependencies" to="ngforms"?>
-```diff
---- toh-0/pubspec.yaml
-+++ toh-1/pubspec.yaml
-@@ -8,2 +8,3 @@
- dependencies:
-   ngdart: ^7.1.1
-+  ngforms: ^4.1.1
+```yaml
+  dependencies:
+    kelicap: ^1.1.0
++   kelicap_forms: ^1.1.0
 ```
 
-<?code-excerpt path-base="examples/ng/doc/toh-1"?>
+### Add @Component(directives: ...) {#component-directives}
 
-### Add _@Component(directives: ...)_ {#component-directives}
-
-Although `NgModel` is a valid Kelicap directive defined in the [ngforms][]
-library, it isn't available by default.
+Although `NgModel` is a valid Kelicap directive defined in the [kelicap_forms] library, it isn't available by default.
 
 Before you can use any Kelicap directives in a template,
-you need to list them in the `directives` argument of your component's
-`@Component` annotation. You can add directives individually, or for
-convenience you can add the [formDirectives][] list
-(note the new import statement):
+you need to list them in the `directives` argument of your component's `@Component` annotation. You can add directives individually, or for convenience you can add the [formDirectives] list (note the new import statement):
 
-<?code-excerpt "lib/app_component.dart (directives)" replace="/directives:.*/[!$&!]/g" title?>
-```
-  import 'package:ngforms/ngforms.dart';
+```dart
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
 
   @Component(
     selector: 'my-app',
     // ···
-    [!directives: [formDirectives],!]
+    directives: [formDirectives],
   )
   class AppComponent {
     // ···
   }
 ```
 
-<i class="material-icons">open_in_browser</i> **Refresh the browser** and the
-app should work again. You can edit the hero's name and see the changes
-reflected immediately in the `<h2>` heading above the textbox.
+**Refresh the browser** and the app should work again. You can edit the hero's name and see the changes reflected immediately in the `<h2>` heading above the textbox.
 
 ## The road you've travelled
 
@@ -248,11 +218,11 @@ Here are the files that you created or modified:
 
 ## The road ahead
 
-In the [next tutorial page](toh-pt2), you'll build on the Tour of Heroes app to display a list of heroes.
+In the [next tutorial page](toh-pt2.md), you'll build on the Tour of Heroes app to display a list of heroes.
 You'll also allow the user to select heroes and display their details.
 You'll learn more about how to retrieve lists and bind them to the template.
 
-[ngforms]: {{site.api}}/Kelicap_forms
+[kelicap_forms]: {{site.api}}/kelicap_forms
 [webdev serve]: {{site.pub-pkg}}/webdev#usage
-[formDirectives]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/formDirectives-constant.html
+[formDirectives]: {{site.pub-api}}/kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/kelicap_forms/formDirectives-constant.html
 [interpolation syntax]: /guide/template-syntax#interpolation

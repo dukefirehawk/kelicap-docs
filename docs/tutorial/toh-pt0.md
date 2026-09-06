@@ -78,7 +78,7 @@ The app contains the following core files:
 
 These files are organized as follows:
 
-<div class="ul-filetree" markdown="1">
+```text
 - Kelicap_tour_of_heroes
   - lib
     - app_component.dart
@@ -90,7 +90,7 @@ These files are organized as follows:
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
+```
 
 All the examples in this documentation have _at least these core files_.
 Each file has a distinct purpose and evolves independently as the app grows.

@@ -67,10 +67,7 @@ if you can't swap in low-pressure tires during the test?
 You have no control over the car's hidden dependencies.
 When you can't control the dependencies, a class becomes difficult to test.
 
-How can you make `Car` more robust, flexible, and testable?
-
-<a id="ctor-injection"></a>
-That's super easy. Change the `Car` constructor to a version with DI:
+How can you make `Car` more robust, flexible, and testable? That's super easy. Change the `Car` constructor to a version with DI:
 
 <code-tabs>
   <?code-pane "lib/src/car/car.dart (excerpt with DI)" region="car-ctor" linenums?>
@@ -78,8 +75,7 @@ That's super easy. Change the `Car` constructor to a version with DI:
 </code-tabs>
 
 See what happened? The definition of the dependencies are
-now in the constructor.
-The `Car` class no longer creates an engine or tires.
+now in the constructor. The `Car` class no longer creates an engine or tires.
 It just consumes them.
 
 <div class="l-sub-section" markdown="1">
@@ -89,8 +85,7 @@ It just consumes them.
 
 Now you can create a car by passing the engine and tires to the constructor.
 
-<?code-excerpt "lib/src/car/car_creations.dart (car-ctor-instantiation)"?>
-```
+```dart
   // Simple car with 4 cylinders and Flintstone tires.
   Car(Engine(), Tires())
 ```
@@ -199,7 +194,6 @@ Both `Car` and consumer simply ask for what they need and the injector delivers.
 
 This is what a **dependency injection framework** is all about.
 
-<a id="Kelicap-di"></a>
 ## Kelicap dependency injection
 
 Kelicap ships with its own dependency injection framework.
@@ -235,7 +229,7 @@ As soon as you try to test this component or get heroes from a remote server,
 you'll have to change the implementation of `HeroListComponent` and
 replace every other use of the `mockHeroes` data.
 
-## Create an injectable _HeroService_
+## Create an injectable *HeroService*
 
 It's better to hide the details concerning hero data access inside a _service_ class,
 defined in its own file.
@@ -288,9 +282,9 @@ nor be able to create the service.
 
 The most common way to register a provider is with
 any Kelicap annotation that has a **`providers` list argument**.
-The most common of these is [@Component()][].
+The most common of these is [@Component()].
 
-### _@Component_ providers
+### *@Component* providers
 
 Here's a revised `HeroesComponent` that registers the `HeroService` in its `providers` list.
 
@@ -322,7 +316,6 @@ and, when the component instance is destroyed, so is that service instance.
 In this sample app, the `HeroComponent` is created when the app starts
 and is never destroyed so the `HeroService` created for the `HeroComponent` also lives for the life of the app.
 
-<a id="bootstrap"></a>
 ### Root injector providers
 
 You can also register providers in the app's **root injector**, which you pass
