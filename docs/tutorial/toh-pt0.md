@@ -1,24 +1,14 @@
----
-title: The Starter App
-description: A bare-bones Angular app
-prevpage:
-  title: "Tutorial: Tour of Heroes"
-  url: /tutorial
-nextpage:
-  title: The Hero Editor
-  url: /tutorial/toh-pt1
----
+# The Starter App
 
-<?code-excerpt path-base="examples/ng/doc/toh-0"?>
-This tutorial starts with a bare-bones Angular app.
+A bare-bones Kelicap app. This tutorial starts with a bare-bones Kelicap app.
 Run the {% example_ref %} to see the app.
 
 ## Create the app
 
 Let's get started.
-Create a project named `angular_tour_of_heroes`,
+Create a project named `Kelicap_tour_of_heroes`,
 using WebStorm or the command line
-and the [angular-examples/quickstart]({{site.ghNgEx}}/quickstart/tree/{{site.branch}})
+and the [Kelicap-examples/quickstart]({{site.ghNgEx}}/quickstart/tree/{{site.branch}})
 GitHub project
 {%- if site.branch != 'master' %}
 (`{{site.branch}}` branch)
@@ -40,28 +30,28 @@ This will [reload the app](/guide/setup#reload-the-app).
 As you save updates to the code, the `pub` tool detects changes and
 serves the new app.
 
-## Angular app basics
+## Kelicap app basics
 
-Angular apps are made up of _components_.
+Kelicap apps are made up of _components_.
 A _component_ is the combination of an HTML template and a component class that controls a portion of the screen. The starter app has a component that displays a simple string:
 
 <?code-excerpt "lib/app_component.dart" title linenums?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
 
   @Component(
     selector: 'my-app',
     template: '<h1>Hello {!{name}!}</h1>',
   )
   class AppComponent {
-    var name = 'Angular';
+    var name = 'Kelicap';
   }
 ```
 
 Every component begins with an `@Component` [annotation](/glossary#annotation '"annotation" explained')
 that describes how the HTML template and component class work together.
 
-The `selector` property tells Angular to display the component inside a custom `<my-app>` tag in the `index.html`.
+The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
 
 <?code-excerpt "web/index.html (inside &lt;body&gt;)" region="my-app" title?>
 ```
@@ -70,10 +60,10 @@ The `selector` property tells Angular to display the component inside a custom `
 
 The `template` property defines a message inside an `<h1>` header.
 The message starts with "Hello" and ends with `{!{name}!}`,
-which is an Angular [interpolation binding](../guide/displaying-data) expression.
-At runtime, Angular replaces `{!{name}!}` with
+which is an Kelicap [interpolation binding](../guide/displaying-data) expression.
+At runtime, Kelicap replaces `{!{name}!}` with
 the value of the component's `name` property.
-Interpolation binding is one of many Angular features you'll discover in this documentation.
+Interpolation binding is one of many Kelicap features you'll discover in this documentation.
 
 <a id="seed"></a>
 ## The starter app's code
@@ -92,7 +82,7 @@ The app contains the following core files:
 These files are organized as follows:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.dart
   - test

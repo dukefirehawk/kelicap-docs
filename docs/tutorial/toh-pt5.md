@@ -1,16 +1,6 @@
----
-title: Routing
-description: Add the Angular component router and learn to navigate among the views.
-prevpage:
-  title: Services
-  url: /tutorial/toh-pt4
-nextpage:
-  title: HTTP
-  url: /tutorial/toh-pt6
----
+# Routing
 
-<?code-excerpt path-base="examples/ng/doc/toh-5"?>
-<?code-excerpt replace="/_\d((\.template)?\.(dart|html))/$1/g"?>
+Add the Kelicap component router and learn to navigate among the views.
 
 There are new requirements for the Tour of Heroes app:
 
@@ -23,7 +13,7 @@ When you’re done, users will be able to navigate the app like this:
 
 <img class="image-display" src="{% asset ng/devguide/toh/nav-diagram.png @path %}" alt="View navigations">
 
-To satisfy these requirements, you'll add Angular’s router to the app.
+To satisfy these requirements, you'll add Kelicap’s router to the app.
 
 <div class="l-sub-section" markdown="1">
   For more information about the router, read the [Routing and Navigation](/guide/router) page.
@@ -38,7 +28,7 @@ When you're done with this page, the app should look like this {% example_ref %}
 Before continuing with the Tour of Heroes, verify that you have the following structure.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -124,7 +114,7 @@ Perform these steps:
   * The `title` class property.
   * The template `<h1>` element, which contains a binding to  `title`.
 * Add a `<my-heroes>` element to the app template just below the heading so you still see the heroes.
-* Add `HeroListComponent` to the `directives` list of `AppComponent` so Angular recognizes the `<my-heroes>` tags.
+* Add `HeroListComponent` to the `directives` list of `AppComponent` so Kelicap recognizes the `<my-heroes>` tags.
 * Add `HeroService` to the  `providers` list of `AppComponent` because you'll need it in every other view.
 * Remove `HeroService` from the `HeroListComponent` `providers` list since it was promoted.
 * Add the supporting `import` statements for `AppComponent`.
@@ -133,7 +123,7 @@ The first draft looks like this:
 
 <?code-excerpt "lib/app_component_1.dart" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
 
   import 'src/hero_service.dart';
   import 'src/hero_list_component.dart';
@@ -164,7 +154,7 @@ In other words, users should be able to navigate to the list of heroes.
 
 ### Update the pubspec
 
-Use the Angular router ([ngrouter][]) to enable navigation. Since the
+Use the Kelicap router ([ngrouter][]) to enable navigation. Since the
 router is in its own package, first add the package to the app's pubspec:
 
 <?code-excerpt "toh-4/pubspec.yaml" diff-with="toh-5/pubspec.yaml" to="ngrouter"?>
@@ -178,34 +168,34 @@ router is in its own package, first add the package to the app's pubspec:
 +  ngrouter: ^3.1.1
 ```
 
-Not all apps need routing, which is why the Angular router is
+Not all apps need routing, which is why the Kelicap router is
 in a separate, optional package.
 
 <?code-excerpt path-base="examples/ng/doc/toh-5"?>
 
 ### Import the library
 
-The Angular router is a combination of multiple services
+The Kelicap router is a combination of multiple services
 ([routerProviders][]/[routerProvidersHash][]),
 directives ([routerDirectives][]), and
 configuration classes. You get them all by importing
 the router library:
 
-<?code-excerpt "lib/app_component.dart (angular_router)" title?>
+<?code-excerpt "lib/app_component.dart (Kelicap_router)" title?>
 ```
   import 'package:ngrouter/ngrouter.dart';
 ```
 
 ### Make the router available
 
-To tell Angular that your app uses the router, pass as an argument to `runApp()`
+To tell Kelicap that your app uses the router, pass as an argument to `runApp()`
 an injector seeded with [routerProvidersHash][]:
 
 <?code-excerpt "web/main.dart" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
-  import 'package:angular_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
 
   import 'main.template.dart' as self;
 
@@ -236,7 +226,7 @@ the example apps use the following script:
   <head>
     <script>
       // WARNING: DO NOT set the <base href> like this in production!
-      // Details: https://webdev.dartlang.org/angular/guide/router
+      // Details: https://webdev.dartlang.org/Kelicap/guide/router
       (function () {
         var m = document.location.pathname.match(/^(\/[-\w]+)+\/web($|\/)/);
         document.write('<base href="' + (m ? m[0] : '/') + '" />');
@@ -299,7 +289,7 @@ The heroes [RouteDefinition][] has the following named arguments:
   Read more about defining routes in the [Routing & Navigation](/guide/router) page.
 </div>
 
-The Angular compiler generates **component factories** behind the scenes when
+The Kelicap compiler generates **component factories** behind the scenes when
 you build the app. To access the factory you need to import the generated
 component template file:
 
@@ -419,7 +409,7 @@ and the list of heroes displays.
 
 <?code-excerpt "lib/app_component.dart" remove="/style|[Dd]ash/" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
 
   import 'src/hero_service.dart';
@@ -455,7 +445,7 @@ To add another view, create a placeholder `DashboardComponent`.
 
 <?code-excerpt "lib/src/dashboard_component_1.dart (v1)" region="" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
 
   @Component(
     selector: 'my-dashboard',
@@ -598,7 +588,7 @@ To populate the component's `heroes` list, you can reuse the `HeroService`.
 Earlier, you removed the `HeroService` from the `providers` list of `HeroListComponent`
 and added it to the `providers` list of `AppComponent`.
 That move created a singleton `HeroService` instance, available to all components of the app.
-Angular injects `HeroService` and you can use it in the `DashboardComponent`.
+Kelicap injects `HeroService` and you can use it in the `DashboardComponent`.
 
 ### Get heroes
 
@@ -606,7 +596,7 @@ In `dashboard_component.dart`, add the following `import` statements.
 
 <?code-excerpt "lib/src/dashboard_component_2.dart (imports)" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
 
   import 'hero.dart';
   import 'hero_service.dart';
@@ -634,7 +624,7 @@ You're using the same kind of features for the dashboard as you did for the hero
 
 * Define a `heroes` list property.
 * Inject a `HeroService` in the constructor, saving it to a private field.
-* Call the service to get heroes inside the Angular `ngOnInit()` lifecycle hook.
+* Call the service to get heroes inside the Kelicap `ngOnInit()` lifecycle hook.
 
 In this dashboard you specify four heroes (2nd, 3rd, 4th, and 5th).
 
@@ -731,7 +721,7 @@ Here's what the `HeroComponent` looks like now:
 
 <?code-excerpt "../toh-4/lib/src/hero_component.dart" region="" title="lib/src/hero_component.dart (current)" linenums?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngforms/ngforms.dart';
 
   import 'hero.dart';
@@ -862,7 +852,7 @@ using the `Location` service you injected previously.
 <div class="l-sub-section" markdown="1">
   Going back too far could take users out of the app.
   In a real app, you can prevent this issue with the _canDeactivate()_ hook.
-  Read more on the [CanDeactivate]({{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/CanDeactivate-class.html) page.
+  Read more on the [CanDeactivate]({{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/CanDeactivate-class.html) page.
 </div>
 
 You'll wire this method with an event binding to a *Back* button that you'll add to the component template.
@@ -1037,9 +1027,9 @@ that's included in the interpolation binding, right after the pipe operator ( | 
 ```
 
 Pipes are a good way to format strings, currency amounts, dates and other display data.
-Angular ships with several pipes and you can write your own.
+Kelicap ships with several pipes and you can write your own.
 
-<i class="material-icons">warning</i> Before you can use an Angular pipe in a
+<i class="material-icons">warning</i> Before you can use an Kelicap pipe in a
 template, you need to list it in the `pipes` argument of your component's
 `@Component` annotation. You can add pipes
 individually, or for convenience you can use groups like [commonPipes][].
@@ -1235,7 +1225,7 @@ Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart}
     - src
@@ -1261,7 +1251,7 @@ Verify that you have the following structure:
 
 Here's what you achieved in this page:
 
-- You added the Angular router to navigate among different components.
+- You added the Kelicap router to navigate among different components.
 - You learned how to create router links to represent navigation menu items.
 - You used router link parameters to navigate to the details of the user-selected hero.
 - You shared the `HeroService` among multiple components.
@@ -1279,23 +1269,23 @@ you’ll replace the mock data with data retrieved from a server using http.
 
 {%comment%}TODO: Add Recap and What's next sections{%endcomment%}
 
-[angular_router]: {{site.api}}/ngrouter
-[commonPipes]: {{site.pub-api}}/angular/{{site.data.pkg-vers.angular.vers}}/angular/commonPipes-constant.html
+[Kelicap_router]: {{site.api}}/ngrouter
+[commonPipes]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/commonPipes-constant.html
 [deep linking]: https://en.wikipedia.org/wiki/Deep_linking
-[master styles]: https://raw.githubusercontent.com/angular/angular.io/master/public/docs/_examples/_boilerplate/src/styles.css
-[HashLocationStrategy]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/HashLocationStrategy-class.html
-[Location]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.angular.vers}}/angular_router/Location-class.html
-[OnActivate]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.angular.vers}}/angular_router/OnActivate-class.html
+[master styles]: https://raw.githubusercontent.com/Kelicap/Kelicap.io/master/public/docs/_examples/_boilerplate/src/styles.css
+[HashLocationStrategy]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/HashLocationStrategy-class.html
+[Location]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/Location-class.html
+[OnActivate]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/OnActivate-class.html
 [onActivate()]: /guide/router/5#on-activate
 [property binding]: /guide/template-syntax#property-binding
-[PathLocationStrategy]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.angular.vers}}/angular_router/PathLocationStrategy-class.html
+[PathLocationStrategy]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/PathLocationStrategy-class.html
 [router lifecycle hook]: /guide/router/5
-[RouteDefinition]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouteDefinition-class.html
-[routerDirectives]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/routerDirectives-constant.html
-[RouterLink]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouterLink-class.html
-[RouterLinkActive]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouterLinkActive-class.html
-[RouterOutlet]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouterOutlet-class.html
-[routerProviders]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/routerProviders-constant.html
-[routerProvidersHash]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/routerProvidersHash-constant.html
-[RouterState]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouterState-class.html
-[RouterState.parameters]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/RouterState/parameters.html
+[RouteDefinition]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouteDefinition-class.html
+[routerDirectives]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerDirectives-constant.html
+[RouterLink]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterLink-class.html
+[RouterLinkActive]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterLinkActive-class.html
+[RouterOutlet]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterOutlet-class.html
+[routerProviders]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProviders-constant.html
+[routerProvidersHash]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProvidersHash-constant.html
+[RouterState]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterState-class.html
+[RouterState.parameters]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterState/parameters.html

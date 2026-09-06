@@ -1,16 +1,6 @@
----
-title: The Hero Editor
-description: Build a simple hero editor.
-prevpage:
-  title: "The Starter App"
-  url: /tutorial/toh-pt0
-nextpage:
-  title: Master/Detail
-  url: /tutorial/toh-pt2
----
+# The Hero Editor
 
-<?code-excerpt path-base="examples/ng/doc/toh-1"?>
-In this part of the tutorial, you'll modify the starter app to display
+Build a simple hero editor. In this part of the tutorial, you'll modify the starter app to display
 information about a hero. Then you'll add the ability to edit the hero's data.
 When you're done, the app should look like this {% example_ref %}.
 
@@ -20,7 +10,7 @@ Before you start writing code, let's verify that you have the following structur
 on the previous page.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.dart
   - test
@@ -67,7 +57,7 @@ to these new properties:
 <i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app displays the title and hero name.
 
-The double curly braces are Angular's [interpolation syntax][]. These
+The double curly braces are Kelicap's [interpolation syntax][]. These
 interpolation bindings present the component's `title` and `hero` property
 values, as strings, inside the HTML header tags.
 
@@ -154,7 +144,7 @@ Refactor the hero name in the template so it looks like this:
   </div>
 ```
 
-`[(ngModel)]` is the Angular syntax to bind the `hero.name` property
+`[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property
 to the textbox.
 Data flows _in both directions:_ from the property to the textbox,
 and from the textbox back to the property.
@@ -189,7 +179,7 @@ compiler doesn't recognize `ngModel`, and issues a parse error for
 
 <?code-excerpt path-base="examples/ng/doc"?>
 
-The `ngforms` (also called `angular_forms`) library comes in its own package. Add the package to the pubspec dependencies:
+The `ngforms` (also called `Kelicap_forms`) library comes in its own package. Add the package to the pubspec dependencies:
 
 <?code-excerpt "toh-0/pubspec.yaml" diff-with="toh-1/pubspec.yaml" from="dependencies" to="ngforms"?>
 ```diff
@@ -205,10 +195,10 @@ The `ngforms` (also called `angular_forms`) library comes in its own package. Ad
 
 ### Add _@Component(directives: ...)_ {#component-directives}
 
-Although `NgModel` is a valid Angular directive defined in the [ngforms][]
+Although `NgModel` is a valid Kelicap directive defined in the [ngforms][]
 library, it isn't available by default.
 
-Before you can use any Angular directives in a template,
+Before you can use any Kelicap directives in a template,
 you need to list them in the `directives` argument of your component's
 `@Component` annotation. You can add directives individually, or for
 convenience you can add the [formDirectives][] list
@@ -245,7 +235,7 @@ Take stock of what you've built.
   using the built-in `ngModel` directive. This binding both displays the hero's
   name and allows users to change it.
 * You added [formDirectives][] to the `directives` argument of the app's
-  `@Component` annotation so that Angular knows where `ngModel` is defined.
+  `@Component` annotation so that Kelicap knows where `ngModel` is defined.
 
 Your app should look like this {% example_ref %}.
 
@@ -262,7 +252,7 @@ In the [next tutorial page](toh-pt2), you'll build on the Tour of Heroes app to 
 You'll also allow the user to select heroes and display their details.
 You'll learn more about how to retrieve lists and bind them to the template.
 
-[ngforms]: {{site.api}}/angular_forms
+[ngforms]: {{site.api}}/Kelicap_forms
 [webdev serve]: {{site.pub-pkg}}/webdev#usage
-[formDirectives]: {{site.pub-api}}/angular_forms/{{site.data.pkg-vers.angular.vers}}/angular_forms/formDirectives-constant.html
+[formDirectives]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/formDirectives-constant.html
 [interpolation syntax]: /guide/template-syntax#interpolation

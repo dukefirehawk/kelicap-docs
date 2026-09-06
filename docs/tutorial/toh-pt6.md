@@ -1,18 +1,10 @@
----
-title: HTTP
-description: Convert the service and components to use Angular's HTTP service.
-prevpage:
-  title: Routing
-  url: /tutorial/toh-pt5
----
+# HTTP
 
-<?code-excerpt path-base="examples/ng/doc/toh-6"?>
+Convert the service and components to use Kelicap's HTTP service. In this page, you'll make the following improvements.
 
-In this page, you'll make the following improvements.
-
-  - Get the hero data from a server.
-  - Let users add, edit, and delete hero names.
-  - Save the changes to the server.
+- Get the hero data from a server.
+- Let users add, edit, and delete hero names.
+- Save the changes to the server.
 
 You'll teach the app to make corresponding HTTP calls to a remote server's web API.
 
@@ -25,7 +17,7 @@ In the [previous page](toh-pt5), you learned to navigate between the dashboard a
 Before continuing with the Tour of Heroes, verify that you have the following structure.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart}
     - src
@@ -47,9 +39,10 @@ Before continuing with the Tour of Heroes, verify that you have the following st
   - pubspec.yaml
 </div>
 
-{% include_relative _keep-app-running.md %}
+{% include_relative_keep-app-running.md %}
 
 <a id="http-providers"></a>
+
 ## Providing HTTP services
 
 You'll be using the Dart [http][] package's client classes to communicate with a server.
@@ -61,7 +54,8 @@ Update package dependencies by adding the Dart [http][] and
 
 <?code-excerpt path-base="examples/ng/doc"?>
 
-<?code-excerpt "toh-5/pubspec.yaml" diff-with="toh-6/pubspec.yaml" from="angular:" to="stream_transform"?>
+<?code-excerpt "toh-5/pubspec.yaml" diff-with="toh-6/pubspec.yaml" from="Kelicap:" to="stream_transform"?>
+
 ```diff
 --- toh-5/pubspec.yaml
 +++ toh-6/pubspec.yaml
@@ -86,10 +80,11 @@ You should be able to access `BrowserClient` services from anywhere in the app,
 so provide it through the app's root injector:
 
 <?code-excerpt "web/main_1.dart" title linenums replace="/_\d//g"?>
+
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
-  import 'package:angular_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
   import 'package:http/browser_client.dart';
 
   import 'main.template.dart' as self;
@@ -123,11 +118,12 @@ a mock service, the *in-memory web API*.
 Update `web/main.dart` with this version, which uses the mock service:
 
 <?code-excerpt "web/main.dart" title linenums?>
+
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
-  import 'package:angular_tour_of_heroes/app_component.template.dart' as ng;
-  import 'package:angular_tour_of_heroes/in_memory_data_service.dart';
+  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:Kelicap_tour_of_heroes/in_memory_data_service.dart';
   import 'package:http/http.dart';
 
   import 'main.template.dart' as self;
@@ -155,6 +151,7 @@ you'll have the app use the `Client` type so that you can freely switch between
 implementations.
 
 <?code-excerpt "lib/in_memory_data_service.dart (init)" title linenums?>
+
 ```
   import 'dart:async';
   import 'dart:convert';
@@ -242,6 +239,7 @@ encoding and decoding heroes in JSON format, so enhance the `Hero`
 class with these capabilities:
 
 <?code-excerpt "lib/src/hero.dart" title linenums?>
+
 ```
   class Hero {
     final int id;
@@ -263,6 +261,7 @@ class with these capabilities:
 In the current `HeroService` implementation, a Future resolved with mock heroes is returned.
 
 <?code-excerpt "../toh-4/lib/src/hero_service.dart (old getAll)" region="getAll"?>
+
 ```
   Future<List<Hero>> getAll() async => mockHeroes;
 ```
@@ -273,6 +272,7 @@ fetching heroes with an HTTP client, which must be an asynchronous operation.
 Now convert `getAll()` to use HTTP.
 
 <?code-excerpt "lib/src/hero_service.dart (updated getAll and new class members)" region="getAll" title?>
+
 ```
   static const _heroesUrl = 'api/heroes'; // URL to web API
 
@@ -303,6 +303,7 @@ Now convert `getAll()` to use HTTP.
 Update the import statements as follows:
 
 <?code-excerpt "lib/src/hero_service.dart (updated imports)" region="imports" title?>
+
 ```
   import 'dart:async';
   import 'dart:convert';
@@ -338,6 +339,7 @@ It receives a Future of *heroes* just as it did before.
 At the end of `getAll()`, you `catch` server failures and pass them to an error handler.
 
 <?code-excerpt "lib/src/hero_service.dart (catch)"?>
+
 ```
   } catch (e) {
     throw _handleError(e);
@@ -347,6 +349,7 @@ At the end of `getAll()`, you `catch` server failures and pass them to an error 
 This is a critical step. You must anticipate HTTP failures, as they happen frequently for reasons beyond your control.
 
 <?code-excerpt "lib/src/hero_service.dart (handleError)"?>
+
 ```
   Exception _handleError(dynamic e) {
     print(e); // for demo purposes only
@@ -359,18 +362,18 @@ you would handle the error in code. For a demo, this works.
 
 The code also includes an error to the caller in a propagated exception, so that the caller can display a proper error message to the user.
 
-
 ### Get hero by id
 
 When the `HeroComponent` asks the `HeroService` to fetch a hero,
 the `HeroService` currently fetches all heroes and
 filters for the one with the matching `id`.
 That's fine for a simulation, but it's wasteful to ask a real server for all heroes when you only want one.
-Most web APIs support a _get-by-id_ request in the form `api/hero/:id` (such as `api/hero/11`).
+Most web APIs support a *get-by-id* request in the form `api/hero/:id` (such as `api/hero/11`).
 
-Update the `HeroService.get()` method to make a _get-by-id_ request:
+Update the `HeroService.get()` method to make a *get-by-id* request:
 
 <?code-excerpt "lib/src/hero_service.dart (get)" title?>
+
 ```
   Future<Hero> get(int id) async {
     try {
@@ -387,7 +390,7 @@ The hero id in the URL identifies which hero the server should update.
 
 Also, the `data` in the response is a single hero object rather than a list.
 
-### Unchanged _getAll_ API
+### Unchanged *getAll* API
 
 Although you made significant internal changes to `getAll()` and `get()`,
 the public signatures didn't change.
@@ -414,6 +417,7 @@ At the end of the hero detail template, add a save button with a `click` event
 binding that invokes a new component method named `save()`.
 
 <?code-excerpt "lib/src/hero_component.html (save)" title?>
+
 ```
   <button (click)="save()">Save</button>
 ```
@@ -422,6 +426,7 @@ Add the following `save()` method, which persists hero name changes using the he
 `update()` method and then navigates back to the previous view.
 
 <?code-excerpt "lib/src/hero_component.dart (save)" title?>
+
 ```
   Future<void> save() async {
     await _heroService.update(hero!);
@@ -429,13 +434,13 @@ Add the following `save()` method, which persists hero name changes using the he
   }
 ```
 
-### Add a hero service _update()_ method
+### Add a hero service *update()* method
 
 The overall structure of the `update()` method is similar to that of
 `getAll()`, but it uses an HTTP `put()` to persist server-side changes.
 
-
 <?code-excerpt "lib/src/hero_service.dart (update)" title?>
+
 ```
   static final _headers = {'Content-Type': 'application/json'};
   // ···
@@ -468,6 +473,7 @@ Insert the following into the heroes component HTML, just after
 the heading:
 
 <?code-excerpt "lib/src/hero_list_component.html (add)" title?>
+
 ```
   <div>
     <label>Hero name:</label> <input #heroName />
@@ -481,6 +487,7 @@ In response to a click event, call the component's click handler and then
 clear the input field so that it's ready for another name.
 
 <?code-excerpt "lib/src/hero_list_component.dart (add)" title?>
+
 ```
   Future<void> add(InputElement event) async {
     final String? name = event.value?.trim();
@@ -497,6 +504,7 @@ named hero to the hero service, and then adds the new hero to the list.
 Implement the `create()` method in the `HeroService` class.
 
 <?code-excerpt "lib/src/hero_service.dart (create)" title?>
+
 ```
   Future<Hero> create(String name) async {
     try {
@@ -519,6 +527,7 @@ Add the following button element to the heroes component HTML, after the hero
 name in the repeated `<li>` element.
 
 <?code-excerpt "lib/src/hero_list_component.html (delete)"?>
+
 ```
   <button class="delete"
     (click)="delete(hero, $event)">x</button>
@@ -527,6 +536,7 @@ name in the repeated `<li>` element.
 The `<li>` element should now look like this:
 
 <?code-excerpt "lib/src/hero_list_component.html (li element)" title?>
+
 ```
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
@@ -546,6 +556,7 @@ select the hero that the user will delete.
 The logic of the `delete()` handler is a bit trickier:
 
 <?code-excerpt "lib/src/hero_list_component.dart (delete)" title?>
+
 ```
   Future<void> delete(Hero hero, Event event) async {
     await _heroService.delete(hero.id);
@@ -565,6 +576,7 @@ To place the delete button at the far right of the hero entry,
 add this CSS:
 
 <?code-excerpt "lib/src/hero_list_component.css (additions)" title?>
+
 ```
   button.delete {
     float:right;
@@ -575,11 +587,12 @@ add this CSS:
   }
 ```
 
-### Hero service _delete()_ method
+### Hero service *delete()* method
 
 Add the hero service's `delete()` method, which uses the `delete()` HTTP method to remove the hero from the server:
 
 <?code-excerpt "lib/src/hero_service.dart (delete)" title?>
+
 ```
   Future<void> delete(int id) async {
     try {
@@ -596,7 +609,7 @@ Refresh the browser and try the new delete functionality.
 ## Streams
 
 Recall that `HeroService.getAll()` awaits for an `http.get()`
-response and yields a _Future_ `List<Hero>`, which is fine when you are only
+response and yields a *Future* `List<Hero>`, which is fine when you are only
 interested in a single result.
 
 But requests aren't always done only once.
@@ -613,6 +626,7 @@ As the user types a name into a search box, you'll make repeated HTTP requests f
 Start by creating `HeroSearchService` that sends search queries to the server's web API.
 
 <?code-excerpt "lib/src/hero_search_service.dart" title?>
+
 ```
   import 'dart:async';
   import 'dart:convert';
@@ -656,6 +670,7 @@ Create a `HeroSearchComponent` that calls the new `HeroSearchService`.
 The component template is simple&mdash;just a text box and a list of matching search results.
 
 <?code-excerpt "lib/src/hero_search_component.html" title?>
+
 ```
   <div id="search-component">
     <h4>Hero Search</h4>
@@ -674,6 +689,7 @@ The component template is simple&mdash;just a text box and a list of matching se
 Also, add styles for the new component.
 
 <?code-excerpt "lib/src/hero_search_component.css" title?>
+
 ```
   .search-result {
     border-bottom: 1px solid gray;
@@ -704,10 +720,11 @@ The `async` pipe subscribes to the `Stream` and produces the list of heroes to `
 Create the `HeroSearchComponent` class and metadata.
 
 <?code-excerpt "lib/src/hero_search_component.dart" title linenums?>
+
 ```
   import 'dart:async';
 
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngrouter/ngrouter.dart';
   import 'package:stream_transform/stream_transform.dart';
 
@@ -759,6 +776,7 @@ Create the `HeroSearchComponent` class and metadata.
 Focus on `_searchTerms`:
 
 <?code-excerpt "lib/src/hero_search_component.dart (searchTerms)"?>
+
 ```
   StreamController<String> _searchTerms = StreamController<String>.broadcast();
   // ···
@@ -777,6 +795,7 @@ the stream by calling `add()` over the controller.
 You can turn the stream of search terms into a stream of `Hero` lists and assign the result to the `heroes` property.
 
 <?code-excerpt "lib/src/hero_search_component.dart (search)"?>
+
 ```
   late Stream<List<Hero>> heroes;
   // ···
@@ -799,15 +818,15 @@ taxing server resources and burning through the cellular network data plan.
 Instead, you can chain `Stream` operators that reduce the request flow to the string `Stream`.
 You'll make fewer calls to the `HeroSearchService` and still get timely results. Here's how:
 
-* `transform(debounce(... 300)))` waits until the flow of search terms pauses for 300
+- `transform(debounce(... 300)))` waits until the flow of search terms pauses for 300
   milliseconds before passing along the latest string.
   You'll never make requests more frequently than 300ms.
-* `distinct()` ensures that a request is sent only if the filter text changed.
-* `transform(switchMap(...))` calls the search service for each
+- `distinct()` ensures that a request is sent only if the filter text changed.
+- `transform(switchMap(...))` calls the search service for each
   search term that makes it through `debounce()` and `distinct()`.
   It cancels and discards previous searches, returning only the
   latest search service stream element.
-* `handleError()` handles errors. The simple example prints the error
+- `handleError()` handles errors. The simple example prints the error
   to the console; a real life app should do better.
 
 ### Add the search component to the dashboard
@@ -815,6 +834,7 @@ You'll make fewer calls to the `HeroSearchService` and still get timely results.
 Add the hero search HTML element to the bottom of the `DashboardComponent` template.
 
 <?code-excerpt "lib/src/dashboard_component.html" title?>
+
 ```
   <h3>Top Heroes</h3>
   <div class="grid grid-pad">
@@ -831,6 +851,7 @@ Add the hero search HTML element to the bottom of the `DashboardComponent` templ
 Finally, import `HeroSearchComponent` from `hero_search_component.dart` and add it to the `directives` list.
 
 <?code-excerpt "lib/src/dashboard_component.dart (search)" plaster="none" title?>
+
 ```
   import 'hero_search_component.dart';
 
@@ -853,7 +874,7 @@ Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart}
     - in_memory_data_service.dart (new)
@@ -916,7 +937,7 @@ Here are the files you added or changed in this page.
 
 ## Next step
 
-Return to the [learning path](/guide/learning-angular), where
+Return to the [learning path](/guide/learning-Kelicap), where
 you can read more about the concepts and practices found in this tutorial.
 
 [http]: https://pub.dev/packages/http

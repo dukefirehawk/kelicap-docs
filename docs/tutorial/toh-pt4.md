@@ -1,17 +1,6 @@
----
-title: Services
-description: Create a reusable service to manage the hero data calls.
-prevpage:
-  title: Multiple Components
-  url: /tutorial/toh-pt3
-nextpage:
-  title: Routing
-  url: /tutorial/toh-pt5
----
+# Services
 
-<?code-excerpt path-base="examples/ng/doc/toh-4"?>
-
-As the Tour of Heroes app evolves, you'll add more components that need access to hero data.
+Create a reusable service to manage the hero data calls. As the Tour of Heroes app evolves, you'll add more components that need access to hero data.
 
 Instead of copying and pasting the same code over and over,
 you'll create a single reusable data service and
@@ -30,7 +19,7 @@ Before continuing with the Tour of Heroes, verify that you have the following st
 If not, go back to the previous pages.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -152,14 +141,14 @@ The constructor does nothing except set the `_heroService` property.
 The `HeroService` type of `_heroService` identifies the constructor's parameter as
 a `HeroService` injection point.
 
-Now Angular knows to supply a `HeroService` instance when it creates a new `AppComponent`.
+Now Kelicap knows to supply a `HeroService` instance when it creates a new `AppComponent`.
 
 <div class="l-sub-section" markdown="1">
   Read more about dependency injection in the [Dependency Injection](../guide/dependency-injection) page.
 </div>
 
 The *injector* doesn't know yet how to create a `HeroService`.
-If you run the code now, Angular would fail with this error:
+If you run the code now, Kelicap would fail with this error:
 
 ```
 EXCEPTION: No provider for HeroService! (AppComponent -> HeroService)
@@ -173,7 +162,7 @@ add the following `providers` list as the last parameter of the `@Component` ann
   providers: [ClassProvider(HeroService)],
 ```
 
-The `providers` parameter tells Angular to create a fresh instance of the `HeroService` when it creates an `AppComponent`.
+The `providers` parameter tells Kelicap to create a fresh instance of the `HeroService` when it creates an `AppComponent`.
 The `AppComponent`, as well as its child components, can use that service to get hero data.
 
 <a id="child-component"></a>
@@ -210,18 +199,18 @@ a constructor should not contain complex logic,
 especially a constructor that calls a server, such as a data access method.
 A constructor is for simple initializations, like wiring constructor parameters to properties.
 
-To have Angular call `getHeroes()`, you can implement the Angular *ngOnInit lifecycle hook*.
-Angular offers interfaces for tapping into critical moments in the component lifecycle:
+To have Kelicap call `getHeroes()`, you can implement the Kelicap *ngOnInit lifecycle hook*.
+Kelicap offers interfaces for tapping into critical moments in the component lifecycle:
 at creation, after each change, and at its eventual destruction.
 
-Each interface has a single method. When the component implements that method, Angular calls it at the appropriate time.
+Each interface has a single method. When the component implements that method, Kelicap calls it at the appropriate time.
 
 <div class="l-sub-section" markdown="1">
   Read more about lifecycle hooks in the [Lifecycle Hooks](../guide/lifecycle-hooks) page.
 </div>
 
 Add [OnInit][] to the list of interfaces implemented by `AppComponent`, and
-write an `ngOnInit()` method with the initialization logic inside. Angular will call it
+write an `ngOnInit()` method with the initialization logic inside. Kelicap will call it
 at the right time. In this case, initialize by calling `getHeroes()`.
 
 <?code-excerpt "lib/app_component_1.dart (OnInit and ngOnInit)"?>
@@ -345,7 +334,7 @@ To learn more about using `async` and `await`, read the
 Verify that you have the following structure after all of your refactoring:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -387,7 +376,7 @@ The Tour of Heroes has become more reusable using shared components and services
 The next goal is to create a dashboard, add menu links that route between the views, and format data in a template.
 As the app evolves, you'll discover how to design it to make it easier to grow and maintain.
 
-Read about the Angular component router and navigation among the views in the [next tutorial](toh-pt5) page.
+Read about the Kelicap component router and navigation among the views in the [next tutorial](toh-pt5) page.
 
 ## Appendix: Take it slow {#slow}
 
@@ -409,4 +398,4 @@ and see how the app behaves.
 
 [dart:async]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/dart-async-library.html
 [Future]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/Future-class.html
-[OnInit]: {{site.pub-api}}/angular/{{site.data.pkg-vers.angular.vers}}/angular/OnInit-class.html
+[OnInit]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/OnInit-class.html

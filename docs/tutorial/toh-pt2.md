@@ -1,18 +1,6 @@
----
-title: Master/Detail
-description: Build a master/detail page with a list of heroes.
-prevpage:
-  title: The Hero Editor
-  url: /tutorial/toh-pt1
-nextpage:
-  title: Multiple Components
-  url: /tutorial/toh-pt3
----
+# Master/Detail
 
-<?code-excerpt path-base="examples/ng/doc/toh-2"?>
-
-In this page, you'll expand the Tour of Heroes app to display a list of heroes, and
-allow users to select a hero and display the hero's details.
+Build a master/detail page with a list of heroes. In this page, you'll expand the Tour of Heroes app to display a list of heroes, and allow users to select a hero and display the hero's details.
 
 When you're done with this page, the app should look like this {% example_ref %}.
 
@@ -23,7 +11,7 @@ verify that you have the following structure after [The Hero Editor](toh-pt1) pa
 If your structure doesn't match, go back to that page to figure out what you missed.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.dart
     - hero.dart
@@ -37,7 +25,7 @@ If your structure doesn't match, go back to that page to figure out what you mis
   - pubspec.yaml
 </div>
 
-{% include_relative _keep-app-running.md %}
+{% include_relative_keep-app-running.md %}
 
 ## App refactoring
 
@@ -49,6 +37,7 @@ You'll be making several updates to the app component's template.
 First, move the template to its own file:
 
 <?code-excerpt "lib/app_component_1.html" title?>
+
 ```
   <h1>{!{title}!}</h1>
   <h2>{!{hero.name}!}</h2>
@@ -63,6 +52,7 @@ Replace the `@Component` `template` parameter by a `templateUrl` referring
 to the new template file:
 
 <?code-excerpt "lib/app_component.dart (templateUrl)" replace="/templateUrl.*/[!$&!]/g" title?>
+
 ```
   @Component(
     selector: 'my-app',
@@ -84,6 +74,7 @@ folder. Make the following changes to your project:
 - In the app component, adjust the import path to the hero file.
 
 <?code-excerpt "lib/app_component.dart (hero import)" title?>
+
 ```
   import 'src/hero.dart';
 ```
@@ -100,6 +91,7 @@ To display a list of heroes, you'll add heroes to the view's template.
 Create a list of ten heroes in the following file under `lib/src`:
 
 <?code-excerpt "lib/src/mock_heroes.dart" title?>
+
 ```
   import 'hero.dart';
 
@@ -126,6 +118,7 @@ Replace the `hero` field with a `heroes` field in `AppComponent`,
 and initialize it with mock heroes (don't forget the import):
 
 <?code-excerpt "lib/app_component.dart (heroes)" title?>
+
 ```
   import 'src/mock_heroes.dart';
 
@@ -148,6 +141,7 @@ To display the hero names in an unordered list, **replace** _all_ of the current
 template with the following HTML:
 
 <?code-excerpt "lib/app_component.html" remove="/selected|click|div|name/" replace="/(\s+)(.li) .*/$1$2\x3E$1  \x3C!-- each hero goes here --\x3E/g" title?>
+
 ```
   <h1>{!{title}!}</h1>
   <h2>Heroes</h2>
@@ -168,6 +162,7 @@ and display them individually.
 Modify the `<li>` tag by adding the core directive `*ngFor`.
 
 <?code-excerpt "lib/app_component.html" retain="ngFor" replace="/ngFor.*/$&\x3E/g"?>
+
 ```
   <li *ngFor="let hero of heroes">
 ```
@@ -195,18 +190,20 @@ Within the `<li>` element, add content
 that uses the `hero` template variable to display the hero's properties.
 
 <?code-excerpt "lib/app_component.html" retain="/\bli\b|span/" replace="/ngFor.*/$&\x3E/g" title?>
+
 ```
   <li *ngFor="let hero of heroes">
     <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
   </li>
 ```
 
-To use an Angular directive in a
+To use an Kelicap directive in a
 template requires that it be listed in the `directives` argument of your
 component's `@Component` annotation. Similar to what you did in [part 1][],
 add all [coreDirectives][]:
 
 <?code-excerpt "lib/app_component.dart (directives)" title?>
+
 ```
   @Component(
     selector: 'my-app',
@@ -251,6 +248,7 @@ These styles apply only to the `AppComponent` and don't affect the outer HTML.
 The template for displaying heroes should look like this:
 
 <?code-excerpt "lib/app_component.html" remove="/div|label|[Ss]elect/" replace="/ngFor.*/$&\x3E/g; /class=[^\x3E]+/[!$&!]/g" title?>
+
 ```
   <h1>{!{title}!}</h1>
   <h2>Heroes</h2>
@@ -277,6 +275,7 @@ which is bound to a click event.
 Add a click event binding to the `<li>` like this:
 
 <?code-excerpt "lib/app_component.html (click)" region="" retain="/\bli\b|span|click/" title?>
+
 ```
   <li *ngFor="let hero of heroes"
       (click)="onSelect(hero)">
@@ -303,6 +302,7 @@ But the user will be able to select one of the heroes by clicking on it.
 So replace the `hero` property with this simple `selected` property:
 
 <?code-excerpt "lib/app_component.dart (selected)" title?>
+
 ```
   Hero? selected;
 ```
@@ -316,6 +316,7 @@ overview](https://dart.dev/null-safety).
 Add an `onSelect()` method that sets the `selected` property to the `hero` that the user clicks.
 
 <?code-excerpt "lib/app_component.dart (onSelect)" title?>
+
 ```
   void onSelect(Hero hero) => selected = hero;
 ```
@@ -324,6 +325,7 @@ The template still refers to the old `hero` property.
 Bind to the new `selected` property instead as follows:
 
 <?code-excerpt "lib/app_component.html" remove="/^[^\s]|hero|li/" title?>
+
 ```
   <h2>{!{selected!.name}!}</h2>
   <div><label>id: </label>{!{selected!.id}!}</div>
@@ -339,12 +341,11 @@ that tells the Dart compiler that `selected` is not
 null here and its properties can be accessed safely. Indeed, why would we want
 to show a hero's id and name when he/she is null?)
 
-
 ### Hide the empty detail with ngIf
 
 When the app loads, `selected` is null.
 The selected hero is only initialized after the user clicks a hero's name.
-Angular can't display properties of the null `selected` and throws the following error,
+Kelicap can't display properties of the null `selected` and throws the following error,
 visible in the browser's console:
 
 ```nocode
@@ -358,6 +359,7 @@ Wrap the HTML hero detail content of the template with a `<div>`.
 Then add the `ngIf` core directive and set it to `selected != null`.
 
 <?code-excerpt "lib/app_component.html" remove="/\b(h1|[Hh]ero|li|ul)/" title?>
+
 ```
   <div *ngIf="selected != null">
     <h2>{!{selected!.name}!}</h2>
@@ -389,7 +391,6 @@ When the user picks a hero, `selected` becomes non-null and
   [Template Syntax](../guide/template-syntax) page.
 </div>
 
-
 ### Style the selected hero
 
 While the selected hero details appear below the list, it's difficult to identify the selected hero within the list itself.
@@ -404,13 +405,13 @@ like this:
 In the template, add the following binding to  the `<li>` tag:
 
 <?code-excerpt "lib/app_component.html" retain="class.selected"?>
+
 ```
   [class.selected]="hero == selected"
 ```
 
-When the expression (`hero == selected`) is `true`, Angular adds the `selected` CSS class.
-When the expression is `false`, Angular removes the `selected` class.
-
+When the expression (`hero == selected`) is `true`, Kelicap adds the `selected` CSS class.
+When the expression is `false`, Kelicap removes the `selected` class.
 
 <div class="l-sub-section" markdown="1">
   The `==` operator tests whether the given objects are [identical][], just like
@@ -422,6 +423,7 @@ When the expression is `false`, Angular removes the `selected` class.
 The final version of the `<li>` looks like this:
 
 <?code-excerpt "lib/app_component.html" retain="/li|span|hero\b/" title?>
+
 ```
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
@@ -439,7 +441,7 @@ After clicking "Magneta", the list should look like this:
 Your project should have the following files:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -478,12 +480,12 @@ Here are the files discussed in this page:
 
 Here's what you achieved in this page:
 
-* The Tour of Heroes app displays a list of selectable heroes.
-* You moved the app template into its own file.
-* You moved the `Hero` class under `lib/src`.
-* You added the ability to select a hero and show the hero's details.
-* You learned how to use the core directives `ngIf` and `ngFor` in a component's template.
-* You defined styles in a CSS file and made used them to style the app.
+- The Tour of Heroes app displays a list of selectable heroes.
+- You moved the app template into its own file.
+- You moved the `Hero` class under `lib/src`.
+- You added the ability to select a hero and show the hero's details.
+- You learned how to use the core directives `ngIf` and `ngFor` in a component's template.
+- You defined styles in a CSS file and made used them to style the app.
 
 Your app should look like this {% example_ref %}.
 
@@ -493,7 +495,6 @@ You've expanded the Tour of Heroes app, but it's far from complete.
 An app shouldn't be one monolithic component.
 In the [next page](toh-pt3), you'll split the app into subcomponents and make them work together.
 
-[coreDirectives]: {{site.pub-api}}/angular/{{site.data.pkg-vers.angular.vers}}/angular/coreDirectives-constant.html
-[identical]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-core/identical.html
+[coreDirectives]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/coreDirectives-constant.html
 [implementation files]: {{site.dartlang}}/tools/pub/package-layout#implementation-files
 [part 1]: /tutorial/toh-pt1#component-directives

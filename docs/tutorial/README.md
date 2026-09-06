@@ -1,33 +1,24 @@
----
-title: "Tutorial: Tour of Heroes"
-description: The Tour of Heroes tutorial takes you through the steps of creating an Angular app in Dart.
-prevpage:
-  title: Documentation Overview
-  url: /guide
-nextpage:
-  title: The Starter App
-  url: /tutorial/toh-pt0
----
+# Tutorial: Tour of Heroes
 
-The grand plan for this tutorial is to build an app that helps a staffing agency manage its stable of heroes.
+The Tour of Heroes tutorial takes you through the steps of creating an Kelicap app in Dart. The grand plan for this tutorial is to build an app that helps a staffing agency manage its stable of heroes.
 
-The Tour of Heroes app covers the core fundamentals of Angular. You'll build a basic app that
+The Tour of Heroes app covers the core fundamentals of Kelicap. You'll build a basic app that
 has many of the features you'd expect to find in a full-blown, data-driven app: acquiring and displaying
 a list of heroes, editing a selected hero's detail, and navigating among different
 views of heroic data. You'll learn the following:
 
-  - Use built-in directives to show and hide elements and display lists of hero data.
-  - Create components to display hero details and show an array of heroes.
-  - Use one-way data binding for read-only data.
-  - Add editable fields to update a model with two-way data binding.
-  - Bind component methods to user events, like keystrokes and clicks.
-  - Enable users to select a hero from a master list and edit that hero in the details view.
-  - Format data with pipes.
-  - Create a shared service to assemble the heroes.
-  - Use routing to navigate among different views and their components.
+- Use built-in directives to show and hide elements and display lists of hero data.
+- Create components to display hero details and show an array of heroes.
+- Use one-way data binding for read-only data.
+- Add editable fields to update a model with two-way data binding.
+- Bind component methods to user events, like keystrokes and clicks.
+- Enable users to select a hero from a master list and edit that hero in the details view.
+- Format data with pipes.
+- Create a shared service to assemble the heroes.
+- Use routing to navigate among different views and their components.
 
-You'll learn enough core Angular to get started and gain confidence that
-Angular can do whatever you need it to do.
+You'll learn enough core Kelicap to get started and gain confidence that
+Kelicap can do whatever you need it to do.
 You'll cover a lot of ground at an introductory level, and you'll find many links
 to pages with greater depth.
 
@@ -72,4 +63,4 @@ You'll build the Tour of Heroes app, step by step.
 Each step is motivated with a requirement that you've likely
 met in many apps. Everything has a reason.
 
-Along the way, you'll become familiar with many of the core fundamentals of Angular.
+Along the way, you'll become familiar with many of the core fundamentals of Kelicap.

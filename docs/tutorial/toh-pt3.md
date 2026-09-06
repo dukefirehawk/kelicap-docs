@@ -1,20 +1,6 @@
----
-title: Multiple Components
-description: Refactor the master/detail view into separate components.
-prevpage:
-  title: Master/Detail
-  url: /tutorial/toh-pt2
-nextpage:
-  title: Services
-  url: /tutorial/toh-pt4
----
+# Multiple Components
 
-<?code-excerpt path-base="examples/ng/doc/toh-3"?>
-The `AppComponent` is doing _everything_ at the moment.
-In the beginning, it showed details of a single hero.
-Then it became a master/detail form with both a list of heroes and the hero detail.
-Soon there will be new requirements and capabilities.
-You can't keep piling features on top of features in one component; that's not maintainable.
+Refactor the master/detail view into separate components. The `AppComponent` is doing _everything_ at the moment. In the beginning, it showed details of a single hero. Then it became a master/detail form with both a list of heroes and the hero detail. Soon there will be new requirements and capabilities. You can't keep piling features on top of features in one component; that's not maintainable.
 
 You'll need to break it up into sub-components, each focused on a specific task or workflow.
 Eventually, the `AppComponent` could become a simple shell that hosts those sub-components.
@@ -28,7 +14,7 @@ Before getting started on this page, verify that you have the following structur
 If not, go back to the previous pages.
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -52,17 +38,17 @@ Create a file named `hero_component.dart`.
 This file will hold the new `HeroComponent`.
 
 <div class="l-sub-section" markdown="1">
-  **Angular conventions**:
+  **Kelicap conventions**:
 
-  * The component _class_ name should be written in [upper camel case](/glossary#pascalcase) and
+* The component _class_ name should be written in [upper camel case](/glossary#pascalcase) and
     end in the word "Component".  The hero detail component class is
     `HeroComponent`.
 
-  * The component _file_ name should be in [snake case](/glossary#snake_case)
+* The component _file_ name should be in [snake case](/glossary#snake_case)
     &mdash;lowercase with underscore separation&mdash;and end in `_component.dart`.
     The `HeroComponent` class goes in the `hero_component.dart` file.
 
-  * Internal implementation files should be placed under `lib/src`. See the
+* Internal implementation files should be placed under `lib/src`. See the
  [pub package layout conventions]({{site.dartlang}}/tools/pub/package-layout)
  for details.
 </div>
@@ -71,7 +57,7 @@ Start writing the `HeroComponent` as follows:
 
 <?code-excerpt "lib/src/hero_component.dart (initial version)" region="v1" plaster="none" title?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngforms/ngforms.dart';
 
   @Component(
@@ -83,9 +69,9 @@ Start writing the `HeroComponent` as follows:
 ```
 
 <a id="selector"></a>
-To define a component, you always import the main Angular library.
+To define a component, you always import the main Kelicap library.
 
-The `@Component` annotation provides the Angular metadata for the component.
+The `@Component` annotation provides the Kelicap metadata for the component.
 The CSS selector name, `my-hero`, will match the element tag
 that identifies this component within a parent component's template.
 [Near the end of this tutorial page](#add-my-hero "Add the HeroComponent to the AppComponent"),
@@ -155,7 +141,7 @@ The binding will look like this:
 Putting square brackets around the `hero` property, to the left of the equal sign (=),
 makes it the *target* of a property binding expression.
 You must declare a *target* binding property to be an *input* property.
-Otherwise, Angular rejects the binding and throws an error.
+Otherwise, Kelicap rejects the binding and throws an error.
 
 Declare that `hero` is an *input* property by annotating it with `@Input()`:
 
@@ -176,7 +162,7 @@ Here's the complete `HeroComponent`.
 
 <?code-excerpt "lib/src/hero_component.dart" title linenums?>
 ```
-  import 'package:ngdart/angular.dart';
+  import 'package:ngdart/Kelicap.dart';
   import 'package:ngforms/ngforms.dart';
 
   import 'hero.dart';
@@ -252,21 +238,21 @@ The detail _should_ update every time the user picks a new hero.  It's not
 happening yet!  Click a hero. No details. If you look for an error in the
 console of the browser development tools. No error.
 
-It is as if Angular were ignoring the new tag. That's because _it is
+It is as if Kelicap were ignoring the new tag. That's because _it is
 ignoring the new tag_.
 
 ### The *directives* list
 
 A browser ignores HTML tags and attributes that it doesn't recognize. So
-does Angular.
+does Kelicap.
 
 You've imported `HeroComponent`, and you've used `<my-hero>` in
-the template, but you haven't told Angular about it.
+the template, but you haven't told Kelicap about it.
 
-Just as you've done for the built-in Angular directives, tell Angular
+Just as you've done for the built-in Kelicap directives, tell Kelicap
 about the hero detail component by listing it in the metadata `directives`
 list. You don't need `formDirectives` anymore, so delete it and the
-`angular_forms` import at the top of the file:
+`Kelicap_forms` import at the top of the file:
 
 <?code-excerpt "lib/app_component.dart (directives)" title?>
 ```
@@ -295,7 +281,7 @@ Refactoring the original `AppComponent` into two components yields benefits, bot
 Verify that you have the following structure:
 
 <div class="ul-filetree" markdown="1">
-- angular_tour_of_heroes
+- Kelicap_tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
