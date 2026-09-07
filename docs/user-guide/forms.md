@@ -26,71 +26,47 @@ You can run the {% example_ref %} in Plunker and download the code from there.
 
 ## Template-driven forms
 
-You can build forms by writing templates in the Kelicap [template syntax](template-syntax) with
-the form-specific directives and techniques described in this page.
+You can build forms by writing templates in the Kelicap [template syntax](template-syntax.md) with the form-specific directives and techniques described in this page. You can also use a reactive (or model-driven) approach to build forms. However, this page focuses on template-driven forms.
 
-<div class="l-sub-section">
-  You can also use a reactive (or model-driven) approach to build forms.
-  However, this page focuses on template-driven forms.
-</div>
+You can build almost any form with a Kelicap template - login forms, contact forms, and pretty much any business form. You can lay out the controls creatively, bind them to data, specify validation rules and display validation errors, conditionally enable or disable specific controls, trigger built-in visual feedback, and much more.
 
-You can build almost any form with an Kelicap template&mdash;login forms, contact forms, and pretty much any business form.
-You can lay out the controls creatively, bind them to data, specify validation rules and display validation errors,
-conditionally enable or disable specific controls, trigger built-in visual feedback, and much more.
+Kelicap makes the process easy by handling many of the repetitive, boilerplate tasks you'd otherwise wrestle with yourself. You'll learn to build a template-driven form that looks like this:
 
-Kelicap makes the process easy by handling many of the repetitive, boilerplate tasks you'd
-otherwise wrestle with yourself.
+![Clean Form](assets/forms/hero-form.png)
 
-You'll learn to build a template-driven form that looks like this:
+The *Hero Employment Agency* uses this form to maintain personal information about heroes. Every hero needs a job. It's the company mission to match the right hero with the right crisis.
 
-<img class="image-display" src="{% asset ng/devguide/forms/hero-form.png @path %}" width="360" alt="Clean Form">
+Two of the three fields on this form are *required*. Following [material design guidelines](https://material.io/components/text-fields), required fields have an asterisk (*). If you delete the hero name, the form displays a validation error in an attention-grabbing style:
 
-The *Hero Employment Agency* uses this form to maintain personal information about heroes.
-Every hero needs a job. It's the company mission to match the right hero with the right crisis.
-
-Two of the three fields on this form are *required*.
-Following [material design guidelines](https://material.io/components/text-fields),
-required fields have an asterisk (*).
-
-If you delete the hero name, the form displays a validation error in an attention-grabbing style:
-
-<img class="image-display" src="{% asset ng/devguide/forms/hero-form-name-required.png @path %}" width="360" alt="Invalid, Name Required">
+![Invalod Name Required](assets/forms/hero-form-name-required.png)
 
 Note that the *Submit* button is disabled, and the input control changes from green to red.
 
 You'll build this form in small steps:
 
 1. Create the `Hero` model class.
-1. Create the component that controls the form.
-1. Create a template with the initial form layout.
-1. Bind data properties to each form control using the [ngModel][NgModel]
+2. Create the component that controls the form.
+3. Create a template with the initial form layout.
+4. Bind data properties to each form control using the [ngModel][NgModel]
    two-way data-binding syntax.
-1. Add an [ngControl][NgControl] directive to each form-input control.
-1. Add custom CSS to provide visual feedback.
-1. Show and hide validation-error messages.
-1. Handle form submission with *ngSubmit*.
-1. Disable the form’s *Submit* button until the form is valid.
+5. Add an [ngControl][NgControl] directive to each form-input control.
+6. Add custom CSS to provide visual feedback.
+7. Show and hide validation-error messages.
+8. Handle form submission with *ngSubmit*.
+9. Disable the form’s *Submit* button until the form is valid.
 
 ## Setup
 
-Follow the [setup](setup) instructions to create a new project named `forms`.
+Follow the [setup] instructions to create a new project named `forms`.
 
 ### Add Kelicap_forms
 
-<?code-excerpt path-base="examples/ng/doc"?>
-
 The Kelicap forms functionality is in the [kelicap_forms] library, which comes in [its own package][kelicap_forms@pub]. Add the package to the pubspec dependencies:
 
-<?code-excerpt "quickstart/pubspec.yaml" diff-with="forms/pubspec.yaml" from="dependencies" to="Kelicap_forms"?>
-
-```diff
---- quickstart/pubspec.yaml
-+++ forms/pubspec.yaml
-@@ -8,2 +8,3 @@
- dependencies:
--  Kelicap: ^7.0.2
-+  Kelicap: ^6.0.1
-+  Kelicap_forms: ^3.0.0
+```dart
+  dependencies:
+    kelicap: ^1.1.0
+    kelicap_forms: ^1.1.0
 ```
 
 ## Create a model
@@ -117,8 +93,7 @@ In the `lib` directory, create the following file with the given content:
 
 It's an anemic model with few requirements and no behavior, good enough for the demo.
 
-The `alterEgo` is optional, so the constructor lets you omit it;
-note the brackets in `[this.alterEgo]`.
+The `alterEgo` is optional, so the constructor lets you omit it; note the brackets in `[this.alterEgo]`.
 
 You can create a new hero like this:
 
@@ -139,8 +114,8 @@ Begin with the class because it states, in brief, what the hero editor can do.
 Create the following file with the given content:
 
 ```dart
-  import 'package:Kelicap/Kelicap.dart';
-  import 'package:Kelicap_forms/Kelicap_forms.dart';
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
 
@@ -179,13 +154,7 @@ Understanding this component requires only the Kelicap concepts covered in previ
   for the template HTML.
 * You defined mock data for `model` and `powers`.
 
-  <div class="l-sub-section" markdown="1">
-  Down the road, you can inject a data service to get and save real data
-  or perhaps expose these properties as inputs and outputs
-  (see [Input and output properties](template-syntax#inputs-outputs) in the
-  [Template Syntax](template-syntax) page) for binding to a
-  parent component. This is not a concern now and these future changes won't affect the form.
-  </div>
+Down the road, you can inject a data service to get and save real data or perhaps expose these properties as inputs and outputs (see [Input and output properties](template-syntax.md#inputs-outputs) in the [Template Syntax](template-syntax.md) page) for binding to a parent component. This is not a concern now and these future changes won't affect the form.
 
 ### Revise the app component
 
@@ -193,10 +162,8 @@ Understanding this component requires only the Kelicap concepts covered in previ
 
 Replace the contents of the starter app version with the following:
 
-<?code-excerpt "lib/app_component.dart" title?>
-
-```
-  import 'package:Kelicap/Kelicap.dart';
+```dart
+  import 'package:kelicap/kelicap.dart';
 
   import 'src/hero_form_component.dart';
 
@@ -212,9 +179,7 @@ Replace the contents of the starter app version with the following:
 
 Create the template file with the following contents:
 
-<?code-excerpt "lib/src/hero_form_component_1.html (start)" plaster="none" title?>
-
-```
+```html
   <div class="container">
     <h1>Hero Form</h1>
     <form>
@@ -236,63 +201,32 @@ Create the template file with the following contents:
   </div>
 ```
 
-The language is simply HTML5. You're presenting two of the `Hero` fields, `name` and `alterEgo`, and
-opening them up for user input in input boxes.
+The language is simply HTML5. You're presenting two of the `Hero` fields, `name` and `alterEgo`, and opening them up for user input in input boxes. The *Name* `<input>` control has the HTML5 `required` attribute, the *Alter Ego* `<input>` control does not because `alterEgo` is optional. You added a *Submit* button at the bottom with some classes on it for styling. *You're not using kelicap yet*. There are no bindings or extra directives, just layout.
 
-The *Name* `<input>` control has the HTML5 `required` attribute;
-the *Alter Ego* `<input>` control does not because `alterEgo` is optional.
+In template driven forms, if you've imported the `kelicap_forms` library, you don't have to do anything to the `<form>` tag in order to make use of the library capabilities. Continue on to see how this works.
 
-You added a *Submit* button at the bottom with some classes on it for styling.
-
-*You're not using Kelicap yet*. There are no bindings or extra directives, just layout.
-
-<div class="l-sub-section" markdown="1">
-  In template driven forms, if you've imported the `Kelicap_forms` library, you don't have to do anything
-  to the `<form>` tag in order to make use of the library capabilities. Continue on to see how this works.
-</div>
-
-<i class="material-icons">open_in_browser</i>
- **Refresh the browser.** You'll see a simple, unstyled form.
+**Refresh the browser.** You'll see a simple, unstyled form.
 
 ### Style the form
 
-The general CSS classes `container` and `btn` come from [Bootstrap][].
-Bootstrap also has [form-specific classes][Bootstrap forms] including `form-control` and `form-group`.
-Together, these give the form a little style.
+The general CSS classes `container` and `btn` come from [Bootstrap]. Bootstrap also has [form-specific classes][Bootstrap forms] including `form-control` and `form-group`. Together, these give the form a little style.
 
-<div class="l-sub-section" markdown="1">
-  Kelicap makes no use of Bootstrap classes or
-  the styles of any external library. Kelicap apps can use any CSS library or none at all.
-</div>
+Kelicap makes no use of Bootstrap classes or the styles of any external library. Kelicap apps can use any CSS library or none at all. Add Bootstrap styles by inserting the following link to the `<head>` of `index.html`:
 
-Add Bootstrap styles by inserting the following link to the `<head>` of `index.html`:
-
-<?code-excerpt "web/index.html (bootstrap)" title?>
-
-```
-  <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-        crossorigin="anonymous">
+```html
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+  crossorigin="anonymous">
 ```
 
-<i class="material-icons">open_in_browser</i>
- **Refresh the browser.** You'll see a form with style!
+**Refresh the browser.** You'll see a form with style!
 
 ## Add powers with **ngFor*
 
-The hero must choose one superpower from a fixed list of agency-approved powers.
-You maintain that list internally (in `HeroFormComponent`).
-
-You'll add a `select` to the
-form and bind the options to the `powers` list using `ngFor`,
-a technique seen previously in the [Displaying Data](displaying-data) page.
+The hero must choose one superpower from a fixed list of agency-approved powers. You maintain that list internally (in `HeroFormComponent`). You'll add a `select` to the form and bind the options to the `powers` list using `ngFor`, a technique seen previously in the [Displaying Data](displaying-data.md) page.
 
 Add the following HTML *immediately below* the *Alter Ego* group:
 
-<?code-excerpt "lib/src/hero_form_component_1.html (powers)" title?>
-
-```
+```html
   <div class="form-group">
     <label for="power">Hero Power&nbsp;*</label>
     <select class="form-control" id="power" required>
@@ -301,36 +235,21 @@ Add the following HTML *immediately below* the *Alter Ego* group:
   </div>
 ```
 
-This code repeats the `<option>` tag for each power in the list of powers.
-The `p` template input variable is a different power in each iteration;
-you display its name using the interpolation syntax.
+This code repeats the `<option>` tag for each power in the list of powers. The `p` template input variable is a different power in each iteration; you display its name using the interpolation syntax.
 
-<a id="ngModel"></a>
+## Two-way data binding with ngModel
 
-## Two-way data binding with *ngModel*
-
-<i class="material-icons">open_in_browser</i>
 **Running the app** now is a bit disappointing.
 
-<img class="image-display" src="{% asset ng/devguide/forms/hero-form-wo-bindings.png @path %}" width="360" alt="Early form with no binding">
+![Early form with no binding](assets/forms/hero-form-wo-bindings.png)
 
-You don't see hero data because you're not binding to the `Hero` yet.
-You know how to do that from earlier pages.
-[Displaying Data](displaying-data) teaches property binding.
-[User Input](user-input) shows how to listen for DOM events with an
-event binding and how to update a component property with the displayed value.
+You don't see hero data because you're not binding to the `Hero` yet. You know how to do that from earlier pages. [Displaying Data](displaying-data.md) teaches property binding. [User Input](user-input.md) shows how to listen for DOM events with an event binding and how to update a component property with the displayed value.
 
-Now you need to display, listen, and extract at the same time.
-
-You could use the techniques you already know, but
-instead you'll use the new `[(ngModel)]` syntax, which
-makes binding the form to the model easy.
+Now you need to display, listen, and extract at the same time. You could use the techniques you already know, but instead you'll use the new `[(ngModel)]` syntax, which makes binding the form to the model easy.
 
 Find the `<input>` tag for *Name* and update it like this:
 
-<?code-excerpt "lib/src/hero_form_component_2.html (name)" title?>
-
-```
+```dart
   <!-- TODO: remove the next diagnostic line -->
   <mark>{!{model.name}!}</mark><hr>
   <div class="form-group">
@@ -354,7 +273,7 @@ Focus on the binding syntax: `[(ngModel)]="..."`.
 adding and deleting characters. You'll see the characters appear and disappear
 from the diagnostic text. At some point it might look like this:
 
-<img class="image-display" src="{% asset ng/devguide/forms/name-ngmodel.png @path %}" width="300" alt="Name ngModel">
+![Name NgModel](assets/forms/name-ngmodel.png)
 
 The diagnostic is evidence that values really are flowing from the input to the model and
 back again.
@@ -384,9 +303,7 @@ confirm that two-way data binding works for the *entire hero model*.
 
 After revision, the core of the form should look like this:
 
-<?code-excerpt "lib/src/hero_form_component_3.html (controls)" title?>
-
-```
+```html
   <!-- TODO: remove the next diagnostic line -->
   <mark>{!{model}!}</mark><hr>
   <div class="form-group">
@@ -411,18 +328,14 @@ After revision, the core of the form should look like this:
   </div>
 ```
 
-<div class="l-sub-section" markdown="1">
-  - Each input element has an `id` property that is used by the `label` element's `for` attribute
-  to match the label to its input control.
-  - Each input element has a `ngControl` directive that is required by Kelicap forms to register the control with the form.
-</div>
+* Each input element has an `id` property that is used by the `label` element's `for` attribute to match the label to its input control.
+* Each input element has a `ngControl` directive that is required by Kelicap forms to register the control with the form.
 
 If you run the app now and change every hero model property, the form might display like this:
 
-<img class="image-display" src="{% asset ng/devguide/forms/ngmodel.png @path %}" width="460" alt="ngModel">
+![ngModel](assets/forms/ngmodel.png)
 
-The diagnostic near the top of the form
-confirms that all of your changes are reflected in the model.
+The diagnostic near the top of the form confirms that all of your changes are reflected in the model.
 
 **Delete** the diagnostic binding from the template since it has served its purpose.
 
@@ -432,11 +345,9 @@ Using CSS and class bindings, you can change a form control's appearance to refl
 
 ### Track control state
 
-An Kelicap form control can tell you if the user touched the control, if the
-value changed, or if the value became invalid.
+An Kelicap form control can tell you if the user touched the control, if the value changed, or if the value became invalid.
 
-Each control ([NgControl][]) in an Kelicap form tracks its own state and makes the state
-available for inspection through the following field members:
+Each control ([NgControl][]) in an Kelicap form tracks its own state and makes the state available for inspection through the following field members:
 
 * `dirty` and `pristine` indicate whether the control's *value has changed*.
 * `touched` and `untouched` indicate whether the control has been *visited*.
@@ -444,9 +355,7 @@ available for inspection through the following field members:
 
 ### Style controls
 
-The `valid` control property is the most interesting, because you want to send a
-strong visual signal when a control value is invalid.
-To create such visual feedback, you'll use the
+The `valid` control property is the most interesting, because you want to send a strong visual signal when a control value is invalid. To create such visual feedback, you'll use the
 [Bootstrap custom-forms][] classes `is-valid` and `is-invalid`.
 
 Add a [template reference variable](template-syntax#ref-vars) called `name`
@@ -456,9 +365,7 @@ to conditionally assign the appropriate form validity class.
 Temporarily add another template reference variable named `spy`
 to the *Name* `<input>` tag and use it to display the input's CSS classes.
 
-<?code-excerpt "lib/src/hero_form_component_4.html (name)" title?>
-
-```
+```html
   <input type="text" class="form-control" id="name" required
          [(ngModel)]="model.name"
          #name="ngForm"
@@ -502,22 +409,16 @@ As an alternative to class bindings, you can use an [NgClass][]
 directive to style a control. First, add the following method to set a
 control's state-dependent CSS class names:
 
-<?code-excerpt "lib/src/hero_form_component.dart (setCssValidityClass)" title?>
-
-```
+```dart
   Map<String, bool> setCssValidityClass(NgControl control) {
     final validityClass = control.valid == true ? 'is-valid' : 'is-invalid';
     return {validityClass: true};
   }
 ```
 
-Use the map value returned by this method to bind to the [NgClass][] directive
-&mdash; read more about this directive and its alternatives in the
-[template syntax](template-syntax#ngClass) page.
+Use the map value returned by this method to bind to the [NgClass]directive - read more about this directive and its alternatives in the [template syntax](template-syntax.md#ngClass) page.
 
-<?code-excerpt "lib/src/hero_form_component.html (power)" title?>
-
-```
+```html
   <select class="form-control" id="power" required
           [(ngModel)]="model.power"
           #power="ngForm"
@@ -529,21 +430,17 @@ Use the map value returned by this method to bind to the [NgClass][] directive
 
 ## Show and hide validation error messages
 
-You can improve the form. The *Name* input is required, and clearing it turns the box outline red.
-That says something is wrong but the user doesn't know *what* is wrong or what to do about it.
-Leverage the control's state to reveal a helpful message.
+You can improve the form. The *Name* input is required, and clearing it turns the box outline red. That says something is wrong but the user doesn't know *what* is wrong or what to do about it. Leverage the control's state to reveal a helpful message.
 
 ### Use the valid and pristine states
 
 When the user deletes the name, the form should look like this:
 
-<img class="image-display" src="{% asset ng/devguide/forms/name-required-error.png @path %}" width="300" alt="Name required">
+![Name Required](assets/forms/name-required-error.png)
 
 To achieve this effect, add the following `<div>` immediately after the *Name* `<input>`:
 
-<?code-excerpt "lib/src/hero_form_component.html (hidden error message)" title?>
-
-```
+```html
   <div [hidden]="name.valid || name.pristine" class="invalid-feedback">
     Name is required
   </div>
@@ -590,9 +487,7 @@ already constrains the power to valid values.
 
 Add a `clear()` method to the component class:
 
-<?code-excerpt "lib/src/hero_form_component.dart (clear)" title?>
-
-```
+```dart
   void clear() {
     model.name = '';
     model.power = _powers[0];
@@ -602,9 +497,7 @@ Add a `clear()` method to the component class:
 
 Add a *Clear* button with a `click` event binding, right after the *Submit* button:
 
-<?code-excerpt "lib/src/hero_form_component_4.html (Clear button)" title?>
-
-```
+```html
   <button (click)="clear()" type="button" class="btn">
     Clear
   </button>
@@ -638,17 +531,9 @@ state* of the form controls.
 
 ### Resetting the form
 
-You have to clear all of the control values and flags imperatively,
-which you can do by calling the `NgForm.reset()` method.
-Replace the component `clear()` method call by a form reset:
+You have to clear all of the control values and flags imperatively, which you can do by calling the `NgForm.reset()` method. Replace the component `clear()` method call by a form reset:
 
-<div class="alert alert-warning" markdown="1">
-  `NgForm.reset()` isn't supported yet: https://github.com/dart-lang/Kelicap/issues/216.
-</div>
-
-<?code-excerpt "lib/src/hero_form_component_5.html (Clear button)" title?>
-
-```
+```html
   <!-- NgForm reset isn't supported yet: https://github.com/dart-lang/Kelicap/issues/216. -->
   <button (click)="heroForm.reset()" type="button" class="btn">
     Clear
@@ -657,30 +542,18 @@ Replace the component `clear()` method call by a form reset:
 
 Because of the two-way bindings, resetting the form clears the model.
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser.** Clicking *Clear* now resets the form, its control flags,
-and the model.
+**Refresh the browser.** Clicking *Clear* now resets the form, its control flags, and the model.
 
-<div class="l-sub-section" markdown="1">
-  You don't need the component `clear()` method anymore, so you can delete it.
-</div>
+You don't need the component `clear()` method anymore, so you can delete it.
 
 <!---------------------------------------------------------------------------->
 {% endif %}
 
 ## Submit the form with *ngSubmit*
 
-The user should be able to submit this form after filling it in.
-The *Submit* button at the bottom of the form
-does nothing on its own, but it will
-trigger a form submit because of its type (`type="submit"`).
+The user should be able to submit this form after filling it in. The *Submit* button at the bottom of the form does nothing on its own, but it will trigger a form submit because of its type (`type="submit"`). A form submit is useless at the moment. To make it useful, assign form component's `onSubmit()` method to the form's `ngSubmit` event binding:
 
-A form submit is useless at the moment. To make it useful, assign
-form component's `onSubmit()` method to the form's `ngSubmit` event binding:
-
-<?code-excerpt "lib/src/hero_form_component.html (ngSubmit)"?>
-
-```
+```html
   <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
 ```
 
@@ -699,12 +572,9 @@ the variable `heroForm` gets bound to the `NgForm` directive that governs the fo
   and monitors their properties, including their validity.
 </div>
 
-You'll bind the form's overall validity via
-the `heroForm` variable to the button's `disabled` property:
+You'll bind the form's overall validity via the `heroForm` variable to the button's `disabled` property:
 
-<?code-excerpt "lib/src/hero_form_component.html" region="Submit-button"?>
-
-```
+```html
   <button [disabled]="!heroForm.form.valid" type="submit" class="btn btn-primary">
     Submit
   </button>
@@ -743,9 +613,7 @@ As a visual effect, you can hide the data entry area and display something else.
 Wrap the form in a `<div>` and bind
 its `hidden` property to the `HeroFormComponent.submitted` property.
 
-<?code-excerpt "lib/src/hero_form_component.html (excerpt)" region="edit-div" title?>
-
-```
+```html
   <div [hidden]="submitted">
     <h1>Hero Form</h1>
     <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
@@ -754,23 +622,16 @@ its `hidden` property to the `HeroFormComponent.submitted` property.
   </div>
 ```
 
-The form is visible from the start because the
-`submitted` property is false until you submit the form,
-as this fragment from the `HeroFormComponent` shows:
+The form is visible from the start because the `submitted` property is false until you submit the form, as this fragment from the `HeroFormComponent` shows:
 
-<?code-excerpt "lib/src/hero_form_component.dart (submitted)" plaster="none" title?>
-
-```
+```dart
   bool submitted = false;
-
   void onSubmit() => submitted = true;
 ```
 
 Now add the following HTML below the `<div>` wrapper you just wrote:
 
-<?code-excerpt "lib/src/hero_form_component.html (submitted)" title?>
-
-```
+```html
   <div [hidden]="!submitted">
     <h1>Hero data</h1>
 
@@ -793,20 +654,15 @@ Now add the following HTML below the `<div>` wrapper you just wrote:
   </div>
 ```
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser,** and submit the form.
-The `submitted` flag becomes true and the form disappears.
-You'll see the hero model values (read-only) displayed in a table.
+**Refresh the browser,** and submit the form. The `submitted` flag becomes true and the form disappears. You'll see the hero model values (read-only) displayed in a table.
 
-<img class="image-display" src="{% asset ng/devguide/forms/submitted-hero-data.png @path %}" width="360" alt="Clean Form">
+![Clean Form](assets/forms/submitted-hero-data.png)
 
-The view includes an *Edit* button whose click event binding clears the `submitted` flag.
-When you click the *Edit* button, the table disappears and the editable form reappears.
+The view includes an *Edit* button whose click event binding clears the `submitted` flag. When you click the *Edit* button, the table disappears and the editable form reappears.
 
 ## Summary
 
-Kelicap forms provide support for data modification, validation, and more.
-In this page, you learned how to use the following features:
+Kelicap forms provide support for data modification, validation, and more. In this page, you learned how to use the following features:
 
 * An HTML form template, and a form component class with an `@Component` annotation.
 * Form submission, handled through an `ngSubmit` event binding.
@@ -821,8 +677,8 @@ In this page, you learned how to use the following features:
 
 The final project folder structure should look like this:
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_forms
+```terminal
+kelicap_forms
   - lib
     - app_component.dart
     - src
@@ -833,21 +689,10 @@ The final project folder structure should look like this:
     - main.dart
     - styles.css
   - pubspec.yaml
-</div>
+```
 
-Here’s the code for the final version of the app:
-
-<code-tabs>
-  <?code-pane "lib/app_component.dart" linenums?>
-  <?code-pane "lib/src/hero.dart" linenums?>
-  <?code-pane "lib/src/hero_form_component.dart" region="final" linenums?>
-  <?code-pane "lib/src/hero_form_component.html" linenums?>
-  <?code-pane "web/index.html" linenums?>
-  <?code-pane "web/main.dart" linenums?>
-</code-tabs>
-
-[Kelicap_forms]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/Kelicap_forms-library.html
-[Kelicap_forms@pub]: https://pub.dev/packages/Kelicap_forms
+[kelicap_forms]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/Kelicap_forms-library.html
+[kelicap_forms@pub]: https://pub.dev/packages/Kelicap_forms
 [Bootstrap]: https://getbootstrap.com
 [Bootstrap forms]: https://getbootstrap.com/docs/4.0/components/forms
 [Bootstrap custom-forms]: https://getbootstrap.com/docs/4.0/components/forms/#custom-forms
