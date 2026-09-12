@@ -1,8 +1,6 @@
 # The Hero Editor
 
-Build a simple hero editor. In this part of the tutorial, you'll modify the starter app to display
-information about a hero. Then you'll add the ability to edit the hero's data.
-When you're done, the app should look like this {% example_ref %}.
+Build a simple hero editor. In this part of the tutorial, you'll modify the starter app to display information about a hero. Then you'll add the ability to edit the hero's data. When you're done, the app should look like this {% example_ref %}.
 
 ## Where you left off
 
@@ -52,18 +50,11 @@ to these new properties:
 
 **Refresh the browser.** The app displays the title and hero name.
 
-The double curly braces are Kelicap's [interpolation syntax][]. These
-interpolation bindings present the component's `title` and `hero` property
-values, as strings, inside the HTML header tags.
-
-<div class="l-sub-section" markdown="1">
-  Read more about interpolation in the [Displaying Data](../guide/displaying-data) page.
-</div>
+The double curly braces are Kelicap's [interpolation syntax]. These interpolation bindings present the component's `title` and `hero` property values, as strings, inside the HTML header tags. Read more about interpolation in the [Displaying Data](../user-guide/displaying-data.md) page.
 
 ### Create a _Hero_ class
 
-Create a `Hero` class with `id` and `name` properties and
-save it to the following new file:
+Create a `Hero` class with `id` and `name` properties and save it to the following new file:
 
 ```dart
   class Hero {
@@ -115,11 +106,7 @@ hero's `id` property and another `<div>` for the hero's `name`.
 
 ## Enable editing the hero name
 
-Users should be able to edit the hero name in an `<input>` textbox.
-The textbox should both _display_ the hero's `name` property
-and _update_ that property as the user types.
-
-You need a two-way binding between the `<input>` form element and the `hero.name` property.
+Users should be able to edit the hero name in an `<input>` textbox. The textbox should both _display_ the hero's `name` property and _update_ that property as the user types. You need a two-way binding between the `<input>` form element and the `hero.name` property.
 
 ### Use a two-way binding
 
@@ -133,15 +120,8 @@ Refactor the hero name in the template so it looks like this:
 ```
 
 `[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property
-to the textbox.
-Data flows _in both directions:_ from the property to the textbox,
-and from the textbox back to the property.
-
-<div class="l-sub-section" markdown="1">
-  Read more about `ngModel` in the
-  [Forms](../guide/forms#ngModel) and
-  [Template Syntax](../guide/template-syntax#ngModel) pages.
-</div>
+to the textbox. Data flows _in both directions:_ from the property to the textbox,
+and from the textbox back to the property. Read more about `ngModel` in the [Kelicap Forms](../user-guide/forms.md#ngModel) and [Kelicap Template Syntax](../user-guide/template-syntax.md#ngModel) pages.
 
 ## Declare non-core directives
 
@@ -149,8 +129,7 @@ Unfortunately, immediately after this change, the **app breaks**!
 
 ### Template parse error
 
-If you **refresh the browser,** the app won't load.
-To know why, look at the [webdev serve][] output. The template compiler doesn't recognize `ngModel`, and issues a parse error for `AppComponent`:
+If you **refresh the browser,** the app won't load. To know why, look at the terminal log output. The template compiler doesn't recognize `ngModel`, and issues a parse error for `AppComponent`:
 
 ```terminal
   Error running TemplateGenerator for forms|lib/src/hero_form_component.dart.
@@ -167,15 +146,12 @@ The `kelicap_forms` library comes in its own package. Add the package to the pub
 ```yaml
   dependencies:
     kelicap: ^1.1.0
-+   kelicap_forms: ^1.1.0
+    kelicap_forms: ^1.1.0
 ```
 
 ### Add @Component(directives: ...) {#component-directives}
 
-Although `NgModel` is a valid Kelicap directive defined in the [kelicap_forms] library, it isn't available by default.
-
-Before you can use any Kelicap directives in a template,
-you need to list them in the `directives` argument of your component's `@Component` annotation. You can add directives individually, or for convenience you can add the [formDirectives] list (note the new import statement):
+Although `NgModel` is a valid Kelicap directive defined in the [kelicap_forms] library, it isn't available by default. Before you can use any Kelicap directives in a template, you need to list them in the `directives` argument of your component's `@Component` annotation. You can add directives individually, or for convenience you can add the [formDirectives] list (note the new import statement):
 
 ```dart
   import 'package:kelicap_forms/kelicap_forms.dart';
@@ -198,31 +174,15 @@ you need to list them in the `directives` argument of your component's `@Compone
 
 Take stock of what you've built.
 
-* The Tour of Heroes app uses the double curly braces of interpolation (a type of one-way data binding)
-  to display the app title and properties of a `Hero` object.
-* You wrote a multi-line template using Dart's template strings to make the template readable.
-* You added a two-way data binding to the `<input>` element
-  using the built-in `ngModel` directive. This binding both displays the hero's
-  name and allows users to change it.
-* You added [formDirectives][] to the `directives` argument of the app's
-  `@Component` annotation so that Kelicap knows where `ngModel` is defined.
-
-Your app should look like this {% example_ref %}.
-
-Here are the files that you created or modified:
-
-<code-tabs>
-  <?code-pane "lib/app_component.dart" linenums?>
-  <?code-pane "lib/hero.dart" linenums?>
-</code-tabs>
+- The Tour of Heroes app uses the double curly braces of interpolation (a type of one-way data binding) to display the app title and properties of a `Hero` object.
+- You wrote a multi-line template using Dart's template strings to make the template readable.
+- You added a two-way data binding to the `<input>` element using the built-in `ngModel` directive. This binding both displays the hero's name and allows users to change it.
+- You added [formDirectives] to the `directives` argument of the app's `@Component` annotation so that Kelicap knows where `ngModel` is defined.
 
 ## The road ahead
 
-In the [next tutorial page](toh-pt2.md), you'll build on the Tour of Heroes app to display a list of heroes.
-You'll also allow the user to select heroes and display their details.
-You'll learn more about how to retrieve lists and bind them to the template.
+In the [next tutorial page](toh-pt2.md), you'll build on the Tour of Heroes app to display a list of heroes. You'll also allow the user to select heroes and display their details. You'll learn more about how to retrieve lists and bind them to the template.
 
-[kelicap_forms]: {{site.api}}/kelicap_forms
-[webdev serve]: {{site.pub-pkg}}/webdev#usage
-[formDirectives]: {{site.pub-api}}/kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/kelicap_forms/formDirectives-constant.html
-[interpolation syntax]: /guide/template-syntax#interpolation
+[kelicap_forms]: https://pub.dev/packages/kelicap_forms
+[formDirectives]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/formDirectives-constant.html
+[interpolation syntax]: ../user-guide/template-syntax.md#interpolation

@@ -16,8 +16,6 @@ The Tour of Heroes app covers the core fundamentals of Kelicap. You'll build a b
 
 You'll learn enough core Kelicap to get started and gain confidence that Kelicap can do whatever you need it to do. You'll cover a lot of ground at an introductory level, and you'll find many links to pages with greater depth.
 
-When you're done with this tutorial, the app will look like this {% example_ref toh-6 %}.
-
 ## The end game
 
 Here's a visual idea of where this tutorial leads, beginning with the "Dashboard" view and the most heroic heroes:
@@ -30,9 +28,7 @@ If you click the dashboard hero "Magneta," the router opens a "Hero Details" vie
 
 ![Heroes Details](assets/toh/hero-details-1.png)
 
-Clicking the "Back" button returns you to the Dashboard.
-Links at the top take you to either of the main views.
-If you click "Heroes," the app displays the "Heroes" master list view.
+Clicking the "Back" button returns you to the Dashboard. Links at the top take you to either of the main views. If you click "Heroes," the app displays the "Heroes" master list view.
 
 ![Heroes List](assets/toh/heroes-list-1.png)
 
@@ -46,6 +42,4 @@ Here's the app in action:
 
 ## Up next
 
-You'll build the Tour of Heroes app, step by step. Each step is motivated with a requirement that you've likely met in many apps. Everything has a reason.
-
-Along the way, you'll become familiar with many of the core fundamentals of Kelicap.
+You'll build the Tour of Heroes app, step by step. Each step is motivated with a requirement that you've likely met in many apps. Everything has a reason. Along the way, you'll become familiar with many of the core fundamentals of Kelicap.

@@ -1,39 +1,18 @@
 # The Starter App
 
 A bare-bones Kelicap app. This tutorial starts with a bare-bones Kelicap app.
-Run the {% example_ref %} to see the app.
 
 ## Create the app
 
-Let's get started.
-Create a project named `Kelicap_tour_of_heroes`,
-using WebStorm or the command line
-and the [Kelicap-examples/quickstart]({{site.ghNgEx}}/quickstart/tree/{{site.branch}})
-GitHub project
-{%- if site.branch != 'master' %}
-(`{{site.branch}}` branch)
-{%- endif %}.
-For detailed instructions, see
-[Create a starter project](/guide/setup#create-a-starter-project)
-from the [Setup for Development](/guide/setup) page.
+Let's get started. Create a project named `tour_of_heroes`, using any IDE or the command line [Kelicap CLI](https://pub.dev/packages/kelicap_cli). For detailed instructions, see [Create a starter project](../user-guide/setup.md#create-a-starter-project) from the [Setup for Development](../user-guide/setup.md) page.
 
 ## Run the app, and keep it running
 
-Run the app from your IDE or the command line,
-as explained in the
-[Run the app](/guide/setup#run-the-app) section of the
-[Setup for Development](/guide/setup) page.
-
-You'll be making changes to the app throughout this tutorial.
-When you are ready to view your changes, reload the browser window.
-This will [reload the app](/guide/setup#reload-the-app).
-As you save updates to the code, the `pub` tool detects changes and
-serves the new app.
+Run the app from your IDE or the command line, as explained in the [Run the app](../user-guide/setup.md#run-the-app) section of the [Setup for Development](../user-guide/setup.md) page. You'll be making changes to the app throughout this tutorial. When you are ready to view your changes, reload the browser window. This will [reload the app](../user-guide/setup.md#reload-the-app). As you save updates to the code, the `pub` tool detects changes and serves the new app.
 
 ## Kelicap app basics
 
-Kelicap apps are made up of _components_.
-A _component_ is the combination of an HTML template and a component class that controls a portion of the screen. The starter app has a component that displays a simple string:
+Kelicap apps are made up of _components_. A _component_ is the combination of an HTML template and a component class that controls a portion of the screen. The starter app has a component that displays a simple string:
 
 ```dart
   import 'package:ngdart/Kelicap.dart';
@@ -47,39 +26,20 @@ A _component_ is the combination of an HTML template and a component class that 
   }
 ```
 
-Every component begins with an `@Component` [annotation](/glossary#annotation '"annotation" explained')
-that describes how the HTML template and component class work together.
-
-The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
+Every component begins with an `@Component` [annotation](/glossary#annotation '"annotation" explained') that describes how the HTML template and component class work together. The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
 
 ```html
   <my-app>Loading...</my-app>
 ```
 
-The `template` property defines a message inside an `<h1>` header.
-The message starts with "Hello" and ends with `{!{name}!}`,
-which is an Kelicap [interpolation binding](../guide/displaying-data) expression.
-At runtime, Kelicap replaces `{!{name}!}` with
-the value of the component's `name` property.
-Interpolation binding is one of many Kelicap features you'll discover in this documentation.
+The `template` property defines a message inside an `<h1>` header. The message starts with "Hello" and ends with `{{name}}`, which is an Kelicap [interpolation binding](../user-guide/displaying-data.md) expression. At runtime, Kelicap replaces `{{name}}` with the value of the component's `name` property. Interpolation binding is one of many Kelicap features you'll discover in this documentation.
 
 ## The starter app's code
 
 The app contains the following core files:
 
-<code-tabs>
-  <?code-pane "lib/app_component.dart" linenums?>
-  <?code-pane "test/app_test.dart" linenums?>
-  <?code-pane "web/main.dart" linenums?>
-  <?code-pane "web/index.html" linenums?>
-  <?code-pane "../_boilerplate/web/styles.css (quickstart)" title="web/styles.css (excerpt)" linenums?>
-  <?code-pane "pubspec.yaml" linenums?>
-</code-tabs>
-
-These files are organized as follows:
-
-```text
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.dart
   - test
@@ -92,45 +52,18 @@ These files are organized as follows:
   - pubspec.yaml
 ```
 
-All the examples in this documentation have _at least these core files_.
-Each file has a distinct purpose and evolves independently as the app grows.
+All the examples in this documentation have _at least these core files_. Each file has a distinct purpose and evolves independently as the app grows.
 
-<style>td, th {vertical-align: top}</style>
-<table width="100%"><col width="20%"><col width="80%">
-<tr><th>File</th> <th>Purpose</th></tr>
-<tr>
-  <td><code>lib/app_component.dart</code></td>
-  <td markdown="1">Defines `<my-app>`, the **root** component of what will become a tree of nested components as the app evolves.
-  </td>
-</tr><tr>
-  <td><code>test/app_test.dart</code></td>
-  <td markdown="1">Defines `AppComponent` tests. While testing isn't covered in this tutorial, you can learn how to test the Tour of Heroes app from the [Testing](../guide/testing) page.
-  </td>
-</tr><tr>
-  <td><code>web/main.dart</code></td>
-  <td markdown="1">Launches the app in the browser.
-  </td>
-</tr><tr>
-  <td><code>web/index.html</code></td>
-  <td markdown="1">Contains the `<my-app>` tag in its `<body>`. This is where the app lives!
-  </td>
-</tr><tr>
-  <td><code>web/styles.css</code></td>
-  <td markdown="1">A set of styles used throughout the app.
-  </td>
-</tr><tr>
-  <td><code>analysis_options.yaml</code></td>
-  <td markdown="1">The analysis options file. For details, see [Customize Static Analysis.][]
-  </td>
-</tr><tr>
-  <td><code>pubspec.yaml</code></td>
-  <td markdown="1">The file that describes this Dart package (the app) and its dependencies. For details, see [Pubspec Format.][]
-  </td>
-</tr>
-</table>
+| File | Purpose |
+| :--- | :--- |
+| lib/app_component.dart | Defines `<my-app>`, the **root** component of what will become a tree of nested components as the app evolves. |
+| test/app_test.dart | Defines `AppComponent` tests. While testing isn't covered in this tutorial, you can learn how to test the Tour of Heroes app from the [Testing](../guide/testing) page. |
+| web/main.dart | Launches the app in the browser. |
+| web/index.html | Contains the `<my-app>` tag in its `<body>`. This is where the app lives! |
+| web/styles.css | A set of styles used throughout the app. |
+| analysis_options.yaml | The analysis options file. For details, see [Customize Static Analysis.] |
+| pubspec.yaml | The file that describes this Dart package (the app) and its dependencies. For details, see [Pubspec Format.] |
 
 ## What's next
 
-In the [next tutorial page](toh-pt1.md),
-you'll modify the starter app to display more interesting data,
-and to allow the user to edit that data.
+In the [next tutorial page](toh-pt1.md), you'll modify the starter app to display more interesting data, and to allow the user to edit that data.
