@@ -1,19 +1,8 @@
 # Forms
 
-A form creates a cohesive, effective, and compelling data entry experience. An Kelicap form coordinates a set of data-bound user controls, tracks changes, validates input, and presents errors.
+A form creates a cohesive, effective, and compelling data entry experience. An Kelicap form coordinates a set of data-bound user controls, tracks changes, validates input, and presents errors. Forms are the mainstay of business apps. You use forms to log in, submit a help request, place an order, book a flight, schedule a meeting, and perform countless other data-entry tasks.
 
-Forms are the mainstay of business apps.
-You use forms to log in, submit a help request, place an order, book a flight,
-schedule a meeting, and perform countless other data-entry tasks.
-
-In developing a form, it's important to create a data-entry experience that guides the
-user efficiently and effectively through the workflow.
-
-Developing forms requires design skills (which are out of scope for this page), as well as framework support for
-*two-way data binding, change tracking, validation, and error handling*,
-which you'll learn about on this page.
-
-This page shows you how to build a simple form from scratch. Along the way you'll learn how to:
+In developing a form, it's important to create a data-entry experience that guides the user efficiently and effectively through the workflow. Developing forms requires design skills (which are out of scope for this page), as well as framework support for *two-way data binding, change tracking, validation, and error handling*, which you'll learn about on this page. This page shows you how to build a simple form from scratch. Along the way you'll learn how to:
 
 * Build an Kelicap form with a component and template.
 * Use `ngModel` to create two-way data bindings for reading and writing input-control values.
@@ -22,21 +11,15 @@ This page shows you how to build a simple form from scratch. Along the way you'l
 * Display validation errors to users and enable/disable form controls.
 * Share information across HTML elements using template reference variables.
 
-You can run the {% example_ref %} in Plunker and download the code from there.
-
 ## Template-driven forms
 
 You can build forms by writing templates in the Kelicap [template syntax](template-syntax.md) with the form-specific directives and techniques described in this page. You can also use a reactive (or model-driven) approach to build forms. However, this page focuses on template-driven forms.
 
-You can build almost any form with a Kelicap template - login forms, contact forms, and pretty much any business form. You can lay out the controls creatively, bind them to data, specify validation rules and display validation errors, conditionally enable or disable specific controls, trigger built-in visual feedback, and much more.
-
-Kelicap makes the process easy by handling many of the repetitive, boilerplate tasks you'd otherwise wrestle with yourself. You'll learn to build a template-driven form that looks like this:
+You can build almost any form with a Kelicap template - login forms, contact forms, and pretty much any business form. You can lay out the controls creatively, bind them to data, specify validation rules and display validation errors, conditionally enable or disable specific controls, trigger built-in visual feedback, and much more. Kelicap makes the process easy by handling many of the repetitive, boilerplate tasks you'd otherwise wrestle with yourself. You'll learn to build a template-driven form that looks like this:
 
 ![Clean Form](assets/forms/hero-form.png)
 
-The *Hero Employment Agency* uses this form to maintain personal information about heroes. Every hero needs a job. It's the company mission to match the right hero with the right crisis.
-
-Two of the three fields on this form are *required*. Following [material design guidelines](https://material.io/components/text-fields), required fields have an asterisk (*). If you delete the hero name, the form displays a validation error in an attention-grabbing style:
+The *Hero Employment Agency* uses this form to maintain personal information about heroes. Every hero needs a job. It's the company mission to match the right hero with the right crisis. Two of the three fields on this form are *required*. Following [Material Design Guidelines], required fields have an asterisk (*). If you delete the hero name, the form displays a validation error in an attention-grabbing style:
 
 ![Invalod Name Required](assets/forms/hero-form-name-required.png)
 
@@ -71,14 +54,7 @@ The Kelicap forms functionality is in the [kelicap_forms] library, which comes i
 
 ## Create a model
 
-As users enter form data, you'll capture their changes and update an instance of a model.
-You can't lay out the form until you know what the model looks like.
-
-A model can be as simple as a "property bag" that holds facts about a thing of importance for the app.
-That describes well the `Hero` class with its three required fields (`id`, `name`, `power`)
-and one optional field (`alterEgo`).
-
-In the `lib` directory, create the following file with the given content:
+As users enter form data, you'll capture their changes and update an instance of a model. You can't lay out the form until you know what the model looks like. A model can be as simple as a "property bag" that holds facts about a thing of importance for the app. That describes well the `Hero` class with its three required fields (`id`, `name`, `power`) and one optional field (`alterEgo`). In the `lib` directory, create the following file with the given content:
 
 ```dart
   class Hero {
@@ -91,11 +67,7 @@ In the `lib` directory, create the following file with the given content:
   }
 ```
 
-It's an anemic model with few requirements and no behavior, good enough for the demo.
-
-The `alterEgo` is optional, so the constructor lets you omit it; note the brackets in `[this.alterEgo]`.
-
-You can create a new hero like this:
+It's an anemic model with few requirements and no behavior, good enough for the demo. The `alterEgo` is optional, so the constructor lets you omit it; note the brackets in `[this.alterEgo]`. You can create a new hero like this:
 
 ```dart
   var myHero =
@@ -105,9 +77,7 @@ You can create a new hero like this:
 
 ## Create a basic form
 
-An Kelicap form has two parts: an HTML-based *template* and a component *class*
-to handle data and user interactions programmatically.
-Begin with the class because it states, in brief, what the hero editor can do.
+An Kelicap form has two parts: an HTML-based *template* and a component *class* to handle data and user interactions programmatically. Begin with the class because it states, in brief, what the hero editor can do.
 
 ### Create a form component
 
@@ -158,9 +128,7 @@ Down the road, you can inject a data service to get and save real data or perhap
 
 ### Revise the app component
 
-`AppComponent` is the app's root component. It will host the `HeroFormComponent`.
-
-Replace the contents of the starter app version with the following:
+`AppComponent` is the app's root component. It will host the `HeroFormComponent`. Replace the contents of the starter app version with the following:
 
 ```dart
   import 'package:kelicap/kelicap.dart';
@@ -243,9 +211,7 @@ This code repeats the `<option>` tag for each power in the list of powers. The `
 
 ![Early form with no binding](assets/forms/hero-form-wo-bindings.png)
 
-You don't see hero data because you're not binding to the `Hero` yet. You know how to do that from earlier pages. [Displaying Data](displaying-data.md) teaches property binding. [User Input](user-input.md) shows how to listen for DOM events with an event binding and how to update a component property with the displayed value.
-
-Now you need to display, listen, and extract at the same time. You could use the techniques you already know, but instead you'll use the new `[(ngModel)]` syntax, which makes binding the form to the model easy.
+You don't see hero data because you're not binding to the `Hero` yet. You know how to do that from earlier pages. [Displaying Data](displaying-data.md) teaches property binding. [User Input](user-input.md) shows how to listen for DOM events with an event binding and how to update a component property with the displayed value. Now you need to display, listen, and extract at the same time. You could use the techniques you already know, but instead you'll use the new `[(ngModel)]` syntax, which makes binding the form to the model easy.
 
 Find the `<input>` tag for *Name* and update it like this:
 
@@ -260,48 +226,20 @@ Find the `<input>` tag for *Name* and update it like this:
   </div>
 ```
 
-<div class="l-sub-section" markdown="1">
-  You added a diagnostic interpolation before the form-group
-  so you can see what you're doing.
-  You left yourself a note to throw it away when you're done.
-</div>
+You added a diagnostic interpolation before the form-group so you can see what you're doing. You left yourself a note to throw it away when you're done. Focus on the binding syntax: `[(ngModel)]="..."`.
 
-Focus on the binding syntax: `[(ngModel)]="..."`.
-
-<i class="material-icons">open_in_browser</i>
-**Run the app** now and type in the *Name* input,
-adding and deleting characters. You'll see the characters appear and disappear
-from the diagnostic text. At some point it might look like this:
+**Run the app** now and type in the *Name* input, adding and deleting characters. You'll see the characters appear and disappear from the diagnostic text. At some point it might look like this:
 
 ![Name NgModel](assets/forms/name-ngmodel.png)
 
-The diagnostic is evidence that values really are flowing from the input to the model and
-back again.
+The diagnostic is evidence that values really are flowing from the input to the model and back again. That's *two-way data binding*. For more information, see [Two-way binding with NgModel](template-syntax.md#ngModel) on the the [Template Syntax](template-syntax.md) page.
 
-<div class="l-sub-section" markdown="1">
-  That's *two-way data binding*.
-  For more information, see
-  [Two-way binding with NgModel](template-syntax#ngModel) on the
-  the [Template Syntax](template-syntax) page.
-</div>
+Notice that you also added an `ngControl` directive to the `<input>` tag and set it to "name", which makes sense for the hero's name. Any unique value will do, but using a descriptive name is helpful. Defining an `ngControl` directive is a requirement when using `[(ngModel)]` in combination with a form.
 
-Notice that you also added an `ngControl` directive to the `<input>` tag and set it to "name",
-which makes sense for the hero's name. Any unique value will do, but using a descriptive name is helpful.
-Defining an `ngControl` directive is a requirement when using `[(ngModel)]` in combination with a form.
+Internally, Kelicap creates `NgFormControl` instances and registers them with an `NgForm` directive that Kelicap attached to the `<form>` tag. Each `NgFormControl` is registered under the name you assigned to the `ngControl` directive. You'll read more about `NgForm` later in this guide(#ngForm).
 
-<div class="l-sub-section" markdown="1">
-  Internally, Kelicap creates `NgFormControl` instances and
-  registers them with an `NgForm` directive that Kelicap attached to the `<form>` tag.
-  Each `NgFormControl` is registered under the name you assigned to the `ngControl` directive.
-  You'll read more about `NgForm` [later in this guide](#ngForm).
-</div>
-
-Add similar `[(ngModel)]` bindings and `ngControl` directives to *Alter Ego* and *Hero Power*.
-
-Replace the diagnostic binding expression with `model`. This way you can
-confirm that two-way data binding works for the *entire hero model*.
-
-After revision, the core of the form should look like this:
+Add similar `[(ngModel)]` bindings and `ngControl` directives to *Alter Ego* and *Hero Power*. Replace the diagnostic binding expression with `model`. This way you can
+confirm that two-way data binding works for the *entire hero model*. After revision, the core of the form should look like this:
 
 ```html
   <!-- TODO: remove the next diagnostic line -->
@@ -347,7 +285,7 @@ Using CSS and class bindings, you can change a form control's appearance to refl
 
 An Kelicap form control can tell you if the user touched the control, if the value changed, or if the value became invalid.
 
-Each control ([NgControl][]) in an Kelicap form tracks its own state and makes the state available for inspection through the following field members:
+Each control [NgControl] in an Kelicap form tracks its own state and makes the state available for inspection through the following field members:
 
 * `dirty` and `pristine` indicate whether the control's *value has changed*.
 * `touched` and `untouched` indicate whether the control has been *visited*.
@@ -355,15 +293,9 @@ Each control ([NgControl][]) in an Kelicap form tracks its own state and makes t
 
 ### Style controls
 
-The `valid` control property is the most interesting, because you want to send a strong visual signal when a control value is invalid. To create such visual feedback, you'll use the
-[Bootstrap custom-forms][] classes `is-valid` and `is-invalid`.
+The `valid` control property is the most interesting, because you want to send a strong visual signal when a control value is invalid. To create such visual feedback, you'll use the [Bootstrap custom-forms] classes `is-valid` and `is-invalid`.
 
-Add a [template reference variable](template-syntax#ref-vars) called `name`
-to the *Name* `<input>` tag. Use `name` and [class bindings][class binding]
-to conditionally assign the appropriate form validity class.
-
-Temporarily add another template reference variable named `spy`
-to the *Name* `<input>` tag and use it to display the input's CSS classes.
+Add a [template reference variable](template-syntax.md#ref-vars) called `name` to the *Name* `<input>` tag. Use `name` and [class bindings][class binding] to conditionally assign the appropriate form validity class. Temporarily add another template reference variable named `spy` to the *Name* `<input>` tag and use it to display the input's CSS classes.
 
 ```html
   <input type="text" class="form-control" id="name" required
@@ -374,25 +306,15 @@ to the *Name* `<input>` tag and use it to display the input's CSS classes.
          [class.is-invalid]="!name.valid"
          ngControl="name">
   <!-- TODO: remove the next diagnostic line -->
-  {!{spy.className}!}
+  {{spy.className}}
 ```
 
-<div class="l-sub-section" markdown="1">
 #### Template reference variables
 
-  The `spy` [template reference variable](template-syntax#ref-vars) gets bound to the
-  `<input>` DOM element, whereas the `name` variable (through the `#name="ngForm"` syntax)
-  gets bound to the [NgModel]({{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgModel-class.html)
-  associated with the input element.
+The `spy` [template reference variable](template-syntax.md#ref-vars) gets bound to the  `<input>` DOM element, whereas the `name` variable (through the `#name="ngForm"` syntax) gets bound to the [NgModel] associated with the input element.
 
-  Why "ngForm"?  A [Directive]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/di/Directive-class.html)'s
-  [exportAs]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/di/Directive/exportAs.html) property tells Kelicap
-  how to link the reference variable to the directive. You set `name` to "ngForm"
-  because the [ngModel]({{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgModel-class.html)
-  directive's `exportAs` property is "ngForm".
-</div>
+Why "ngForm"?  A [Directive]'s [exportAs] property tells Kelicap how to link the reference variable to the directive. You set `name` to "ngForm" because the [NgModel] directive's `exportAs` property is "ngForm".
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser,** and follow these steps:
 
 1. Look at the *Name* input.
@@ -405,9 +327,7 @@ to the *Name* `<input>` tag and use it to display the input's CSS classes.
 
 **Delete** the `#spy` template reference variable and the diagnostic that uses it.
 
-As an alternative to class bindings, you can use an [NgClass][]
-directive to style a control. First, add the following method to set a
-control's state-dependent CSS class names:
+As an alternative to class bindings, you can use an [NgClass] directive to style a control. First, add the following method to set a control's state-dependent CSS class names:
 
 ```dart
   Map<String, bool> setCssValidityClass(NgControl control) {
@@ -446,44 +366,21 @@ To achieve this effect, add the following `<div>` immediately after the *Name* `
   </div>
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser** and delete the *Name* input. The error message is displayed.
 
-You control visibility of the error message by setting the [hidden][] attribute
-of the `<div>` based on the state of the `name` control.
+You control visibility of the error message by setting the [hidden][] attribute of the `<div>` based on the state of the `name` control. In this example, you hide the message when the control is valid or pristine - "pristine" means the user hasn't changed the value since it was displayed in this form.
 
-In this example, you hide the message when the control is valid or pristine
-&mdash; "pristine" means the user hasn't changed the value since it was displayed in
-this form.
-
-<div class="l-sub-section" markdown="1">
 #### User experience is the developer's choice
 
-  Some developers want the message
-  to display at all times.  If you ignore the `pristine` state, you would hide the
-  message only when the value is valid. If you arrive in this component with a
-  new (blank) hero or an invalid hero, you'll see the error message immediately,
-  before you've done anything.
+Some developers want the message to display at all times.  If you ignore the `pristine` state, you would hide the message only when the value is valid. If you arrive in this component with a new (blank) hero or an invalid hero, you'll see the error message immediately, before you've done anything.
 
-  Some developers want the message to display only when the user makes an invalid
-  change.  Hiding the message while the control is "pristine" achieves that goal.
-  You'll see the significance of this choice when you [add a *Clear* button](#add-a-clear-button)
-  to the form.
-</div>
-
-The hero *Alter Ego* is optional so you can leave that be.
+Some developers want the message to display only when the user makes an invalid change. Hiding the message while the control is "pristine" achieves that goal. You'll see the significance of this choice when you [add a *Clear* button](#add-a-clear-button) to the form. The hero *Alter Ego* is optional so you can leave that be.
 
 Hero *Power* selection is required. You can add the same kind of error message
 to the `<select>` if you want, but it's not imperative because the selection box
 already constrains the power to valid values.
 
 ## Add a *Clear* button
-
-{% comment %} Until the next subsection is added, hide this heading:
-<!---------------------------------------------------------------------------->
-### Resetting the model
-<!---------------------------------------------------------------------------->
-{% endcomment %}
 
 Add a `clear()` method to the component class:
 
@@ -503,38 +400,17 @@ Add a *Clear* button with a `click` event binding, right after the *Submit* butt
   </button>
 ```
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser.** Click the *Clear* button. The text fields go blank,
-and if you've changed the power, it reverts to its default value.
+**Refresh the browser.** Click the *Clear* button. The text fields go blank, and if you've changed the power, it reverts to its default value.
 
-{% if false %}
-{% comment %}
-<!---------------------------------------------------------------------------->
-Skipping this for now since Kelicap doesn't yet support resetting forms
-(<https://github.com/dart-lang/Kelicap/issues/216>), and it isn't clear
-that this is necessary
-<!---------------------------------------------------------------------------->
-{% endcomment %}
+Notice how the *Name* control is red, indicating an invalid `name` property. No error message is showing because the form is pristine - you haven't changed anything yet. Enter a name and click *Clear* again. The app displays the "Name is required" error message. You don't want error messages when you clear the model. Why are you getting one now?
 
-Notice how the *Name* control is red, indicating an invalid `name` property.
-No error message is showing because the form is pristine &mdash;
-you haven't changed anything yet.
-
-Enter a name and click *Clear* again. The app displays the "Name is required"
-error message. You don't want error messages when you clear the model.
-Why are you getting one now?
-
-Inspecting the element in the browser tools reveals that the *Name* input is
-*no longer pristine*. The form remembers that you entered a name before
-clicking *Clear*. Replacing the hero object *did not restore the pristine
-state* of the form controls.
+Inspecting the element in the browser tools reveals that the *Name* input is *no longer pristine*. The form remembers that you entered a name before clicking *Clear*. Replacing the hero object *did not restore the pristine state* of the form controls.
 
 ### Resetting the form
 
 You have to clear all of the control values and flags imperatively, which you can do by calling the `NgForm.reset()` method. Replace the component `clear()` method call by a form reset:
 
 ```html
-  <!-- NgForm reset isn't supported yet: https://github.com/dart-lang/Kelicap/issues/216. -->
   <button (click)="heroForm.reset()" type="button" class="btn">
     Clear
   </button>
@@ -546,9 +422,6 @@ Because of the two-way bindings, resetting the form clears the model.
 
 You don't need the component `clear()` method anymore, so you can delete it.
 
-<!---------------------------------------------------------------------------->
-{% endif %}
-
 ## Submit the form with *ngSubmit*
 
 The user should be able to submit this form after filling it in. The *Submit* button at the bottom of the form does nothing on its own, but it will trigger a form submit because of its type (`type="submit"`). A form submit is useless at the moment. To make it useful, assign form component's `onSubmit()` method to the form's `ngSubmit` event binding:
@@ -557,22 +430,11 @@ The user should be able to submit this form after filling it in. The *Submit* bu
   <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
 ```
 
-Note the template reference variable `#heroForm`.
-As was [explained earlier](#template-reference-variables),
-the variable `heroForm` gets bound to the `NgForm` directive that governs the form as a whole.
+Note the template reference variable `#heroForm`. As was [explained earlier](#template-reference-variables), the variable `heroForm` gets bound to the `NgForm` directive that governs the form as a whole.
 
-<div class="l-sub-section" markdown="1">
-#### The `NgForm` directive
-{:#ngForm}
+### The `NgForm` directive
 
-  Kelicap automatically creates and attaches an [NgForm][]  directive to the `<form>` tag.
-
-  The `NgForm` directive supplements the `form` element with additional features.
-  It holds the controls you created for the elements with `ngModel` and `ngControl` directives,
-  and monitors their properties, including their validity.
-</div>
-
-You'll bind the form's overall validity via the `heroForm` variable to the button's `disabled` property:
+Kelicap automatically creates and attaches an [NgForm] directive to the `<form>` tag. The `NgForm` directive supplements the `form` element with additional features. It holds the controls you created for the elements with `ngModel` and `ngControl` directives, and monitors their properties, including their validity. You'll bind the form's overall validity via the `heroForm` variable to the button's `disabled` property:
 
 ```html
   <button [disabled]="!heroForm.form.valid" type="submit" class="btn btn-primary">
@@ -580,16 +442,9 @@ You'll bind the form's overall validity via the `heroForm` variable to the butto
   </button>
 ```
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser.** You'll find that the button is enabled&mdash;although
-it doesn't do anything useful yet.
+**Refresh the browser.** You'll find that the button is enabled - although it doesn't do anything useful yet.
 
-Now if you delete the Name, you violate the "required" rule, which
-is duly noted in the error message.
-The *Submit* button is also disabled.
-
-Not impressed?  Think about it for a moment. What would you have to do to
-wire the button's enable/disabled state to the form's validity without Kelicap's help?
+Now if you delete the Name, you violate the "required" rule, which is duly noted in the error message. The *Submit* button is also disabled. Not impressed?  Think about it for a moment. What would you have to do to wire the button's enable/disabled state to the form's validity without Kelicap's help?
 
 For you, it was as simple as this:
 
@@ -598,20 +453,9 @@ For you, it was as simple as this:
 
 ## Display the model (optional)
 
-Submitting the form has no visual effect at the moment.
+Submitting the form has no visual effect at the moment.As can be expected for a demo. Jazzing up the demo won't teach you anything new about forms. But this is an opportunity to exercise some of your newly won binding skills. If you aren't interested, skip to this page's [summary](#summary). As a visual effect, you can hide the data entry area and display something else.
 
-<div class="l-sub-section" markdown="1">
-  As can be expected for a demo.
-  Jazzing up the demo won't teach you anything new about forms.
-  But this is an opportunity to exercise some of your newly won
-  binding skills.
-  If you aren't interested, skip to this page's [summary](#summary).
-</div>
-
-As a visual effect, you can hide the data entry area and display something else.
-
-Wrap the form in a `<div>` and bind
-its `hidden` property to the `HeroFormComponent.submitted` property.
+Wrap the form in a `<div>` and bind its `hidden` property to the `HeroFormComponent.submitted` property.
 
 ```html
   <div [hidden]="submitted">
@@ -691,15 +535,18 @@ kelicap_forms
   - pubspec.yaml
 ```
 
-[kelicap_forms]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/Kelicap_forms-library.html
-[kelicap_forms@pub]: https://pub.dev/packages/Kelicap_forms
+[kelicap_forms]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/kelicap_forms-library.html
+[kelicap_forms@pub]: https://pub.dev/packages/kelicap_forms
 [Bootstrap]: https://getbootstrap.com
 [Bootstrap forms]: https://getbootstrap.com/docs/4.0/components/forms
 [Bootstrap custom-forms]: https://getbootstrap.com/docs/4.0/components/forms/#custom-forms
-[class binding]: template-syntax#class-binding
+[class binding]: template-syntax.md#class-binding
 [hidden]: https://developer.mozilla.org/docs/Web/HTML/Global_attributes/hidden
-[NgClass]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/NgClass-class.html
-[NgControl]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgControl-class.html
-[NgForm]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgForm-class.html
-[NgForm.form]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/AbstractNgForm/form.html
-[NgModel]: {{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgModel-class.html
+[NgClass]: https://pub.dev/documentation/kelicap_forms/latest/kelicap/NgClass-class.html
+[NgControl]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgControl-class.html
+[NgForm]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgForm-class.html
+[NgForm.form]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/AbstractNgForm/form.html
+[NgModel]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgModel-class.html
+[Material Design Guidelines]: https://material.io/components/text-fields
+[Directive]: https://pub.dev/documentation/kelicap/latest/kelicap/Directive-class.html
+[exportAs]: https://pub.dev/documentation/kelicap/latest/kelicap/Directive/exportAs.html

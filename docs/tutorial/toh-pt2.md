@@ -2,16 +2,12 @@
 
 Build a master/detail page with a list of heroes. In this page, you'll expand the Tour of Heroes app to display a list of heroes, and allow users to select a hero and display the hero's details.
 
-When you're done with this page, the app should look like this {% example_ref %}.
-
 ## Where you left off
 
-Before you continue with this page of the Tour of Heroes,
-verify that you have the following structure after [The Hero Editor](toh-pt1) page.
-If your structure doesn't match, go back to that page to figure out what you missed.
+Before you continue with this page of the Tour of Heroes, verify that you have the following structure after [The Hero Editor](toh-pt1) page. If your structure doesn't match, go back to that page to figure out what you missed.
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.dart
     - hero.dart
@@ -23,7 +19,7 @@ If your structure doesn't match, go back to that page to figure out what you mis
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
+```
 
 {% include_relative_keep-app-running.md %}
 
@@ -33,12 +29,9 @@ Before adding new features, you'll benefit from refactoring the app a little.
 
 ### App template file
 
-You'll be making several updates to the app component's template.
-First, move the template to its own file:
+You'll be making several updates to the app component's template. First, move the template to its own file:
 
-<?code-excerpt "lib/app_component_1.html" title?>
-
-```
+```html
   <h1>{!{title}!}</h1>
   <h2>{!{hero.name}!}</h2>
   <div><label>id: </label>{!{hero.id}!}</div>
@@ -48,12 +41,9 @@ First, move the template to its own file:
   </div>
 ```
 
-Replace the `@Component` `template` parameter by a `templateUrl` referring
-to the new template file:
+Replace the `@Component` `template` parameter by a `templateUrl` referring to the new template file:
 
-<?code-excerpt "lib/app_component.dart (templateUrl)" replace="/templateUrl.*/[!$&!]/g" title?>
-
-```
+```dart
   @Component(
     selector: 'my-app',
     [!templateUrl: 'app_component.html',!]
@@ -61,26 +51,21 @@ to the new template file:
   )
 ```
 
-<i class="material-icons">open_in_browser</i>
- **Refresh the browser,** and the app still runs.
+**Refresh the browser,** and the app still runs.
 
 ### Hero class
 
-It is good practice to place [implementation files][] under the `lib/src`
-folder. Make the following changes to your project:
+It is good practice to place [implementation files][] under the `lib/src` folder. Make the following changes to your project:
 
 - Create the `lib/src` folder.
 - Move `hero.dart` into `lib/src`.
 - In the app component, adjust the import path to the hero file.
 
-<?code-excerpt "lib/app_component.dart (hero import)" title?>
-
-```
+```dart
   import 'src/hero.dart';
 ```
 
-<i class="material-icons">open_in_browser</i>
- **Refresh the browser.** The app still runs, and you are now ready to add new features.
+**Refresh the browser.** The app still runs, and you are now ready to add new features.
 
 ## Displaying heroes
 
@@ -90,9 +75,7 @@ To display a list of heroes, you'll add heroes to the view's template.
 
 Create a list of ten heroes in the following file under `lib/src`:
 
-<?code-excerpt "lib/src/mock_heroes.dart" title?>
-
-```
+```dart
   import 'hero.dart';
 
   final mockHeroes = <Hero>[
@@ -109,17 +92,13 @@ Create a list of ten heroes in the following file under `lib/src`:
   ];
 ```
 
-Eventually this app will fetch the list of heroes from a web service, but for now
-you can display mock heroes.
+Eventually this app will fetch the list of heroes from a web service, but for now you can display mock heroes.
 
 ### App _heroes_ field
 
-Replace the `hero` field with a `heroes` field in `AppComponent`,
-and initialize it with mock heroes (don't forget the import):
+Replace the `hero` field with a `heroes` field in `AppComponent`, and initialize it with mock heroes (don't forget the import):
 
-<?code-excerpt "lib/app_component.dart (heroes)" title?>
-
-```
+```dart
   import 'src/mock_heroes.dart';
 
   // ···

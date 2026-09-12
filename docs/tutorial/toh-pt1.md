@@ -1,11 +1,10 @@
 # The Hero Editor
 
-Build a simple hero editor. In this part of the tutorial, you'll modify the starter app to display information about a hero. Then you'll add the ability to edit the hero's data. When you're done, the app should look like this {% example_ref %}.
+Build a simple hero editor. In this part of the tutorial, you'll modify the starter app to display information about a hero. Then you'll add the ability to edit the hero's data.
 
 ## Where you left off
 
-Before you start writing code, let's verify that you have the following structure. If not, you'll need to go back and follow the [setup](toh-pt0.md) instructions
-on the previous page.
+Before you start writing code, let's verify that you have the following structure. If not, you'll need to go back and follow the [setup](toh-pt0.md) instructions on the previous page.
 
 ```terminal
 tour_of_heroes
@@ -68,8 +67,7 @@ Create a `Hero` class with `id` and `name` properties and save it to the followi
 Make these changes to `app_component.dart`:
 
 - Import `hero.dart`.
-- In the `AppComponent` class, declare the type of `hero` to be `Hero`, and
-  initialize it with a new `Hero` having an ID of `1` and the name "Windstorm".
+- In the `AppComponent` class, declare the type of `hero` to be `Hero`, and initialize it with a new `Hero` having an ID of `1` and the name "Windstorm".
 
 ```dart
   import 'hero.dart';
@@ -80,8 +78,7 @@ Make these changes to `app_component.dart`:
   }
 ```
 
-Because you changed the hero from a string to an object, update the binding in
-the template to refer to the hero's `name` property.
+Because you changed the hero from a string to an object, update the binding in the template to refer to the hero's `name` property.
 
 ```html
   <h1>{{title}}</h1>
@@ -92,8 +89,7 @@ the template to refer to the hero's `name` property.
 
 ### Show all hero properties
 
-Update the template to show all of the hero's properties: add a `<div>` for the
-hero's `id` property and another `<div>` for the hero's `name`.
+Update the template to show all of the hero's properties: add a `<div>` for the hero's `id` property and another `<div>` for the hero's `name`.
 
 ```html
   <h1>{{title}}</h1>
@@ -119,9 +115,7 @@ Refactor the hero name in the template so it looks like this:
   </div>
 ```
 
-`[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property
-to the textbox. Data flows _in both directions:_ from the property to the textbox,
-and from the textbox back to the property. Read more about `ngModel` in the [Kelicap Forms](../user-guide/forms.md#ngModel) and [Kelicap Template Syntax](../user-guide/template-syntax.md#ngModel) pages.
+`[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property to the textbox. Data flows _in both directions:_ from the property to the textbox, and from the textbox back to the property. Read more about `ngModel` in the [Kelicap Forms](../user-guide/forms.md#ngModel) and [Kelicap Template Syntax](../user-guide/template-syntax.md#ngModel) pages.
 
 ## Declare non-core directives
 
