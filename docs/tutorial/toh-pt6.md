@@ -226,8 +226,7 @@ In the current `HeroService` implementation, a Future resolved with mock heroes 
   Future<List<Hero>> getAll() async => mockHeroes;
 ```
 
-This was implemented in anticipation of ultimately
-fetching heroes with an HTTP client, which must be an asynchronous operation.
+This was implemented in anticipation of ultimately fetching heroes with an HTTP client, which must be an asynchronous operation.
 
 Now convert `getAll()` to use HTTP.
 
@@ -273,13 +272,7 @@ Refresh the browser. The hero data should successfully load from the mock server
 
 ### HTTP Future
 
-To get the list of heroes, you first make an asynchronous call to
-`http.get()`. Then you use the `_extractData` helper method to decode the
-response body.
-
-The response JSON has a single `data` property, which
-holds the list of heroes that the caller wants.
-So you grab that list and return it as the resolved Future value.
+To get the list of heroes, you first make an asynchronous call to `http.get()`. Then you use the `_extractData` helper method to decode the response body. The response JSON has a single `data` property, which holds the list of heroes that the caller wants. So you grab that list and return it as the resolved Future value.
 
 > **[Note]** the shape of the data that the server returns. This particular in-memory web API example returns an object with a `data` property. Your API might return something else. Adjust the code to match your web API.
 
