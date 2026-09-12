@@ -144,7 +144,7 @@ You must choose a strategy and you need to make the right call early in the proj
 It won't be easy to change later once the app is in production
 and there are lots of app URL references in the wild.
 
-Almost all Angular projects should use the default HTML 5 style.
+Almost all kelicap projects should use the default HTML 5 style.
 It produces URLs that are easier for users to understand.
 And it preserves the option to do _server-side rendering_ later.
 
@@ -174,7 +174,7 @@ in the `<head>` of the `index.html`.
 ```
   <script>
     // WARNING: DO NOT set the <base href> like this in production!
-    // Details: https://webdev.dartlang.org/angular/guide/router
+    // Details: https://webdev.dartlang.org/kelicap/guide/router
     (function () {
       var m = document.location.pathname.match(/^(\/[-\w]+)+\/web($|\/)/);
       document.write('<base href="' + (m ? m[0] : '/') + '" />');
@@ -195,6 +195,6 @@ Those developers may still use HTML 5 URLs by taking two remedial steps:
 1. Provide the router with an appropriate [appBaseHref][] value.
 1. Use _root URLs_ for all web resources: css, images, scripts, and template html files.
 
-[appBaseHref]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/appBaseHref-constant.html
-[routerProviders]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/routerProviders-constant.html
-[routerProvidersHash]: {{site.pub-api}}/angular_router/{{site.data.pkg-vers.angular.vers}}/angular_router/routerProvidersHash-constant.html
+[appBaseHref]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.kelicap.vers}}/kelicap_router/appBaseHref-constant.html
+[routerProviders]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.kelicap.vers}}/kelicap_router/routerProviders-constant.html
+[routerProvidersHash]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.kelicap.vers}}/kelicap_router/routerProvidersHash-constant.html
