@@ -144,8 +144,7 @@ That's where the heavy initialization logic belongs.
 
 ### OnDestroy
 
-Put cleanup logic in `ngOnDestroy`, the logic that **must** run before Kelicap destroys the directive. This is the time to notify another part of the app that the component is going away. This is the place to free resources that won't be garbage collected automatically. Unsubscribe from observables and DOM events. Stop interval timers. Unregister all callbacks that this directive registered with global or app services.
-You risk memory leaks if you neglect to do so.
+Put cleanup logic in `ngOnDestroy`, the logic that **must** run before Kelicap destroys the directive. This is the time to notify another part of the app that the component is going away. This is the place to free resources that won't be garbage collected automatically. Unsubscribe from observables and DOM events. Stop interval timers. Unregister all callbacks that this directive registered with global or app services. You risk memory leaks if you neglect to do so.
 
 ## AfterChanges
 
@@ -219,8 +218,7 @@ Use the `DoCheck` hook to detect and act upon changes that Kelicap doesn't catch
   }
 ```
 
-This code inspects certain **values-of-interest**, capturing and comparing their current state against previous values. It writes a special message to the log when there are no substantive changes to the `hero` or the `power`
-so you can see how often `DoCheck` is called. The results are illuminating:
+This code inspects certain **values-of-interest**, capturing and comparing their current state against previous values. It writes a special message to the log when there are no substantive changes to the `hero` or the `power` so you can see how often `DoCheck` is called. The results are illuminating:
 
 ![DoCheck](assets/lifecycle-hooks/do-check-anim.gif)
 
@@ -349,8 +347,7 @@ Now look at the component's template:
     ''',
 ```
 
-The `<ng-content>` tag is a *placeholder* for the external content.
-It tells Kelicap where to insert that content. In this case, the projected content is the `<my-child>` from the parent.
+The `<ng-content>` tag is a *placeholder* for the external content. It tells Kelicap where to insert that content. In this case, the projected content is the `<my-child>` from the parent.
 
 ![Projected Content](assets/lifecycle-hooks/projected-child-view.png)
 

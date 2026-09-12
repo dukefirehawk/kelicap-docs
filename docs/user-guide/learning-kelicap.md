@@ -35,11 +35,9 @@ but here's a possible learning path if you're new to Kelicap:
 
 Then feel free to skip around among the other pages on this site.
 
-### Next step
+## Next step
 
-Try the [tutorial](../tutorial "Tour of Heroes") if you're ready to start
-coding, or visit the [architecture overview](architecture.html "Basic Concepts")
-if you prefer to learn the basic concepts first.
+Try the [tutorial](../tutorial "Tour of Heroes") if you're ready to start coding, or visit the [architecture overview](architecture.html "Basic Concepts") if you prefer to learn the basic concepts first.
 
 ### Extra note
 

@@ -32,9 +32,9 @@ Before adding new features, you'll benefit from refactoring the app a little.
 You'll be making several updates to the app component's template. First, move the template to its own file:
 
 ```html
-  <h1>{!{title}!}</h1>
-  <h2>{!{hero.name}!}</h2>
-  <div><label>id: </label>{!{hero.id}!}</div>
+  <h1>{{title}}</h1>
+  <h2>{{hero.name}}</h2>
+  <div><label>id: </label>{{hero.id}}</div>
   <div>
     <label>name: </label>
     <input [(ngModel)]="hero.name" placeholder="name">
@@ -109,20 +109,15 @@ Replace the `hero` field with a `heroes` field in `AppComponent`, and initialize
   }
 ```
 
-<div class="l-sub-section" markdown="1">
-  The hero data is separated from the class implementation
-  because ultimately the hero names will come from a data service.
-</div>
+The hero data is separated from the class implementation because ultimately the hero names will come from a data service.
 
 ### Display hero names in a template
 
 To display the hero names in an unordered list, **replace** _all_ of the current
 template with the following HTML:
 
-<?code-excerpt "lib/app_component.html" remove="/selected|click|div|name/" replace="/(\s+)(.li) .*/$1$2\x3E$1  \x3C!-- each hero goes here --\x3E/g" title?>
-
-```
-  <h1>{!{title}!}</h1>
+```html
+  <h1>{{title}}</h1>
   <h2>Heroes</h2>
   <ul class="heroes">
     <li>
@@ -140,50 +135,29 @@ and display them individually.
 
 Modify the `<li>` tag by adding the core directive `*ngFor`.
 
-<?code-excerpt "lib/app_component.html" retain="ngFor" replace="/ngFor.*/$&\x3E/g"?>
-
-```
+```html
   <li *ngFor="let hero of heroes">
 ```
 
-<div class="l-sub-section" markdown="1">
-  The (`*`) prefix to `ngFor` is a critical part of this syntax.
-  It indicates that the `<li>` element and its children
-  constitute a master template.
+The (`*`) prefix to `ngFor` is a critical part of this syntax. It indicates that the `<li>` element and its children constitute a master template.
 
-  The `ngFor` directive iterates over the component's `heroes` list
-  and renders an instance of this template for each hero in that list.
+The `ngFor` directive iterates over the component's `heroes` list and renders an instance of this template for each hero in that list.
 
-  The `let hero` part of the expression identifies `hero` as the  template input variable,
-  which holds the current hero item for each iteration.
-  You can reference this variable within the template to access the current hero's properties.
+The `let hero` part of the expression identifies `hero` as the  template input variable,
+which holds the current hero item for each iteration. You can reference this variable within the template to access the current hero's properties.
 
-  Read more about `ngFor` and template input variables in the
-  [Showing a list property with *ngFor](../guide/displaying-data#ngFor) section of the
-  [Displaying Data](../guide/displaying-data) page and the
-  [ngFor](../guide/template-syntax#ngFor) section of the
-  [Template Syntax](../guide/template-syntax) page.
-</div>
+Read more about `ngFor` and template input variables in the [Showing a list property with *ngFor](../user-guide/displaying-data.md#ngFor) section of the [Displaying Data](../user-guide/displaying-data.md) page and the [ngFor](../user-guide/template-syntax.md#ngFor) section of the [Template Syntax](../user-guide/template-syntax.md) page. Within the `<li>` element, add content that uses the `hero` template variable to display the hero's properties.
 
-Within the `<li>` element, add content
-that uses the `hero` template variable to display the hero's properties.
-
-<?code-excerpt "lib/app_component.html" retain="/\bli\b|span/" replace="/ngFor.*/$&\x3E/g" title?>
-
-```
+```html
   <li *ngFor="let hero of heroes">
-    <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
+    <span class="badge">{{hero.id}}</span> {{hero.name}}
   </li>
 ```
 
-To use an Kelicap directive in a
-template requires that it be listed in the `directives` argument of your
-component's `@Component` annotation. Similar to what you did in [part 1][],
-add all [coreDirectives][]:
+To use an Kelicap directive in a template requires that it be listed in the `directives` argument of your
+component's `@Component` annotation. Similar to what you did in [part 1](toh-pt1.md), add all [coreDirectives]:
 
-<?code-excerpt "lib/app_component.dart (directives)" title?>
-
-```
+```dart
   @Component(
     selector: 'my-app',
     // ···
@@ -191,7 +165,6 @@ add all [coreDirectives][]:
   )
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser**, and a list of heroes appears.
 
 ### Style the heroes
@@ -216,133 +189,82 @@ Instead, place the styles in a `.css` file, and refer to the file using the
 `styleUrls` argument to `@Component`. By convention, the names of the
 component's CSS and Dart files have the same base (`app_component`).
 
-<code-tabs>
-  <?code-pane "lib/app_component.dart (styleUrls)" linenums?>
-  <?code-pane "lib/app_component.css" linenums?>
-</code-tabs>
-
 When you assign styles to a component, they are scoped to that specific component.
 These styles apply only to the `AppComponent` and don't affect the outer HTML.
 
 The template for displaying heroes should look like this:
 
-<?code-excerpt "lib/app_component.html" remove="/div|label|[Ss]elect/" replace="/ngFor.*/$&\x3E/g; /class=[^\x3E]+/[!$&!]/g" title?>
-
-```
-  <h1>{!{title}!}</h1>
+```html
+  <h1>{{title}}</h1>
   <h2>Heroes</h2>
   <ul [!class="heroes"!]>
     <li *ngFor="let hero of heroes">
-      <span [!class="badge"!]>{!{hero.id}!}</span> {!{hero.name}!}
+      <span [!class="badge"!]>{{hero.id}}</span> {{hero.name}}
     </li>
   </ul>
 ```
 
 ## Selecting a hero
 
-The app now displays a list of heroes as well as a single hero in the details view. But
-the list and the details view are not connected.
-When users select a hero from the list, the selected hero should appear in the details view.
-This UI pattern is known as "master/detail."
-In this case, the _master_ is the heroes list and the _detail_ is the selected hero.
-
-Next you'll connect the master to the detail through a `selected` component property,
-which is bound to a click event.
+The app now displays a list of heroes as well as a single hero in the details view. But the list and the details view are not connected. When users select a hero from the list, the selected hero should appear in the details view. This UI pattern is known as "master/detail. In this case, the _master_ is the heroes list and the _detail_ is the selected hero. Next you'll connect the master to the detail through a `selected` component property, which is bound to a click event.
 
 ### Handle click events
 
 Add a click event binding to the `<li>` like this:
 
-<?code-excerpt "lib/app_component.html (click)" region="" retain="/\bli\b|span|click/" title?>
-
-```
+```html
   <li *ngFor="let hero of heroes"
       (click)="onSelect(hero)">
-    <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
+    <span class="badge">{{hero.id}}</span> {{hero.name}}
   </li>
 ```
 
-The parentheses identify the `<li>` element's  `click` event as the target.
-The `onSelect(hero)` expression calls the  `AppComponent` method, `onSelect()`,
-passing the template input variable `hero`, as an argument.
-That's the same `hero` variable you defined previously in the `ngFor` directive.
+The parentheses identify the `<li>` element's  `click` event as the target. The `onSelect(hero)` expression calls the  `AppComponent` method, `onSelect()`, passing the template input variable `hero`, as an argument. That's the same `hero` variable you defined previously in the `ngFor` directive.
 
-<div class="l-sub-section" markdown="1">
-  Learn more about event binding at the
-  [User Input](../guide/user-input) page and the
-  [Event binding](../guide/template-syntax#event-binding) section of the
-  [Template Syntax](../guide/template-syntax) page.
-</div>
+Learn more about event binding at the [User Input](../user-guide/user-input.md) page and the [Event binding](../user-guide/template-syntax#event-binding.md) section of the [Template Syntax](../user-guide/template-syntax.md) page.
 
 ### Add a click handler to expose the selected hero
 
-You no longer need the `hero` property because you're no longer displaying a single hero; you're displaying a list of heroes.
-But the user will be able to select one of the heroes by clicking on it.
-So replace the `hero` property with this simple `selected` property:
+You no longer need the `hero` property because you're no longer displaying a single hero; you're displaying a list of heroes. But the user will be able to select one of the heroes by clicking on it. So replace the `hero` property with this simple `selected` property:
 
-<?code-excerpt "lib/app_component.dart (selected)" title?>
-
-```
+```dart
   Hero? selected;
 ```
 
-We use the `?` to indicate that `selected` can be `null` since you won't
-initialize `selected` as you did with `hero`. The hero names should
-all be unselected (in other words, `selected` should remain `null`) before the user picks
-a hero. You can learn more about Dart's null safety feature at [Sound null safety
-overview](https://dart.dev/null-safety).
+We use the `?` to indicate that `selected` can be `null` since you won't initialize `selected` as you did with `hero`. The hero names should all be unselected (in other words, `selected` should remain `null`) before the user picks a hero. You can learn more about Dart's null safety feature at [Sound null safety overview](https://dart.dev/null-safety). Add an `onSelect()` method that sets the `selected` property to the `hero` that the user clicks.
 
-Add an `onSelect()` method that sets the `selected` property to the `hero` that the user clicks.
-
-<?code-excerpt "lib/app_component.dart (onSelect)" title?>
-
-```
+```dart
   void onSelect(Hero hero) => selected = hero;
 ```
 
-The template still refers to the old `hero` property.
-Bind to the new `selected` property instead as follows:
+The template still refers to the old `hero` property. Bind to the new `selected` property instead as follows:
 
-<?code-excerpt "lib/app_component.html" remove="/^[^\s]|hero|li/" title?>
-
-```
-  <h2>{!{selected!.name}!}</h2>
-  <div><label>id: </label>{!{selected!.id}!}</div>
+```html
+  <h2>{{selected!.name}}</h2>
+  <div><label>id: </label>{{selected!.id}}</div>
   <div>
     <label>name: </label>
     <input [(ngModel)]="selected!.name" placeholder="name">
   </div>
 ```
 
-(Note the `!` after `selected`. It is a [null assertion
-operator](https://dart.dev/null-safety/understanding-null-safety#null-assertion-operator)
-that tells the Dart compiler that `selected` is not
-null here and its properties can be accessed safely. Indeed, why would we want
-to show a hero's id and name when he/she is null?)
+(Note the `!` after `selected`. It is a [null assertion operator](https://dart.dev/null-safety/understanding-null-safety#null-assertion-operator) that tells the Dart compiler that `selected` is not null here and its properties can be accessed safely. Indeed, why would we want to show a hero's id and name when he/she is null?)
 
 ### Hide the empty detail with ngIf
 
-When the app loads, `selected` is null.
-The selected hero is only initialized after the user clicks a hero's name.
-Kelicap can't display properties of the null `selected` and throws the following error,
-visible in the browser's console:
+When the app loads, `selected` is null. The selected hero is only initialized after the user clicks a hero's name. Kelicap can't display properties of the null `selected` and throws the following error, visible in the browser's console:
 
-```nocode
+```terminal
 EXCEPTION: Unexpected null value.
 ```
 
-Although `selected.name` is displayed in the template,
-you must keep the hero detail out of the DOM until there is a selected hero.
-
-Wrap the HTML hero detail content of the template with a `<div>`.
+Although `selected.name` is displayed in the template, you must keep the hero detail out of the DOM until there is a selected hero. Wrap the HTML hero detail content of the template with a `<div>`.
 Then add the `ngIf` core directive and set it to `selected != null`.
 
-<?code-excerpt "lib/app_component.html" remove="/\b(h1|[Hh]ero|li|ul)/" title?>
-
-```
+```html
   <div *ngIf="selected != null">
-    <h2>{!{selected!.name}!}</h2>
-    <div><label>id: </label>{!{selected!.id}!}</div>
+    <h2>{{selected!.name}}</h2>
+    <div><label>id: </label>{{selected!.id}}</div>
     <div>
       <label>name: </label>
       <input [(ngModel)]="selected!.name" placeholder="name">
@@ -350,77 +272,47 @@ Then add the `ngIf` core directive and set it to `selected != null`.
   </div>
 ```
 
-<div class="alert alert-warning" markdown="1">
-  Don't forget the asterisk (`*`) in front of `ngIf`.
-</div>
+Don't forget the asterisk (`*`) in front of `ngIf`.
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app no longer fails and the list of names displays again in the browser.
 
 When there is no selected hero, the `ngIf` directive removes the hero detail HTML from the DOM.
-There are no hero detail elements or bindings to worry about.
+There are no hero detail elements or bindings to worry about. When the user picks a hero, `selected` becomes non-null and `ngIf` puts the hero detail content into the DOM and evaluates the nested bindings.
 
-When the user picks a hero, `selected` becomes non-null and
-`ngIf` puts the hero detail content into the DOM and evaluates the nested bindings.
-
-<div class="l-sub-section" markdown="1">
-  Read more about `ngIf` and `ngFor` in the
-  [Structural Directives](../guide/structural-directives) page and the
-  [Built-in directives](../guide/template-syntax#directives) section of the
-  [Template Syntax](../guide/template-syntax) page.
-</div>
+Read more about `ngIf` and `ngFor` in the [Structural Directives](../user-guide/structural-directives.md) page and the [Built-in directives](../user-guide/template-syntax#directives.md) section of the [Template Syntax](../user-guide/template-syntax.md) page.
 
 ### Style the selected hero
 
-While the selected hero details appear below the list, it's difficult to identify the selected hero within the list itself.
+While the selected hero details appear below the list, it's difficult to identify the selected hero within the list itself. In the `styles` metadata that you added above, there is a custom CSS class named `selected`. To make the selected hero more visible, you'll apply this `selected` class to the `<li>` when the user clicks on a hero name. For example, when the user clicks "Magneta", it should render with a distinctive but subtle background color like this:
 
-In the `styles` metadata that you added above, there is a custom CSS class named `selected`.
-To make the selected hero more visible, you'll apply this `selected` class to the `<li>` when the user clicks on a hero name.
-For example, when the user clicks "Magneta", it should render with a distinctive but subtle background color
-like this:
-
-<img class="image-display" src="{% asset ng/devguide/toh/heroes-list-selected.png @path %}" alt="Selected hero">
+![Selected hero](assets/toh/heroes-list-selected.png)
 
 In the template, add the following binding to  the `<li>` tag:
 
-<?code-excerpt "lib/app_component.html" retain="class.selected"?>
-
-```
+```dart
   [class.selected]="hero == selected"
 ```
 
-When the expression (`hero == selected`) is `true`, Kelicap adds the `selected` CSS class.
-When the expression is `false`, Kelicap removes the `selected` class.
+When the expression (`hero == selected`) is `true`, Kelicap adds the `selected` CSS class. When the expression is `false`, Kelicap removes the `selected` class. The `==` operator tests whether the given objects are [identical], just like in normal Dart code. Read more about the `[class]` binding in the [Template Syntax](../user-guide/template-syntax.md#ngClass "Template syntax: NgClass") guide. The final version of the `<li>` looks like this:
 
-<div class="l-sub-section" markdown="1">
-  The `==` operator tests whether the given objects are [identical][], just like
-  in normal Dart code.
-
-  Read more about the `[class]` binding in the [Template Syntax](../guide/template-syntax#ngClass "Template syntax: NgClass") guide.
-</div>
-
-The final version of the `<li>` looks like this:
-
-<?code-excerpt "lib/app_component.html" retain="/li|span|hero\b/" title?>
-
-```
+```html
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
       (click)="onSelect(hero)">
-    <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
+    <span class="badge">{{hero.id}}</span> {{hero.name}}
   </li>
 ```
 
 After clicking "Magneta", the list should look like this:
 
-<img class="image-display" src="{% asset ng/devguide/toh/heroes-list-1.png @path %}" alt="Output of heroes list app" width="320px">
+![Output of heroes list app](assets/toh/heroes-list-1.png)
 
 ## Review the app structure
 
 Your project should have the following files:
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -435,25 +327,11 @@ Your project should have the following files:
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
+```
 
-<aside class="alert alert-info" markdown="1">
-  <h4>Tutorial component tests</h4>
+## Tutorial component tests
 
-  This tutorial doesn't cover testing, but if you look at the example code, it
-  has component tests for each new feature this tutorial adds. See the
-  [Component Testing](../guide/testing/component) page for details.
-</aside>
-
-Here are the files discussed in this page:
-
-<code-tabs>
-  <?code-pane "lib/app_component.dart" linenums?>
-  <?code-pane "lib/app_component.html" linenums?>
-  <?code-pane "lib/app_component.css" linenums?>
-  <?code-pane "lib/src/hero.dart" linenums?>
-  <?code-pane "lib/src/mock_heroes.dart" linenums?>
-</code-tabs>
+This tutorial doesn't cover testing, but if you look at the example code, it has component tests for each new feature this tutorial adds. See the [Component Testing](../guide/testing/component) page for details.
 
 ## The road you've travelled
 
@@ -470,10 +348,7 @@ Your app should look like this {% example_ref %}.
 
 ## The road ahead
 
-You've expanded the Tour of Heroes app, but it's far from complete.
-An app shouldn't be one monolithic component.
-In the [next page](toh-pt3), you'll split the app into subcomponents and make them work together.
+You've expanded the Tour of Heroes app, but it's far from complete. An app shouldn't be one monolithic component. In the [next page](toh-pt3.md), you'll split the app into subcomponents and make them work together.
 
 [coreDirectives]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/coreDirectives-constant.html
 [implementation files]: {{site.dartlang}}/tools/pub/package-layout#implementation-files
-[part 1]: /tutorial/toh-pt1#component-directives
