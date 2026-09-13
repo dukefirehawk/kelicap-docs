@@ -47,14 +47,14 @@ Update package dependencies by adding the Dart [http] and
 [stream_transform] packages:
 
 ```yaml
-   kelicap: ^1.1.0
-   kelicap_forms: ^1.1.0
-   kelicap_router: ^1.1.0
-+  http: ^0.16.0
-+  stream_transform: ^3.1.0
+  kelicap: ^1.1.0
+  kelicap_forms: ^1.1.0
+  kelicap_router: ^1.1.0
+  http: ^0.16.0
+  stream_transform: ^3.1.0
 
  dev_dependencies:
-   kelicap_test: ^1.1.0
+  kelicap_test: ^1.1.0
 ```
 
 ## Register for HTTP services
@@ -62,9 +62,9 @@ Update package dependencies by adding the Dart [http] and
 Before the app can use `BrowserClient`, you have to register it as a service provider. You should be able to access `BrowserClient` services from anywhere in the app, so provide it through the app's root injector:
 
 ```dart
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngrouter/ngrouter.dart';
-  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap_router/kelicap_router.dart';
+  import 'package:tour_of_heroes/app_component.template.dart' as ng;
   import 'package:http/browser_client.dart';
 
   import 'main.template.dart' as self;
@@ -91,10 +91,10 @@ Until you have a web server that can handle requests for hero data, the HTTP cli
 Update `web/main.dart` with this version, which uses the mock service:
 
 ```dart
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngrouter/ngrouter.dart';
-  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
-  import 'package:Kelicap_tour_of_heroes/in_memory_data_service.dart';
+  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap_router/kelicap_router.dart';
+  import 'package:tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:tour_of_heroes/in_memory_data_service.dart';
   import 'package:http/http.dart';
 
   import 'main.template.dart' as self;
@@ -630,8 +630,8 @@ Create the `HeroSearchComponent` class and metadata.
 ```dart
   import 'dart:async';
 
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngrouter/ngrouter.dart';
+  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap_router/kelicap_router.dart';
   import 'package:stream_transform/stream_transform.dart';
 
   import 'route_paths.dart';

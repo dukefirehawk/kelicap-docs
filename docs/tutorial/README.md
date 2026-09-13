@@ -22,9 +22,7 @@ Here's a visual idea of where this tutorial leads, beginning with the "Dashboard
 
 ![Heroes Dashboard](assets/toh/heroes-dashboard-1.png)
 
-You can click the two links above the dashboard ("Dashboard" and "Heroes") to navigate between this Dashboard view and a Heroes view.
-
-If you click the dashboard hero "Magneta," the router opens a "Hero Details" view where you can change the hero's name.
+You can click the two links above the dashboard ("Dashboard" and "Heroes") to navigate between this Dashboard view and a Heroes view. If you click the dashboard hero "Magneta," the router opens a "Hero Details" view where you can change the hero's name.
 
 ![Heroes Details](assets/toh/hero-details-1.png)
 

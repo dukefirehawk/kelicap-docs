@@ -152,7 +152,7 @@ To tell Kelicap that your app uses the router, pass as an argument to `runApp()`
 ```dart
   import 'package:kelicap/kelicap.dart';
   import 'package:kelicap_router/kelicap_router.dart';
-  import 'package:kelicap_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:tour_of_heroes/app_component.template.dart' as ng;
 
   import 'main.template.dart' as self;
 
