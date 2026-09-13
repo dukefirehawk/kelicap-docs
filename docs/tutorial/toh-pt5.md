@@ -1,8 +1,6 @@
 # Routing
 
-Add the Kelicap component router and learn to navigate among the views.
-
-There are new requirements for the Tour of Heroes app:
+Add the Kelicap component router and learn to navigate among the views. There are new requirements for the Tour of Heroes app:
 
 * Add a *Dashboard* view.
 * Add the ability to navigate between the *Heroes* and *Dashboard* views.
@@ -11,24 +9,16 @@ There are new requirements for the Tour of Heroes app:
 
 When you’re done, users will be able to navigate the app like this:
 
-<img class="image-display" src="{% asset ng/devguide/toh/nav-diagram.png @path %}" alt="View navigations">
+![View navigations](assets/toh/nav-diagram.png)
 
-To satisfy these requirements, you'll add Kelicap’s router to the app.
-
-<div class="l-sub-section" markdown="1">
-  For more information about the router, read the [Routing and Navigation](/guide/router) page.
-</div>
-
-When you're done with this page, the app should look like this {% example_ref %}.
-
-{%comment%}include ../../../_includes/_see-addr-bar{%endcomment%}
+To satisfy these requirements, you'll add Kelicap’s router to the app. For more information about the router, read the [Routing and Navigation](../user-guide/router.md) page.
 
 ## Where you left off
 
 Before continuing with the Tour of Heroes, verify that you have the following structure.
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.{css,dart,html}
     - src
@@ -44,9 +34,7 @@ Before continuing with the Tour of Heroes, verify that you have the following st
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
-
-{% include_relative _keep-app-running.md %}
+```
 
 ## Action plan
 
@@ -58,35 +46,25 @@ Here's the plan:
 * Create a new `DashboardComponent`.
 * Tie the *Dashboard* into the navigation structure.
 
-<div class="l-sub-section" markdown="1">
-  *Routing* is another name for *navigation*. The router is the mechanism for navigating from view to view.
-</div>
+*Routing* is another name for *navigation*. The router is the mechanism for navigating from view to view.
 
 ## Splitting the *AppComponent*
 
-The current app loads `AppComponent` and immediately displays the list of heroes.
-The revised app should present a shell with a choice of views (*Dashboard* and *Heroes*)
-and then default to one of them.
-
-The `AppComponent` should only handle navigation, so you'll
-move the display of *Heroes* out of `AppComponent` and into its own `HeroListComponent`.
+The current app loads `AppComponent` and immediately displays the list of heroes. The revised app should present a shell with a choice of views (*Dashboard* and *Heroes*) and then default to one of them. The `AppComponent` should only handle navigation, so you'll move the display of *Heroes* out of `AppComponent` and into its own `HeroListComponent`.
 
 ### *HeroListComponent*
 
-`AppComponent` is already dedicated to *Heroes*.
-Instead of moving the code out of `AppComponent`, rename it to `HeroListComponent`
-and create a separate `AppComponent` shell.
+`AppComponent` is already dedicated to *Heroes*. Instead of moving the code out of `AppComponent`, rename it to `HeroListComponent` and create a separate `AppComponent` shell.
 
 Do the following:
 
 * Rename and move the `app_component.*` files to `src/hero_list_component.*`.
 * Drop the `src/` prefix from import paths.
-* Rename the `AppComponent` class to `HeroListComponent` (rename locally, _only_ in this file).
+* Rename the `AppComponent` class to `HeroListComponent` (rename locally, *only* in this file).
 * Rename the selector `my-app` to `my-heroes`.
 * Change the template URL to `hero_list_component.html` and style file to `hero_list_component.css`.
 
-<?code-excerpt "lib/src/hero_list_component.dart (showing renamings only)" region="renaming" replace="/, this._router//g" title?>
-```
+```dart
   @Component(
     selector: 'my-heroes',
     templateUrl: 'hero_list_component.html',
@@ -102,8 +80,7 @@ Do the following:
 
 ### Create *AppComponent*
 
-The new `AppComponent` is the app shell.
-It will have some navigation links at the top and a display area below.
+The new `AppComponent` is the app shell. It will have some navigation links at the top and a display area below.
 
 Perform these steps:
 
@@ -121,9 +98,8 @@ Perform these steps:
 
 The first draft looks like this:
 
-<?code-excerpt "lib/app_component_1.dart" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
+```dart
+  import 'package:kelicap/Kelicap.dart';
 
   import 'src/hero_service.dart';
   import 'src/hero_list_component.dart';
@@ -131,7 +107,7 @@ The first draft looks like this:
   @Component(
     selector: 'my-app',
     template: '''
-      <h1>{!{title}!}</h1>
+      <h1>{{title}}</h1>
       <my-heroes></my-heroes>
     ''',
     directives: [HeroListComponent],
@@ -142,60 +118,41 @@ The first draft looks like this:
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app still runs and displays heroes.
 
 ## Add routing
 
-Instead of displaying automatically, heroes should display after users click a button.
-In other words, users should be able to navigate to the list of heroes.
-
-<?code-excerpt path-base="examples/ng/doc"?>
+Instead of displaying automatically, heroes should display after users click a button. In other words, users should be able to navigate to the list of heroes.
 
 ### Update the pubspec
 
-Use the Kelicap router ([ngrouter][]) to enable navigation. Since the
-router is in its own package, first add the package to the app's pubspec:
+Use the Kelicap router ([kelicap_router]) to enable navigation. Since the router is in its own package, first add the package to the app's pubspec:
 
-<?code-excerpt "toh-4/pubspec.yaml" diff-with="toh-5/pubspec.yaml" to="ngrouter"?>
-```diff
---- toh-4/pubspec.yaml
-+++ toh-5/pubspec.yaml
-@@ -8,3 +8,4 @@
- dependencies:
-   ngdart: ^7.1.1
-   ngforms: ^4.1.1
-+  ngrouter: ^3.1.1
+```yaml
+  dependencies:
+    kelicap: ^1.1.0
+    kelicap_forms: ^1.1.0
+    kelicap_router: ^1.1.0
 ```
 
-Not all apps need routing, which is why the Kelicap router is
-in a separate, optional package.
-
-<?code-excerpt path-base="examples/ng/doc/toh-5"?>
+Not all apps need routing, which is why the Kelicap router is in a separate, optional package.
 
 ### Import the library
 
-The Kelicap router is a combination of multiple services
-([routerProviders][]/[routerProvidersHash][]),
-directives ([routerDirectives][]), and
-configuration classes. You get them all by importing
-the router library:
+The Kelicap router is a combination of multiple services ([routerProviders]/[routerProvidersHash]), directives ([routerDirectives]), and configuration classes. You get them all by importing the router library:
 
-<?code-excerpt "lib/app_component.dart (Kelicap_router)" title?>
-```
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap_router/kelicap_router.dart';
 ```
 
 ### Make the router available
 
-To tell Kelicap that your app uses the router, pass as an argument to `runApp()`
-an injector seeded with [routerProvidersHash][]:
+To tell Kelicap that your app uses the router, pass as an argument to `runApp()`an injector seeded with [routerProvidersHash]:
 
-<?code-excerpt "web/main.dart" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngrouter/ngrouter.dart';
-  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
+```dart
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_router/kelicap_router.dart';
+  import 'package:kelicap_tour_of_heroes/app_component.template.dart' as ng;
 
   import 'main.template.dart' as self;
 
@@ -209,24 +166,16 @@ an injector seeded with [routerProvidersHash][]:
   }
 ```
 
-{% include location-strategy-callout.md %}
-
 ### *\<base href>*
 
-Open `index.html` and ensure there is a `<base href="...">` element
-(or a script that dynamically sets this element)
-at the top of the `<head>` section.
+Open `index.html` and ensure there is a `<base href="...">` element (or a script that dynamically sets this element) at the top of the `<head>` section.
 
-As explained in the [Set the base href](/guide/router/1#base-href)
-section of the [Routing and Navigation](/guide/router) page,
-the example apps use the following script:
+As explained in the [Set the base href](../user-guide/router/1.md#base-href) section of the [Routing and Navigation](../user-guide/router/README.md) page, the example apps use the following script:
 
-<?code-excerpt "web/index.html (base-href)" title?>
-```
+```html
   <head>
     <script>
       // WARNING: DO NOT set the <base href> like this in production!
-      // Details: https://webdev.dartlang.org/Kelicap/guide/router
       (function () {
         var m = document.location.pathname.match(/^(\/[-\w]+)+\/web($|\/)/);
         document.write('<base href="' + (m ? m[0] : '/') + '" />');
@@ -241,9 +190,8 @@ pastes a URL into the browser address bar.
 
 First create a file to hold route paths. Initialize it with this content:
 
-<?code-excerpt "lib/src/route_paths.dart" region="v1" plaster="none" title?>
-```
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap_router/kelicap_router.dart';
 
   class RoutePaths {
     static final heroes = RoutePath(path: 'heroes');
@@ -252,9 +200,8 @@ First create a file to hold route paths. Initialize it with this content:
 
 As a first route, define a route to the heroes component:
 
-<?code-excerpt "lib/src/routes.dart (a first route)" plaster="none" title?>
-```
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap_router/kelicap_router.dart';
 
   import 'route_paths.dart';
   import 'hero_list_component.template.dart' as hero_list_template;
@@ -275,26 +222,18 @@ As a first route, define a route to the heroes component:
   }
 ```
 
-The `Routes.all` field is a list of *route definitions*.
-It contains only one route, but you'll be adding more routes shortly.
+The `Routes.all` field is a list of *route definitions*. It contains only one route, but you'll be adding more routes shortly. The heroes [RouteDefinition] has the following named arguments:
 
-The heroes [RouteDefinition][] has the following named arguments:
+* `routePath`: The router matches this path against the URL in the browser address bar (`heroes`).
+* `component`: The (factory of the) component that will be activated when this route is navigated to (`hero_list_template.HeroListComponentNgFactory`).
 
-- `routePath`: The router matches this path against the URL in the browser
-  address bar (`heroes`).
-- `component`: The (factory of the) component that will be activated when this
-  route is navigated to (`hero_list_template.HeroListComponentNgFactory`).
-
-<div class="l-sub-section" markdown="1">
-  Read more about defining routes in the [Routing & Navigation](/guide/router) page.
-</div>
+> Read more about defining routes in the [Routing & Navigation](../user-guide/router/README.md) page.
 
 The Kelicap compiler generates **component factories** behind the scenes when
 you build the app. To access the factory you need to import the generated
 component template file:
 
-<?code-excerpt "lib/src/routes.dart (hero_list_template)"?>
-```
+```dart
   import 'hero_list_component.template.dart' as hero_list_template;
 ```
 
@@ -302,45 +241,34 @@ Until you've built the app, the generated files don't exist. The analyzer
 normally reports a missing import as an error, but we've disabled this error
 using the following configuration:
 
-<?fixme-code-excerpt "analysis_options.yaml" retain="/analyzer:|errors:|uri/"  plaster="none" title?>
 ```yaml
   analyzer:
     errors:
       uri_has_not_been_generated: ignore
 ```
 
-By naming the import (`hero_list_template`) you can use the not-yet-generated
-component factory without an error from the analyzer
+By naming the import (`hero_list_template`) you can use the not-yet-generated component factory without an error from the analyzer
 
 ### Router outlet
 
-When you visit [localhost:8080/#/heroes](http://localhost:8080/#/heroes){:.no-automatic-external},
-the router should match the URL to the heroes route and display a `HeroListComponent`.
-However, you have to tell the router where to display the component.
+When you visit [localhost:8080/#/heroes](http://localhost:8080/#/heroes), the router should match the URL to the heroes route and display a `HeroListComponent`. However, you have to tell the router where to display the component.
 
 To do this, open `app_component.dart` and make the following changes:
 
-- Add [routerDirectives][] to the directives list. [RouterOutlet][] is one of
-  the `routerDirectives`.
-- Add a `<router-outlet>` element at the end of the template. The router
-  displays each component immediately below the `<router-outlet>` as users
-  navigate through the app.
-- Remove `<my-heroes>` from the template because `AppComponent` won't directly
-  display heroes, that's the router's job.
-- Remove `HeroListComponent` from the directives list.
+* Add [routerDirectives][] to the directives list. [RouterOutlet][] is one of the `routerDirectives`.
+* Add a `<router-outlet>` element at the end of the template. The router displays each component immediately below the `<router-outlet>` as users navigate through the app.
+* Remove `<my-heroes>` from the template because `AppComponent` won't directly display heroes, that's the router's job.
+* Remove `HeroListComponent` from the directives list.
 
 The `<router-outlet>` takes a list of routes as input, so make these changes:
 
-- Import the app routes.
-- Add an `exports` argument to the `@Component` annotation, and export
-  `RoutePaths` and `Routes` (you'll be using `RoutePaths` shortly).
-- In the template, bind the `routes` property of the `<router-outlet>` to
-  `Routes.all`.
+* Import the app routes.
+* Add an `exports` argument to the `@Component` annotation, and export `RoutePaths` and `Routes` (you'll be using `RoutePaths` shortly).
+* In the template, bind the `routes` property of the `<router-outlet>` to `Routes.all`.
 
 The app component code should look like this:
 
-<?code-excerpt "lib/app_component.dart (routes and template)" replace="/(template: ''')\n/$1/g; /'''\s*\/\//'''/g; /(.router-outlet|directives|exports).*/[!$&!]/g" title?>
-```
+```dart
   import 'src/routes.dart';
 
   @Component(
@@ -358,23 +286,15 @@ The app component code should look like this:
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser,** then visit
-[localhost:8080/#/heroes](http://localhost:8080/#/heroes){:.no-automatic-external}.
-You should see the heroes list.
+**Refresh the browser,** then visit [localhost:8080/#/heroes](http://localhost:8080/#/heroes){:.no-automatic-external}. You should see the heroes list.
 
 ### Router links
 
-Users shouldn't have to paste a route path into the address bar.
-Instead, add an anchor to the template that, when clicked,
-triggers navigation to `HeroListComponent`.
+Users shouldn't have to paste a route path into the address bar. Instead, add an anchor to the template that, when clicked, triggers navigation to `HeroListComponent`. The revised template looks like this:
 
-The revised template looks like this:
-
-<?code-excerpt "lib/app_component.dart (template)" remove="/[Dd]ashboard/" title?>
-```
+```html
   template: '''
-    <h1>{!{title}!}</h1>
+    <h1>{{title}}</h1>
     <nav>
       <a [routerLink]="RoutePaths.heroes.toUrl()"
          [routerLinkActive]="'active'">Heroes</a>
@@ -383,34 +303,22 @@ The revised template looks like this:
   ''',
 ```
 
-Note the `routerLink` [property binding][] in the anchor tag. The [RouterLink][] directive
-is bound to an expression whose string value that tells the router where to navigate to when the user
-clicks the link.
+Note the `routerLink` [property binding][] in the anchor tag. The [RouterLink][] directive is bound to an expression whose string value that tells the router where to navigate to when the user clicks the link.
 
 Looking back at the route definitions, you can confirm that
 `'heroes'` is the path of the route to the `HeroListComponent`.
 
-{% comment %} The path string isn't visible anymore so this callout isn't really pertinent:
-<div class="callout is-important" markdown="1">
-  Notice that `routerLink` is bound to `/heroes` and not `/#/heroes`, even if
-  your app uses the [HashLocationStrategy][] during development.  This uniform
-  use of route paths makes it easy to switch to the [PathLocationStrategy][]
-  when deploying in production.
-</div>
-{% endcomment %}
+> The path string isn't visible anymore so this callout isn't really pertinent: Notice that `routerLink` is bound to `/heroes` and not `/#/heroes`, even if your app uses the [HashLocationStrategy] during development.  This uniform use of route paths makes it easy to switch to the [PathLocationStrategy] when deploying in production.
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser**. The browser displays the app title and heroes link,
 but not the heroes list. Click the *Heroes* navigation link. The address bar
-updates to `/#/heroes` (or the equivalent `/#heroes`),
-and the list of heroes displays.
+updates to `/#/heroes` (or the equivalent `/#heroes`), and the list of heroes displays.
 
 `AppComponent` now looks like this:
 
-<?code-excerpt "lib/app_component.dart" remove="/style|[Dd]ash/" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap_router/kelicap_router.dart';
 
   import 'src/hero_service.dart';
   import 'src/routes.dart';
@@ -418,7 +326,7 @@ and the list of heroes displays.
   @Component(
     selector: 'my-app',
     template: '''
-      <h1>{!{title}!}</h1>
+      <h1>{{title}}</h1>
       <nav>
         <a [routerLink]="RoutePaths.heroes.toUrl()"
            [routerLinkActive]="'active'">Heroes</a>
@@ -434,18 +342,14 @@ and the list of heroes displays.
   }
 ```
 
-The  *AppComponent* has a router and displays routed views.
-For this reason, and to distinguish it from other kinds of components,
-this component type is called a *router component*.
+The  *AppComponent* has a router and displays routed views. For this reason, and to distinguish it from other kinds of components, this component type is called a *router component*.
 
 ## Add a dashboard
 
-Routing only makes sense when multiple views exist.
-To add another view, create a placeholder `DashboardComponent`.
+Routing only makes sense when multiple views exist. To add another view, create a placeholder `DashboardComponent`.
 
-<?code-excerpt "lib/src/dashboard_component_1.dart (v1)" region="" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
+```dart
+  import 'package:kelicap/Kelicap.dart';
 
   @Component(
     selector: 'my-dashboard',
@@ -461,13 +365,11 @@ You'll make this component more useful later.
 Add a dashboard route similar to the heroes route by adding a path
 and then creating a route definition.
 
-<?code-excerpt "lib/src/route_paths.dart (dashboard)" title?>
-```
+```dart
   static final dashboard = RoutePath(path: 'dashboard');
 ```
 
-<?code-excerpt "lib/src/routes.dart (dashboard)" title?>
-```
+```dart
   static final dashboard = RouteDefinition(
     routePath: RoutePaths.dashboard,
     component: dashboard_template.DashboardComponentNgFactory,
@@ -481,21 +383,15 @@ and then creating a route definition.
 
 You'll also need to import the compiled dashboard template:
 
-<?code-excerpt "lib/src/routes.dart (dashboard_template)" title?>
-```
+```dart
   import 'dashboard_component.template.dart' as dashboard_template;
 ```
 
 ### Add a redirect route
 
-Currently, the browser launches with `/` in the address bar.
-When the app starts, it should show the dashboard and
-display the `/#/dashboard` path in the address bar.
+Currently, the browser launches with `/` in the address bar. When the app starts, it should show the dashboard and display the `/#/dashboard` path in the address bar. To make this happen, add a redirect route:
 
-To make this happen, add a redirect route:
-
-<?code-excerpt "lib/src/routes.dart (redirect route)" title?>
-```
+```dart
   static final all = <RouteDefinition>[
     // ···
     RouteDefinition.redirect(
@@ -505,22 +401,15 @@ To make this happen, add a redirect route:
   ];
 ```
 
-<div class="l-sub-section" markdown="1">
-  Alternatively, you could define `Dashboard` as a _default_ route.
-  Read more about
-  [default routes](/guide/router/2#default-route) and
-  [redirects](/guide/router/2#redirect-route) in the
-  [Routing & Navigation](/guide/router/2) page.
-</div>
+Alternatively, you could define `Dashboard` as a *default* route. Read more about [default routes](../user-guide/router/2.md#default-route) and [redirects](../user-guide/router/2.md#redirect-route) in the [Routing & Navigation](../user-guide/router/2.md) page.
 
 ### Add navigation to the dashboard
 
 Add a dashboard link to the app component template, just above the heroes link.
 
-<?code-excerpt "lib/app_component.dart (template)" title?>
-```
+```dart
   template: '''
-    <h1>{!{title}!}</h1>
+    <h1>{{title}}</h1>
     <nav>
       <a [routerLink]="RoutePaths.dashboard.toUrl()"
          [routerLinkActive]="'active'">Dashboard</a>
@@ -531,25 +420,15 @@ Add a dashboard link to the app component template, just above the heroes link.
   ''',
 ```
 
-<div class="l-sub-section" markdown="1">
-  The `<nav>` element and the `routerLinkActive` directives don't do anything yet,
-  but they'll be useful later when you [style the links](#style-the-navigation-links).
-</div>
+The `<nav>` element and the `routerLinkActive` directives don't do anything yet, but they'll be useful later when you [style the links](#style-the-navigation-links).
 
-<i class="material-icons">open_in_browser</i> **Refresh the browser,** then
-visit [localhost:8080/](http://localhost:8080/){:.no-automatic-external}. The
-app displays the dashboard and you can navigate between the dashboard and the
-heroes list.
+**Refresh the browser,** then visit [localhost:8080/](http://localhost:8080/). The app displays the dashboard and you can navigate between the dashboard and the heroes list.
 
 ## Add heroes to the dashboard
 
-To make the dashboard more interesting, you'll display the top four heroes at a glance.
+To make the dashboard more interesting, you'll display the top four heroes at a glance. Replace the `template` metadata with a `templateUrl` property that points to a new template file, and add the directives shown below (you'll add the necessary imports soon):
 
-Replace the `template` metadata with a `templateUrl` property that points to a new
-template file, and add the directives shown below (you'll add the necessary imports soon):
-
-<?code-excerpt "lib/src/dashboard_component_2.dart (metadata)" region="metadata-wo-styles" title?>
-```
+```dart
   @Component(
     selector: 'my-dashboard',
     templateUrl: 'dashboard_component.html',
@@ -558,21 +437,16 @@ template file, and add the directives shown below (you'll add the necessary impo
   )
 ```
 
-<div class="l-sub-section" markdown="1">
-  The value of `templateUrl` can be an asset in this package or another
-  package. To refer to an asset from another package, use a full package reference,
-  such as `'package:some_other_package/dashboard_component.html'`.
-</div>
+The value of `templateUrl` can be an asset in this package or another package. To refer to an asset from another package, use a full package reference, such as `'package:some_other_package/dashboard_component.html'`.
 
 Create the template file with this content:
 
-<?code-excerpt "lib/src/dashboard_component_1.html" title linenums?>
-```
+```html
   <h3>Top Heroes</h3>
   <div class="grid grid-pad">
     <div *ngFor="let hero of heroes">
       <div class="module hero">
-        <h4>{!{hero.name}!}</h4>
+        <h4>{{hero.name}}</h4>
       </div>
     </div>
   </div>
@@ -583,20 +457,15 @@ The extra `<div>` elements will help with styling later.
 
 ### Reusing the *HeroService*
 
-To populate the component's `heroes` list, you can reuse the `HeroService`.
-
-Earlier, you removed the `HeroService` from the `providers` list of `HeroListComponent`
-and added it to the `providers` list of `AppComponent`.
-That move created a singleton `HeroService` instance, available to all components of the app.
-Kelicap injects `HeroService` and you can use it in the `DashboardComponent`.
+To populate the component's `heroes` list, you can reuse the `HeroService`. Earlier, you removed the `HeroService` from the `providers` list of `HeroListComponent` and added it to the `providers` list of `AppComponent`.
+That move created a singleton `HeroService` instance, available to all components of the app. Kelicap injects `HeroService` and you can use it in the `DashboardComponent`.
 
 ### Get heroes
 
 In `dashboard_component.dart`, add the following `import` statements.
 
-<?code-excerpt "lib/src/dashboard_component_2.dart (imports)" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
+```dart
+  import 'package:kelicap/Kelicap.dart';
 
   import 'hero.dart';
   import 'hero_service.dart';
@@ -604,8 +473,7 @@ In `dashboard_component.dart`, add the following `import` statements.
 
 Now create the `DashboardComponent` class like this:
 
-<?code-excerpt "lib/src/dashboard_component_2.dart (class)" title?>
-```
+```dart
   class DashboardComponent implements OnInit {
     List<Hero> heroes = <Hero>[];
 
@@ -628,13 +496,11 @@ You're using the same kind of features for the dashboard as you did for the hero
 
 In this dashboard you specify four heroes (2nd, 3rd, 4th, and 5th).
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser** to see four hero names in the new dashboard.
 
 ## Navigating to hero details
 
-While the details of a selected hero display at the bottom of the `HeroListComponent`,
-users should be able to navigate to a `HeroComponent` in the following additional ways:
+While the details of a selected hero display at the bottom of the `HeroListComponent`, users should be able to navigate to a `HeroComponent` in the following additional ways:
 
 * From the dashboard to a selected hero.
 * From the heroes list to a selected hero.
@@ -642,15 +508,9 @@ users should be able to navigate to a `HeroComponent` in the following additiona
 
 ### Routing to a hero detail
 
-You can add a route to the `HeroComponent` in `AppComponent`, where the other routes are defined.
-
-The new route is unusual in that you must tell the `HeroComponent` which hero to show.
-You didn't have to tell the `HeroListComponent` or the `DashboardComponent` anything.
-
-Currently, the parent `HeroListComponent` sets the component's `hero` property to a
+You can add a route to the `HeroComponent` in `AppComponent`, where the other routes are defined. The new route is unusual in that you must tell the `HeroComponent` which hero to show. You didn't have to tell the `HeroListComponent` or the `DashboardComponent` anything. Currently, the parent `HeroListComponent` sets the component's `hero` property to a
 hero object with a binding like this:
 
-<?code-excerpt "../toh-3/lib/app_component.html (my-hero)"?>
 ```html
   <my-hero [hero]="selected"></my-hero>
 ```
@@ -659,22 +519,19 @@ But this binding won't work in any of the routing scenarios.
 
 ### Parameterized route
 
-You can add the hero's ID to the route path. When routing to the hero whose ID is 11,
-you could expect to see a path such as this:
+You can add the hero's ID to the route path. When routing to the hero whose ID is 11, you could expect to see a path such as this:
 
-```nocode
+```terminal
 /heroes/11
 ```
 
-The `/heroes/` part is constant. The trailing numeric ID changes from hero to hero.
-You need to represent the variable part of the route with a *parameter* that stands for the hero's ID.
+The `/heroes/` part is constant. The trailing numeric ID changes from hero to hero. You need to represent the variable part of the route with a *parameter* that stands for the hero's ID.
 
 ### Add a route with a parameter
 
 First, define the route path:
 
-<?code-excerpt "lib/src/route_paths.dart (hero)" title?>
-```
+```dart
   const idParam = 'id';
 
   class RoutePaths {
@@ -683,20 +540,17 @@ First, define the route path:
   }
 ```
 
-The colon (:) in the path indicates that `:$idParam` (`:id`) is a placeholder
-for a specific hero ID when navigating to hero view.
+The colon (:) in the path indicates that `:$idParam` (`:id`) is a placeholder for a specific hero ID when navigating to hero view.
 
 In the routes file, import the hero detail component template:
 
-<?code-excerpt "lib/src/routes.dart (hero_template)" title?>
-```
+```dart
   import 'hero_component.template.dart' as hero_template;
 ```
 
 Next, add the following route:
 
-<?code-excerpt "lib/src/routes.dart (hero)" title replace="/([[,])\n\s*(\/)/$1 $2/g"?>
-```
+```dart
   static final hero = RouteDefinition(
     routePath: RoutePaths.hero,
     component: hero_template.HeroComponentNgFactory,
@@ -709,19 +563,14 @@ Next, add the following route:
 
 You're finished with the app routes.
 
-You didn't add a hero detail link to the template because users
-don't click a navigation *link* to view a particular hero;
-they click a *hero name*, whether the name is displayed on the dashboard or in the heroes list.
-But this won't work until the `HeroComponent`
-is revised and ready to be navigated to.
+You didn't add a hero detail link to the template because users don't click a navigation *link* to view a particular hero; they click a *hero name*, whether the name is displayed on the dashboard or in the heroes list. But this won't work until the `HeroComponent` is revised and ready to be navigated to.
 
 ## Revise *HeroComponent*
 
 Here's what the `HeroComponent` looks like now:
 
-<?code-excerpt "../toh-4/lib/src/hero_component.dart" region="" title="lib/src/hero_component.dart (current)" linenums?>
-```
-  import 'package:ngdart/Kelicap.dart';
+```dart
+  import 'package:kelicap/Kelicap.dart';
   import 'package:ngforms/ngforms.dart';
 
   import 'hero.dart';
@@ -730,8 +579,8 @@ Here's what the `HeroComponent` looks like now:
     selector: 'my-hero',
     template: '''
       <div *ngIf="hero != null">
-        <h2>{!{hero!.name}!}</h2>
-        <div><label>id: </label>{!{hero!.id}!}</div>
+        <h2>{{hero!.name}}</h2>
+        <div><label>id: </label>{{hero!.id}}</div>
         <div>
           <label>name: </label>
           <input [(ngModel)]="hero!.name" placeholder="name"/>
@@ -752,16 +601,14 @@ Here's what the `HeroComponent` looks like now:
   }
 ```
 
-The template won't change. Hero names will display the same way.
-The major changes are driven by how you get hero names.
+The template won't change. Hero names will display the same way. The major changes are driven by how you get hero names.
 
 ### Drop *@Input()*
 
 You will no longer receive the hero in a parent component property binding, so
 you can **remove the `@Input()` annotation** from the `hero` field:
 
-<?code-excerpt "lib/src/hero_component.dart (hero with @Input removed)" region="hero" replace="/implements \w+ //g" plaster="none" title?>
-```
+```dart
   class HeroComponent {
     Hero? hero;
   }
@@ -770,23 +617,18 @@ you can **remove the `@Input()` annotation** from the `hero` field:
 ### Add *onActivate()* life-cycle hook
 
 The new `HeroComponent` will take the `id` parameter from the router's
-state and use the `HeroService` to fetch the hero with that `id`.
+state and use the `HeroService` to fetch the hero with that `id`. Add the following imports:
 
-Add the following imports:
-
-<?code-excerpt "lib/src/hero_component.dart (added-imports)" title?>
-```
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap_router/kelicap_router.dart';
   // ···
   import 'hero_service.dart';
   import 'route_paths.dart';
 ```
 
-Inject the `HeroService` and [Location][] service
-into the constructor, saving their values in private fields:
+Inject the `HeroService` and [Location] service into the constructor, saving their values in private fields:
 
-<?code-excerpt "lib/src/hero_component.dart (constructor)" region="ctor" title?>
-```
+```dart
   final HeroService _heroService;
   final Location _location;
 
@@ -794,11 +636,9 @@ into the constructor, saving their values in private fields:
 ```
 
 To get notified when a hero route is navigated to, make `HeroComponent`
-implement the [OnActivate][] interface, and update `hero` from
-the [onActivate()][] [router lifecycle hook][]:
+implement the [OnActivate] interface, and update `hero` from the [onActivate()] [router lifecycle hook]:
 
-<?code-excerpt "lib/src/hero_component.dart (OnActivate)" title?>
-```
+```dart
   class HeroComponent implements OnActivate {
     // ···
     @override
@@ -811,18 +651,16 @@ the [onActivate()][] [router lifecycle hook][]:
 ```
 
 The hook implementation makes use of the `getId()` helper function that
-extracts the `id` from the [RouterState.parameters][] map.
+extracts the `id` from the [RouterState.parameters] map.
 
-<?code-excerpt "lib/src/route_paths.dart (getId)" title?>
-```
+```dart
   int? getId(Map<String, String> parameters) {
     final id = parameters[idParam];
     return id == null ? null : int.tryParse(id);
   }
 ```
 
-The hero ID is a number. Route parameters are always strings.
-So the route parameter value is converted to a number.
+The hero ID is a number. Route parameters are always strings. So the route parameter value is converted to a number.
 
 ### Add *HeroService.get()*
 
@@ -830,8 +668,7 @@ In `onActivate()`, you used the `get()` method, which `HeroService` doesn't
 have yet. To fix this issue, open `HeroService` and add a `get()` method
 that filters the heroes list from `getAll()` by `id`.
 
-<?code-excerpt "lib/src/hero_service.dart (get)" title?>
-```
+```dart
   Future<Hero> get(int id) async =>
       (await getAll()).firstWhere((hero) => hero.id == id);
 ```
@@ -840,36 +677,27 @@ that filters the heroes list from `getAll()` by `id`.
 
 Users have several ways to navigate *to* the `HeroComponent`.
 
-To navigate somewhere else, users can click one of the two links in the `AppComponent` or click the browser's back button.
-Now add a third option, a `goBack()` method that navigates backward one step in the browser's history stack
-using the `Location` service you injected previously.
+To navigate somewhere else, users can click one of the two links in the `AppComponent` or click the browser's back button. Now add a third option, a `goBack()` method that navigates backward one step in the browser's history stack using the `Location` service you injected previously.
 
-<?code-excerpt "lib/src/hero_component.dart (goBack)" title?>
-```
+```dart
   void goBack() => _location.back();
 ```
 
-<div class="l-sub-section" markdown="1">
-  Going back too far could take users out of the app.
-  In a real app, you can prevent this issue with the _canDeactivate()_ hook.
-  Read more on the [CanDeactivate]({{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/CanDeactivate-class.html) page.
-</div>
+> Going back too far could take users out of the app. In a real app, you can prevent this issue with the *canDeactivate()* hook. Read more on the [CanDeactivate] page.
 
 You'll wire this method with an event binding to a *Back* button that you'll add to the component template.
 
-<?code-excerpt "lib/src/hero_component.html (back-button)"?>
-```
+```dart
   <button (click)="goBack()">Back</button>
 ```
 
 Migrate the template to its own file called `hero_component.html`:
 
-<?code-excerpt "lib/src/hero_component.html" title?>
-```
+```html
   <div *ngIf="hero != null">
-    <h2>{!{hero!.name}!}</h2>
+    <h2>{{hero!.name}}</h2>
     <div>
-      <label>id: </label>{!{hero!.id}!}</div>
+      <label>id: </label>{{hero!.id}}</div>
     <div>
       <label>name: </label>
       <input [(ngModel)]="hero!.name" placeholder="name" />
@@ -880,8 +708,7 @@ Migrate the template to its own file called `hero_component.html`:
 
 Update the component metadata with a `templateUrl` pointing to the template file that you just created.
 
-<?code-excerpt "lib/src/hero_component.dart (metadata)" region="metadata-wo-style" title?>
-```
+```dart
   @Component(
     selector: 'my-hero',
     templateUrl: 'hero_component.html',
@@ -890,12 +717,7 @@ Update the component metadata with a `templateUrl` pointing to the template file
   )
 ```
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser** and visit
-[localhost:8080/#heroes/11](http://localhost:8080/#heroes/11){:.no-automatic-external}.
-Details for hero 11 should be displayed. Selecting a hero
-in either the dashboard or the heroes list doesn't work yet.
-You'll deal with that next.
+**Refresh the browser** and visit [localhost:8080/#heroes/11](http://localhost:8080/#heroes/11){:.no-automatic-external}. Details for hero 11 should be displayed. Selecting a hero in either the dashboard or the heroes list doesn't work yet. You'll deal with that next.
 
 ## Select a dashboard hero
 
@@ -903,46 +725,39 @@ When a user selects a hero in the dashboard, the app should navigate to a
 `HeroComponent` to allow the user to view and edit the selected hero.
 
 The dashboard heroes should behave like anchor tags:
-when hovering over a hero name, the target URL should display in the browser status bar
-and the user should be able to copy the link or open the hero detail view in a new tab.
+when hovering over a hero name, the target URL should display in the browser status bar and the user should be able to copy the link or open the hero detail view in a new tab.
 
 To achieve this, you'll need to make changes to the dashboard component and its
 template.
 
 Update the dashboard component:
 
-- Import `route_paths.dart`
-- Add `routerDirectives` to the `directives` list
-- Add the following method:
+* Import `route_paths.dart`
+* Add `routerDirectives` to the `directives` list
+* Add the following method:
 
-<?code-excerpt "lib/src/dashboard_component.dart (heroUrl)" title?>
-```
+```dart
   String heroUrl(int id) => RoutePaths.hero.toUrl(parameters: {idParam: '$id'});
 ```
 
 Edit the dashboard template:
 
-- Replace the `div` opening and closing tags in the `<div *ngFor...>` element
-  with anchor tags.
-- Add a router link property binding, as shown.
+* Replace the `div` opening and closing tags in the `<div *ngFor...>` element with anchor tags.
+* Add a router link property binding, as shown.
 
-<?code-excerpt "lib/src/dashboard_component.html (repeated &lt;a&gt; tag)" region="click" replace="/\ba\b|\[routerLink\][^\x3E]+/[!$&!]/g" title?>
-```
-  <[!a!] *ngFor="let hero of heroes" class="col-1-4"
-     [![routerLink]="heroUrl(hero.id)"!]>
+
+```html
+  <a *ngFor="let hero of heroes" class="col-1-4"
+     [routerLink]="heroUrl(hero.id)">
     <div class="module hero">
-      <h4>{!{hero.name}!}</h4>
+      <h4>{{hero.name}}</h4>
     </div>
-  </[!a!]>
+  </a>
 ```
 
-As described in the [Router links](#router-links) section of this page,
-top-level navigation in the `AppComponent` template has router links set to
-paths like, `/dashboard` and `/heroes`. This time, you're binding to the
-parameterized `hero` path you defined earlier:
+As described in the [Router links](#router-links) section of this page, top-level navigation in the `AppComponent` template has router links set to paths like, `/dashboard` and `/heroes`. This time, you're binding to the parameterized `hero` path you defined earlier:
 
-<?code-excerpt "lib/src/route_paths.dart (hero)"?>
-```
+```dart
   const idParam = 'id';
 
   class RoutePaths {
@@ -955,7 +770,6 @@ The `heroUrl()` method generates the string representation of the path using the
 `toUrl()` method, passing route parameter values using a map literal. For
 example, it returns [/heroes/15](localhost:8080/#/heroes/15) when `id` is 15.
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser** and select a hero from the dashboard; the app navigates to that hero’s details.
 
 ## Select a hero in the *HeroListComponent*
@@ -964,39 +778,35 @@ In the `HeroListComponent`,
 the current template exhibits a "master/detail" style with the list of heroes
 at the top and details of the selected hero below.
 
-<?code-excerpt "lib/src/hero_list_component_1.html" title?>
-```
+
+```html
   <h2>Heroes</h2>
   <ul class="heroes">
     <li *ngFor="let hero of heroes"
         [class.selected]="hero == selected"
         (click)="onSelect(hero)">
-      <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
+      <span class="badge">{{hero.id}}</span> {{hero.name}}
     </li>
   </ul>
   <my-hero [hero]="selected"></my-hero>
 ```
 
-You'll no longer show the full `HeroComponent` here.
-Instead, you'll display the hero detail on its own page and route to it as you did in the dashboard.
-Make these changes:
+You'll no longer show the full `HeroComponent` here. Instead, you'll display the hero detail on its own page and route to it as you did in the dashboard. Make these changes:
 
-- Remove the `<my-hero>` element from the last line of the template.
-- Remove `HeroComponent` from list of `directives`.
-- Remove the hero detail import.
+* Remove the `<my-hero>` element from the last line of the template.
+* Remove `HeroComponent` from list of `directives`.
+* Remove the hero detail import.
 
-When users select a hero from the list, they won't go to the detail page.
-Instead, they'll see a mini detail on *this* page and have to click a button to navigate to the *full detail* page.
+When users select a hero from the list, they won't go to the detail page. Instead, they'll see a mini detail on *this* page and have to click a button to navigate to the *full detail* page.
 
 ### Add the *mini detail*
 
 Add the following HTML fragment at the bottom of the template where the `<my-hero>` used to be:
 
-<?code-excerpt "lib/src/hero_list_component.html (mini detail)" title?>
-```
+```html
   <div *ngIf="selected != null">
     <h2>
-      {!{$pipe.uppercase(selected!.name)}!} is my hero
+      {{$pipe.uppercase(selected!.name)}} is my hero
     </h2>
     <button (click)="gotoDetail()">View Details</button>
   </div>
@@ -1004,9 +814,8 @@ Add the following HTML fragment at the bottom of the template where the `<my-her
 
 Add the following import and method stub to `HeroListComponent`:
 
-<?code-excerpt "lib/src/hero_list_component.dart (gotoDetail stub)" title retain="/^\s*($|[^_\s])/" replace="/(.*?=\x3E).*/$1 null;/g"?>
-```
-  import 'package:ngrouter/ngrouter.dart';
+```dart
+  import 'package:kelicap_router/kelicap_router.dart';
   // ···
   class HeroListComponent implements OnInit {
     // ···
@@ -1016,26 +825,20 @@ Add the following import and method stub to `HeroListComponent`:
 
 After clicking a hero (but don't try now since it won't work yet), users should see something like this below the hero list:
 
-<img class="image-display" src="{% asset ng/devguide/toh/mini-hero-detail.png @path %}" alt="Mini Hero Detail" width="250">
+![Mini Hero Detail](assets/toh/mini-hero-detail.png)
 
 The hero's name is displayed in capital letters because of the `uppercase` pipe
 that's included in the interpolation binding, right after the pipe operator ( | ).
 
-<?code-excerpt "lib/src/hero_list_component.html (pipe)"?>
-```
-  {!{$pipe.uppercase(selected!.name)}!} is my hero
+```dart
+  {{$pipe.uppercase(selected!.name)}} is my hero
 ```
 
-Pipes are a good way to format strings, currency amounts, dates and other display data.
-Kelicap ships with several pipes and you can write your own.
+Pipes are a good way to format strings, currency amounts, dates and other display data. Kelicap ships with several pipes and you can write your own.
 
-<i class="material-icons">warning</i> Before you can use an Kelicap pipe in a
-template, you need to list it in the `pipes` argument of your component's
-`@Component` annotation. You can add pipes
-individually, or for convenience you can use groups like [commonPipes][].
+> **Warning** Before you can use an Kelicap pipe in a template, you need to list it in the `pipes` argument of your component's `@Component` annotation. You can add pipes individually, or for convenience you can use groups like [commonPipes][].
 
-<?code-excerpt "lib/src/hero_list_component.dart (pipes)" title?>
-```
+```dart
   @Component(
     selector: 'my-heroes',
     // ···
@@ -1043,30 +846,25 @@ individually, or for convenience you can use groups like [commonPipes][].
   )
 ```
 
-<div class="l-sub-section" markdown="1">
-  Read more about pipes on the [Pipes](/guide/pipes) page.
-</div>
+> Read more about pipes on the [Pipes](../user-guide/pipes.md) page.
 
-<i class="material-icons">open_in_browser</i>
-**Refresh the browser.** Selecting a hero from the heroes list will activate the mini
-detail view. The view details button doesn't work yet.
+**Refresh the browser.** Selecting a hero from the heroes list will activate the mini detail view. The view details button doesn't work yet.
 
-### Update the _HeroListComponent_ class
+### Update the *HeroListComponent* class
 
 The `HeroListComponent` navigates to the `HeroesDetailComponent` in response to a button click.
-The button's click event is bound to a `gotoDetail()` method that should navigate _imperatively_
+The button's click event is bound to a `gotoDetail()` method that should navigate *imperatively*
 by telling the router where to go.
 
 This approach requires the following changes to the component class:
 
-- Import `route_paths.dart`.
-- Inject the `Router` in the constructor, along with the `HeroService`.
-- Implement `gotoDetail()` by calling the router `navigate()` method.
+* Import `route_paths.dart`.
+* Inject the `Router` in the constructor, along with the `HeroService`.
+* Implement `gotoDetail()` by calling the router `navigate()` method.
 
 Here's the revised `HeroListComponent` class:
 
-<?code-excerpt "lib/src/hero_list_component.dart (class)" title?>
-```
+```dart
   class HeroListComponent implements OnInit {
     final HeroService _heroService;
     final Router _router;
@@ -1091,7 +889,6 @@ Here's the revised `HeroListComponent` class:
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser** and start clicking.
 Users can navigate around the app, from the dashboard to hero details and back,
 from heroes list to the mini detail to the hero details and back to the heroes again.
@@ -1100,53 +897,26 @@ You've met all of the navigational requirements that propelled this page.
 
 ## Style the app
 
-The app is functional but it needs styling.
-The dashboard heroes should display in a row of rectangles.
-You've received around 60 lines of CSS for this purpose, including some simple media queries for responsive design.
+The app is functional but it needs styling. The dashboard heroes should display in a row of rectangles. You've received around 60 lines of CSS for this purpose, including some simple media queries for responsive design.
 
-As you now know, adding the CSS to the component `styles` metadata
-would obscure the component logic.
-Instead, you'll add the CSS to separate `.css` files.
+As you now know, adding the CSS to the component `styles` metadata would obscure the component logic. Instead, you'll add the CSS to separate `.css` files.
 
 ### Dashboard styles
 
 Create a `dashboard_component.css` file in the `lib/src` folder and reference
-that file in the component metadata's `styleUrls` list property like this:
-
-<code-tabs>
-  <?code-pane "lib/src/dashboard_component.dart (styleUrls)" region="metadata" linenums?>
-  <?code-pane "lib/src/dashboard_component.css" linenums?>
-</code-tabs>
-
+that file in the component metadata's `styleUrls` list.
 
 ### Hero detail styles
 
-Create a `hero_component.css` file in the `lib/src`
-folder and reference that file in the component metadata’s `styleUrls` list:
-
-<code-tabs>
-  <?code-pane "lib/src/hero_component.dart (styleUrls)" region="metadata" linenums?>
-  <?code-pane "lib/src/hero_component.css" linenums?>
-</code-tabs>
+Create a `hero_component.css` file in the `lib/src` folder and reference that file in the component metadata’s `styleUrls` list.
 
 ### Style the navigation links
 
-Create an `app_component.css` file in the `lib` folder
-and reference that file in the component metadata’s `styleUrls` list:
+Create an `app_component.css` file in the `lib` folder and reference that file in the component metadata’s `styleUrls` list. The provided CSS makes the navigation links in the `AppComponent` look more like selectable buttons. Earlier, you surrounded those links with a `<nav>` element, and added a `routerLinkActive` directive to each anchor:
 
-<code-tabs>
-  <?code-pane "lib/app_component.dart (styleUrls)" linenums?>
-  <?code-pane "lib/app_component.css" linenums?>
-</code-tabs>
-
-The provided CSS makes the navigation links in the `AppComponent` look more like selectable buttons.
-Earlier, you surrounded those links with a `<nav>` element,
-and added a `routerLinkActive` directive to each anchor:
-
-<?code-excerpt "lib/app_component.dart (template)" title?>
-```
+```dart
   template: '''
-    <h1>{!{title}!}</h1>
+    <h1>{{title}}</h1>
     <nav>
       <a [routerLink]="RoutePaths.dashboard.toUrl()"
          [routerLinkActive]="'active'">Dashboard</a>
@@ -1157,25 +927,19 @@ and added a `routerLinkActive` directive to each anchor:
   ''',
 ```
 
-The router adds the class named by the [RouterLinkActive][] directive to
-the HTML navigation element whose route matches the active route.
+The router adds the class named by the [RouterLinkActive][] directive to the HTML navigation element whose route matches the active route.
 
 ### Global app styles
 
-When you add styles to a component, you keep everything a component needs&mdash;HTML,
-the CSS, the code&mdash;together in one convenient place.
+When you add styles to a component, you keep everything a component needs&mdash;HTML, the CSS, the code&mdash;together in one convenient place.
 It's easy to package it all up and reuse the component somewhere else.
 
 You can also create styles at the *app level* outside of any component.
 
-The designers provided some basic styles to apply to elements across the entire app.
-These correspond to the full set of master styles that you installed earlier during [setup](/guide/setup).
+The designers provided some basic styles to apply to elements across the entire app. These correspond to the full set of master styles that you installed earlier during [setup](/guide/setup).
 Here's an excerpt:
 
-<?code-excerpt path-base="examples/ng/doc/_boilerplate"?>
-
-<?code-excerpt "web/styles.css (excerpt)" region="toh" title?>
-```
+```html
   @import url(https://fonts.googleapis.com/css?family=Roboto);
   @import url(https://fonts.googleapis.com/css?family=Material+Icons);
 
@@ -1204,28 +968,23 @@ Here's an excerpt:
   }
 ```
 
-<?code-excerpt path-base="examples/ng/doc/toh-5"?>
+Create the file `web/styles.css`, if necessary. Ensure that the file contains the [master styles provided here][master styles]. Also edit `web/index.html` to refer to this stylesheet.
 
-Create the file `web/styles.css`, if necessary.
-Ensure that the file contains the [master styles provided here][master styles].
-Also edit `web/index.html` to refer to this stylesheet.
-
-<?code-excerpt "web/index.html (link ref)" region="css" title?>
-```
+```html
   <link rel="stylesheet" href="styles.css">
 ```
 
 Look at the app now. The dashboard, heroes, and navigation links are styled.
 
-<img class="image-display" src="{% asset ng/devguide/toh/dashboard-top-heroes.png @path %}" alt="View navigations">
+![View navigations](assets/toh/dashboard-top-heroes.png)
 
 ## App structure and code
 
 Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
-<div class="ul-filetree" markdown="1">
-- Kelicap_tour_of_heroes
+```terminal
+tour_of_heroes
   - lib
     - app_component.{css,dart}
     - src
@@ -1245,17 +1004,17 @@ Verify that you have the following structure:
     - styles.css
   - analysis_options.yaml
   - pubspec.yaml
-</div>
+```
 
 ## The road you’ve travelled
 
 Here's what you achieved in this page:
 
-- You added the Kelicap router to navigate among different components.
-- You learned how to create router links to represent navigation menu items.
-- You used router link parameters to navigate to the details of the user-selected hero.
-- You shared the `HeroService` among multiple components.
-- You added the `uppercase` pipe to format data.
+* You added the Kelicap router to navigate among different components.
+* You learned how to create router links to represent navigation menu items.
+* You used router link parameters to navigate to the details of the user-selected hero.
+* You shared the `HeroService` among multiple components.
+* You added the `uppercase` pipe to format data.
 
 Your app should look like this {% example_ref %}.
 
@@ -1269,16 +1028,13 @@ you’ll replace the mock data with data retrieved from a server using http.
 
 {%comment%}TODO: Add Recap and What's next sections{%endcomment%}
 
-[Kelicap_router]: {{site.api}}/ngrouter
+[Kelicap_router]: {{site.api}}/kelicap_router
 [commonPipes]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/commonPipes-constant.html
-[deep linking]: https://en.wikipedia.org/wiki/Deep_linking
 [master styles]: https://raw.githubusercontent.com/Kelicap/Kelicap.io/master/public/docs/_examples/_boilerplate/src/styles.css
-[HashLocationStrategy]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/HashLocationStrategy-class.html
-[Location]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/Location-class.html
-[OnActivate]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/OnActivate-class.html
+[Location]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/Location-class.html
+[OnActivate]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/OnActivate-class.html
 [onActivate()]: /guide/router/5#on-activate
 [property binding]: /guide/template-syntax#property-binding
-[PathLocationStrategy]: {{site.pub-api}}/ngrouter/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/PathLocationStrategy-class.html
 [router lifecycle hook]: /guide/router/5
 [RouteDefinition]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouteDefinition-class.html
 [routerDirectives]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerDirectives-constant.html
@@ -1287,5 +1043,5 @@ you’ll replace the mock data with data retrieved from a server using http.
 [RouterOutlet]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterOutlet-class.html
 [routerProviders]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProviders-constant.html
 [routerProvidersHash]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProvidersHash-constant.html
-[RouterState]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterState-class.html
 [RouterState.parameters]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterState/parameters.html
+[CanDeactivate]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/CanDeactivate-class.html

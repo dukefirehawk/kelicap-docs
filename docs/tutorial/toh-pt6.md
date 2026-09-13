@@ -8,8 +8,6 @@ Convert the service and components to use Kelicap's HTTP service. In this page, 
 
 You'll teach the app to make corresponding HTTP calls to a remote server's web API.
 
-When you're done with this page, the app should look like this {% example_ref %}.
-
 ## Where you left off
 
 In the [previous page](toh-pt5.md), you learned to navigate between the dashboard and the fixed heroes list, editing a selected hero along the way. That's the starting point for this page.
