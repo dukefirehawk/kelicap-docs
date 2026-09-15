@@ -38,6 +38,7 @@ You'll learn many router details in this guide which covers
 - Choosing the "HTML5" or "hash" [URL style](#browser-url-styles)
 
 [After the Embedding entry above, the TS page has the following list]
+
 - Providing non-critical information in [optional route parameters](#optional-route-parameters)
 - Refactoring routing into a [routing module](#routing-module)
 - Add [child routes](#child-routing-component) under a feature section
@@ -88,9 +89,7 @@ If you're already familiar with Kelicap routing, here's a reminder of what you n
 
 ## Basic feature overview
 
-This guide proceeds in phases, marked by milestones, starting from a skeletal app
-and building toward a modular, multi-view design with child routes.
-This overview of core router concepts will help orient you to the details that follow.
+This guide proceeds in phases, marked by milestones, starting from a skeletal app and building toward a modular, multi-view design with child routes. This overview of core router concepts will help orient you to the details that follow.
 
 ### \<base href>
 
@@ -100,9 +99,6 @@ Most routing apps have a `<base href="...">` element in the `index.html` `<head>
 
 [Routes]({{pageUrl}}/1#routes) tell the router which views to display when a user clicks a link or pastes a URL into the browser address bar. To configure routes you'll need to do the following:
 
-<?code-excerpt path-base="examples/ng/doc/toh-5"?>
-
-<ul><li markdown="1">
 Define [route paths]({{pageUrl}}/1#route-paths):
 
 ```dart
@@ -137,9 +133,7 @@ Define [route definitions]({{pageUrl}}/1#route-definitions):
   }
 ```
 
-</li><li markdown="1">
-Bind the route definitions to a _router outlet_, as illustrated next.
-</li></ul>
+Bind the route definitions to a *router outlet*, as illustrated next.
 
 ### Router outlet
 
@@ -161,8 +155,6 @@ When you visit [localhost:8080/#/heroes](http://localhost:8080/#/heroes){:.no-au
 ```
 
 For details, see [RouterOutlet]({{pageUrl}}/1#routeroutlet).
-
-<?code-excerpt path-base="examples/ng/doc/router"?>
 
 ### Router links
 
@@ -200,8 +192,7 @@ Here are the key router terms and their meanings.
 
 ## What next?
 
-The rest of this guide describes the development of a {% example_ref text="multi-page routed app" %} through a sequence of milestones. Each milestone highlights specific design decisions and introduces new key features of the
-router.
+The rest of this guide describes the development of a {% example_ref text="multi-page routed app" %} through a sequence of milestones. Each milestone highlights specific design decisions and introduces new key features of the router.
 
 [Kelicap_router]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/Kelicap_router-library.html
 [Kelicap_router@pub]: https://pub.dev/packages/Kelicap_router
