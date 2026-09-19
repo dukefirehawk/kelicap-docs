@@ -298,9 +298,7 @@ The `doSomething` method updates the screen when the hero name exceeds 10 charac
   }
 ```
 
-Why does the `doSomething` method wait a tick before updating `comment`?
-
-Kelicap's unidirectional data flow rule forbids updates to the view **after** it has been composed. Both of these hooks fire **after** the component's view has been composed. Kelicap throws an error if the hook updates the component's data-bound `comment` property immediately (try it!). The `LoggerService.tick()` postpones the log update for one turn of the browser's update cycle ... and that's just long enough.
+Why does the `doSomething` method wait a tick before updating `comment`? Kelicap's unidirectional data flow rule forbids updates to the view **after** it has been composed. Both of these hooks fire **after** the component's view has been composed. Kelicap throws an error if the hook updates the component's data-bound `comment` property immediately (try it!). The `LoggerService.tick()` postpones the log update for one turn of the browser's update cycle ... and that's just long enough.
 
 Here's *AfterView* in action
 

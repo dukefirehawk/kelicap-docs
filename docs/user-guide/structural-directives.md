@@ -1,51 +1,23 @@
 # Structural Directives
 
-Kelicap has a powerful template engine that lets us easily manipulate the DOM structure of our elements.
+Kelicap has a powerful template engine that lets us easily manipulate the DOM structure of our elements. This guide looks at how Kelicap manipulates the DOM with **structural directives** and how you can write your own structural directives to do the same thing.
 
-We're currently using <template> until <ng-container> becomes available;
-hence the page variable named `ng_container` set to `template` in the front matter.
-Btw, <template> is soon to be renamed <ng-template> in ngTS.
-{% endcomment %}
-
-This guide looks at how Kelicap manipulates the DOM with **structural directives** and
-how you can write your own structural directives to do the same thing.
-
-Try the {% example_ref %}.
-
-<div id="definition"></div>
 ## What are structural directives?
 
-Structural directives are responsible for HTML layout.
-They shape or reshape the DOM's _structure_, typically by adding, removing, or manipulating
-elements.
+Structural directives are responsible for HTML layout. They shape or reshape the DOM's _structure_, typically by adding, removing, or manipulating elements. As with other directives, you apply a structural directive to a _host element_. The directive then does whatever it's supposed to do with that host element and its descendents.
 
-As with other directives, you apply a structural directive to a _host element_.
-The directive then does whatever it's supposed to do with that host element and its descendents.
+Structural directives are easy to recognize. An asterisk (*) precedes the directive attribute name as in this example.
 
-Structural directives are easy to recognize.
-An asterisk (*) precedes the directive attribute name as in this example.
-
-<?code-excerpt "lib/app_component.html (ngif)"?>
-```
+```html
   <div *ngIf="hero != null" >{!{hero.name}!}</div>
 ```
 
-No brackets. No parentheses. Just `*ngIf` set to a string.
+No brackets. No parentheses. Just `*ngIf` set to a string. You'll learn in this guide that the [asterisk (*) is a convenience notation](#asterisk) and the string is a [_microsyntax_](#microsyntax) rather than the usual
+[template expression](template-syntax#template-expressions). Kelicap desugars this notation into a marked-up `<template>` that surrounds the host element and its descendents. Each structural directive does something different with that template.
 
-You'll learn in this guide that the [asterisk (*) is a convenience notation](#asterisk)
-and the string is a [_microsyntax_](#microsyntax) rather than the usual
-[template expression](template-syntax#template-expressions).
-Kelicap desugars this notation into a marked-up `<template>` that surrounds the
-host element and its descendents.
-Each structural directive does something different with that template.
+Three of the common, built-in structural directives - [NgIf](template-syntax.md#ngIf), [NgFor](template-syntax.md#ngFor), and [NgSwitch](template-syntax.md#ngSwitch) - are described in the [_Template Syntax_](template-syntax) guide and seen in samples throughout the Kelicap documentation. Here's an example of them in a template:
 
-Three of the common, built-in structural directives &mdash; [NgIf](template-syntax#ngIf),
-[NgFor](template-syntax#ngFor), and [NgSwitch...](template-syntax#ngSwitch) &mdash; are
-described in the [_Template Syntax_](template-syntax) guide and seen in samples throughout the Kelicap documentation.
-Here's an example of them in a template:
-
-<?code-excerpt "lib/app_component.html (built-in)" plaster="none"?>
-```
+```html
   <div *ngIf="hero != null" >{!{hero.name}!}</div>
 
   <ul>
@@ -60,47 +32,24 @@ Here's an example of them in a template:
   </div>
 ```
 
-This guide won't repeat how to _use_ them. But it does explain _how they work_
-and how to [write your own](#unless) structural directive.
+This guide won't repeat how to _use_ them. But it does explain _how they work_ and how to [write your own](#unless) structural directive.
 
-<div class="alert alert-info" markdown="1">
-  <h4>Directive spelling</h4>
+> **Directive spelling** Throughout this guide, you'll see a directive spelled in both _UpperCamelCase_ and _lowerCamelCase_. Already you've seen `NgIf` and `ngIf`. There's a reason. `NgIf` refers to the directive _class_; `ngIf` refers to the directive's _attribute name_. A directive _class_ is spelled in _UpperCamelCase_ (`NgIf`). A directive's _attribute name_ is spelled in _lowerCamelCase_ (`ngIf`). The guide refers to the directive _class_ when talking about its properties and what the directive does. The guide refers to the _attribute name_ when describing how you apply the directive to an element in the HTML template.
 
-  Throughout this guide, you'll see a directive spelled in both _UpperCamelCase_ and _lowerCamelCase_.
-  Already you've seen `NgIf` and `ngIf`.
-  There's a reason. `NgIf` refers to the directive _class_;
-  `ngIf` refers to the directive's _attribute name_.
+There are two other kinds of Kelicap directives, described extensively elsewhere:
 
-  A directive _class_ is spelled in _UpperCamelCase_ (`NgIf`).
-  A directive's _attribute name_ is spelled in _lowerCamelCase_ (`ngIf`).
-  The guide refers to the directive _class_ when talking about its properties and what the directive does.
-  The guide refers to the _attribute name_ when describing how
-  you apply the directive to an element in the HTML template.
-</div>
+1. components and
+2. attribute directives.
 
-<div class="l-sub-section" markdown="1">
-  There are two other kinds of Kelicap directives, described extensively elsewhere:
-  (1)&nbsp;components and (2)&nbsp;attribute directives.
+A _component_ manages a region of HTML in the manner of a native HTML element. Technically it's a directive with a template.
 
-  A *component* manages a region of HTML in the manner of a native HTML element.
-  Technically it's a directive with a template.
-
-  An [*attribute* directive](attribute-directives) changes the appearance or behavior
-  of an element, component, or another directive.
-  For example, the built-in [`NgStyle`](template-syntax#ngStyle) directive
-  changes several element styles at the same time.
-
-  You can apply many _attribute_ directives to one host element.
-  You can [only apply one](#one-per-element) _structural_ directive to a host element.
-</div>
+An [_attribute_ directive](attribute-directives) changes the appearance or behavior of an element, component, or another directive. For example, the built-in [`NgStyle`](template-syntax#ngStyle) directive changes several element styles at the same time. You can apply many _attribute_ directives to one host element. You can [only apply one](#one-per-element) _structural_ directive to a host element.
 
 ## NgIf case study {#ngIf}
 
-`NgIf` is the simplest structural directive and the easiest to understand.
-It takes a boolean expression and makes an entire chunk of the DOM appear or disappear.
+`NgIf` is the simplest structural directive and the easiest to understand. It takes a boolean expression and makes an entire chunk of the DOM appear or disappear.
 
-<?code-excerpt "lib/app_component.html (ngif-true)"?>
-```
+```html
   <p *ngIf="true">
     Expression is true and ngIf is true.
     This paragraph is in the DOM.
@@ -111,8 +60,7 @@ It takes a boolean expression and makes an entire chunk of the DOM appear or dis
   </p>
 ```
 
-The `ngIf` directive doesn't hide elements with CSS. It adds and removes them physically from the DOM.
-Confirm that fact using browser developer tools to inspect the DOM.
+The `ngIf` directive doesn't hide elements with CSS. It adds and removes them physically from the DOM. Confirm that fact using browser developer tools to inspect the DOM.
 
 <img class="image-display" src="{% asset ng/devguide/structural-directives/element-not-in-dom.png @path %}" alt="ngIf=false element not in DOM">
 
@@ -124,11 +72,12 @@ detaches it from DOM events (the attachments that it made),
 detaches the component from Kelicap change detection, and destroys it.
 The component and DOM nodes can be garbage-collected and free up memory.
 
-### Why *remove* rather than *hide*?
+### Why _remove_ rather than _hide_?
 
 A directive could hide the unwanted paragraph instead by setting its `display` style to `none`.
 
 <?code-excerpt "lib/app_component.html (display-none)"?>
+
 ```
   <p [style.display]="'block'">
     Expression sets display to "block".
@@ -175,6 +124,7 @@ and wondered why it is necessary and what it does.
 Here is `*ngIf` displaying the hero's name if `hero` exists.
 
 <?code-excerpt "lib/app_component.html (asterisk)"?>
+
 ```
   <div *ngIf="hero != null" >{!{hero.name}!}</div>
 ```
@@ -183,6 +133,7 @@ The asterisk is [syntactic sugar][] for something a bit more complicated.
 Internally, Kelicap desugars it into a [template element][], wrapped around the host element, like this.
 
 <?code-excerpt "lib/app_component.html (ngif-template)"?>
+
 ```
   <template [ngIf]="hero != null">
     <div>{!{hero.name}!}</div>
@@ -210,6 +161,7 @@ template _attribute_ to template _element_.
 Here's a full-featured app of `NgFor`, written all three ways:
 
 <?code-excerpt "lib/app_component.html (inside-ngfor)" plaster="none"?>
+
 ```
   <div *ngFor="let hero of heroes; let i=index; let odd=odd; trackBy: trackByHeroId"
        [class.odd]="odd">
@@ -311,6 +263,7 @@ The Kelicap _NgSwitch_ is actually a set of cooperating directives: `NgSwitch`, 
 Here's an example.
 
 <?code-excerpt "lib/app_component.html (ngswitch)"?>
+
 ```
   <div [ngSwitch]="hero?.emotion">
     <happy-hero    *ngSwitchCase="'happy'"    [hero]="hero"></happy-hero>
@@ -347,6 +300,7 @@ As with other structural directives, the `NgSwitchCase` and `NgSwitchDefault`
 can be desugared into the `<template>` element form.
 
 <?code-excerpt "lib/app_component.html (ngswitch-template)"?>
+
 ```
   <div [ngSwitch]="hero?.emotion">
     <template [ngSwitchCase]="'happy'">
@@ -373,7 +327,7 @@ While there's rarely a good reason to apply a structural directive in template _
 it's still important to know that Kelicap creates a `<template>` and to understand how it works.
 You'll refer to the `<template>` when you [write your own structural directive](#unless).
 
-## The *template* element  {#template}
+## The _template_ element  {#template}
 
 The HTML 5 [template element][] is a formula for rendering HTML.
 It is never displayed directly.
@@ -384,6 +338,7 @@ those elements disappear.
 That's the fate of the middle "Hip!" in the phrase "Hip! Hip! Hooray!".
 
 <?code-excerpt "lib/app_component.html (template-tag)"?>
+
 ```
   <p>Hip!</p>
   <template>
@@ -408,6 +363,7 @@ There's often a _root_ element that can and should host the structural directive
 The list element (`<li>`) is a typical host element of an `NgFor` repeater.
 
 <?code-excerpt "lib/app_component.html (ngfor-li)"?>
+
 ```
   <li *ngFor="let hero of heroes">{!{hero.name}!}</li>
 ```
@@ -416,6 +372,7 @@ When there isn't a host element, you can usually wrap the content in a native HT
 such as a `<div>`, and attach the directive to that wrapper.
 
 <?code-excerpt "lib/app_component.html (ngif)"?>
+
 ```
   <div *ngIf="hero != null" >{!{hero.name}!}</div>
 ```
@@ -429,6 +386,7 @@ neither expect nor accommodate the new layout.
 For example, suppose you have the following paragraph layout.
 
 <?code-excerpt "lib/app_component.html (ngif-span)"?>
+
 ```
   <p>
     I turned the corner
@@ -442,6 +400,7 @@ For example, suppose you have the following paragraph layout.
 You also have a CSS style rule that happens to apply to a `<span>` within a `<p>`aragraph.
 
 <?code-excerpt "lib/app_component.css (p-span)"?>
+
 ```
   p span { color: red; font-size: 70%; }
 ```
@@ -459,6 +418,7 @@ You can't wrap the _options_ in a conditional `<div>` or a `<span>`.
 When you try this,
 
 <?code-excerpt "lib/app_component.html (select-span)"?>
+
 ```
   <div>
     Pick your favorite hero
@@ -479,7 +439,7 @@ the drop down is empty.
 
 The browser won't display an `<option>` within a `<span>`.
 
-### *{{page.ng_container}}* to the rescue
+### _{{page.ng_container}}_ to the rescue
 
 The Kelicap `<{{page.ng_container}}>` is a grouping element that doesn't interfere with styles or layout
 because Kelicap _doesn't put it in the DOM_.
@@ -487,6 +447,7 @@ because Kelicap _doesn't put it in the DOM_.
 Here's the conditional paragraph again, this time using `<{{page.ng_container}}>`.
 
 <?code-excerpt "lib/app_component.html (ngif-ngcontainer)"?>
+
 ```
   <p>
     I turned the corner
@@ -504,6 +465,7 @@ It renders properly. Notice the use of a desugared form of [NgIf](#ngIf).
 Now conditionally exclude a _select_ `<option>` with `<{{page.ng_container}}>`.
 
 <?code-excerpt "lib/app_component.html (select-ngcontainer)"?>
+
 ```
   <div>
     Pick your favorite hero 2
@@ -543,9 +505,10 @@ The `<{{page.ng_container}}>` satisfies a similar need in Kelicap templates.
 In this section, you write an `UnlessDirective` structural directive
 that does the opposite of `NgIf`.
 `NgIf` displays the template content when the condition is `true`.
-`UnlessDirective` displays the content when the condition is ***false***.
+`UnlessDirective` displays the content when the condition is _**false**_.
 
 <?code-excerpt "lib/app_component.html (myUnless-1)"?>
+
 ```
   <p *myUnless="condition">Show this sentence unless the condition is true.</p>
 ```
@@ -554,6 +517,7 @@ Creating a directive is similar to creating a component.
 Here's how you might begin:
 
 <?code-excerpt "lib/src/unless_directive.dart (skeleton)" plaster="none" title?>
+
 ```
   import 'package:Kelicap/Kelicap.dart';
 
@@ -590,6 +554,7 @@ and access the _view container_ through a
 You inject both in the directive constructor as private variables of the class.
 
 <?code-excerpt "lib/src/unless_directive.dart (ctor)"?>
+
 ```
   TemplateRef _templateRef;
   ViewContainerRef _viewContainer;
@@ -607,6 +572,7 @@ That means the directive needs a `myUnless` property, decorated with `@Input`
 </div>
 
 <?code-excerpt "lib/src/unless_directive.dart (set)"?>
+
 ```
   @Input()
   set myUnless(bool condition) {
@@ -634,6 +600,7 @@ Nobody reads the `myUnless` property so it doesn't need a getter.
 The completed directive code looks like this:
 
 <?code-excerpt "lib/src/unless_directive.dart (excerpt)" region="no-docs" plaster="none" title?>
+
 ```
   import 'package:Kelicap/Kelicap.dart';
 
@@ -664,6 +631,7 @@ Add this directive to the `directives` list of the AppComponent.
 Then create some HTML to try it.
 
 <?code-excerpt "lib/app_component.html (myUnless)"?>
+
 ```
   <p *myUnless="condition" class="unless a">
     (A) This paragraph is displayed because the condition is false.
