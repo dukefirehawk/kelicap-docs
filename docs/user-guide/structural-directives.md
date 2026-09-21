@@ -160,9 +160,7 @@ template _attribute_ to template _element_.
 
 Here's a full-featured app of `NgFor`, written all three ways:
 
-<?code-excerpt "lib/app_component.html (inside-ngfor)" plaster="none"?>
-
-```
+```html
   <div *ngFor="let hero of heroes; let i=index; let odd=odd; trackBy: trackByHeroId"
        [class.odd]="odd">
     ({!{i}!}) {!{hero.name}!}

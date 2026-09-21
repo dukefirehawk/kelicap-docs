@@ -167,9 +167,7 @@ As with expressions, avoid writing complex template statements. Method calls or 
 
 ## Binding syntax: An overview  {#binding-syntax}
 
-Data binding is a mechanism for coordinating what users see, with app data values. While you can push values to and pull values from HTML, the app is easier to write, read, and maintain if you use a binding framework. You declare bindings between binding sources and target HTML elements and then let the framework do the work.
-
-Below is a high-level summary of Kelicap data binding and its syntax. It's followed by more detailed information about most of the data binding types that Kelicap provides. Binding types can be grouped into three categories based on the direction of data flow: *source-to-view*, *view-to-source*, and two-way sequence *view-to-source-to-view*.
+Data binding is a mechanism for coordinating what users see, with app data values. While you can push values to and pull values from HTML, the app is easier to write, read, and maintain if you use a binding framework. You declare bindings between binding sources and target HTML elements and then let the framework do the work. Below is a high-level summary of Kelicap data binding and its syntax. It's followed by more detailed information about most of the data binding types that Kelicap provides. Binding types can be grouped into three categories based on the direction of data flow: *source-to-view*, *view-to-source*, and two-way sequence *view-to-source-to-view*.
 
 Dart gives the best code styling results for the fenced code in the table.
 
@@ -209,76 +207,39 @@ That's HTML Plus. Then you learn about data binding. The first binding you meet 
   <button [disabled]="isUnchanged">Save</button>
 ```
 
-Your intuition might suggest that you're binding to the button's `disabled` attribute and setting
-it to the current value of the component's `isUnchanged` property. That intuition would be incorrect!
-
-The everyday HTML mental model is misleading. Once you start data
-binding, you're no longer working with HTML *attributes*. You aren't setting
-attributes; you're setting the *properties* of DOM elements, components, and
-directives.
+Your intuition might suggest that you're binding to the button's `disabled` attribute and setting it to the current value of the component's `isUnchanged` property. That intuition would be incorrect! The everyday HTML mental model is misleading. Once you start data binding, you're no longer working with HTML *attributes*. You aren't setting attributes; you're setting the *properties* of DOM elements, components, and directives.
 
 ### HTML attribute vs. DOM property
 
-  The distinction between an HTML attribute and a DOM property is crucial to understanding how Kelicap binding works.
+The distinction between an HTML attribute and a DOM property is crucial to understanding how Kelicap binding works.
 
-  **Attributes are defined by HTML. Properties are defined by the DOM (Document Object Model).**
+**Attributes are defined by HTML. Properties are defined by the DOM (Document Object Model).**
 
 * A few HTML attributes have 1:1 mapping to properties. `id` is one example.
-
 * Some HTML attributes don't have corresponding properties. `colspan` is one example.
-
 * Some DOM properties don't have corresponding attributes. `textContent` is one example.
-
 * Many HTML attributes appear to map to properties ... but not in the way you might think!
 
-  That last category is confusing unless you know this general rule:
+That last category is confusing unless you know this general rule:
 
-  **Attributes *initialize* DOM properties and then they're done.
-  Property values can change; attribute values can't.**
+**Attributes *initialize* DOM properties and then they're done. Property values can change; attribute values can't.**
 
-  For example, when the browser renders `<input type="text" value="Bob">`, it creates a
-  corresponding DOM node with a `value` property *initialized* to "Bob".
+For example, when the browser renders `<input type="text" value="Bob">`, it creates a corresponding DOM node with a `value` property *initialized* to "Bob". When the user enters "Sally" in the input box, the DOM element `value` *property* becomes "Sally". But the HTML `value` *attribute* remains unchanged, as you discover if you ask the input element about that attribute: `input.getAttribute('value')` returns "Bob".
 
-  When the user enters "Sally" in the input box, the DOM element `value` *property* becomes "Sally".
-  But the HTML `value` *attribute* remains unchanged, as you discover if you ask the input element
-  about that attribute: `input.getAttribute('value')` returns "Bob".
+The HTML attribute `value` specifies the *initial* value; the DOM `value` property is the *current* value. The `disabled` attribute is another peculiar example. A button's `disabled` *property* is `false` by default so the button is enabled. When you add the `disabled` *attribute*, its presence alone initializes the  button's `disabled` *property* to `true` so the button is disabled. Adding and removing the `disabled` *attribute* disables and enables the button. The value of the *attribute* is irrelevant, which is why you can't enable a button by writing `<button disabled="false">Still Disabled</button>`. Setting the button's `disabled` *property*  (say, with an Kelicap binding) disables or enables the button. The value of the *property* matters.
 
-  The HTML attribute `value` specifies the *initial* value; the DOM `value` property is the *current* value.
-
-  The `disabled` attribute is another peculiar example. A button's `disabled` *property* is
-  `false` by default so the button is enabled.
-  When you add the `disabled` *attribute*, its presence alone initializes the  button's `disabled` *property* to `true`
-  so the button is disabled.
-
-  Adding and removing the `disabled` *attribute* disables and enables the button. The value of the *attribute* is irrelevant,
-  which is why you can't enable a button by writing `<button disabled="false">Still Disabled</button>`.
-
-  Setting the button's `disabled` *property*  (say, with an Kelicap binding) disables or enables the button.
-  The value of the *property* matters.
-
-  **The HTML attribute and the DOM property are not the same thing, even when they have the same name.**
-
-</div>
+**The HTML attribute and the DOM property are not the same thing, even when they have the same name.**
 
 This fact bears repeating:
 **Template binding works with *properties* and *events*, not *attributes*.**
 
-<div class="alert alert-info" markdown="1">
-  <h4>A world without attributes</h4>
-  In the world of Kelicap, the only role of attributes is to initialize element and directive state.
-  When you write a data binding, you're dealing exclusively with properties and events of the target object.
-  HTML attributes effectively disappear.
-</div>
+> A world without attributes. In the world of Kelicap, the only role of attributes is to initialize element and directive state. When you write a data binding, you're dealing exclusively with properties and events of the target object. HTML attributes effectively disappear.
 
 With this model in mind, read on to learn about binding targets.
 
 ### Binding targets
 
-The **target of a data binding** is something in the DOM.
-Depending on the binding type, the target can be an
-(element | component | directive) property, an
-(element | component | directive) event, or (rarely) an attribute name.
-The following table summarizes the scenarios:
+The **target of a data binding** is something in the DOM. Depending on the binding type, the target can be an (element | component | directive) property, an (element | component | directive) event, or (rarely) an attribute name. The following table summarizes the scenarios:
 
 <table>
 <col width="10%"> <col width="15%"> <col width="75%">
@@ -353,11 +314,7 @@ You're now ready to look at binding types in detail.
 
 ## Property binding ( [property] ) {#property-binding}
 
-Write a template **property binding** to set a property of a view element.
-The binding sets the property to the value of a [template expression](#template-expressions).
-
-The most common property binding sets an element property to a component property value. An example is
-binding the `src` property of an image element to a component's `heroImageUrl` property:
+Write a template **property binding** to set a property of a view element. The binding sets the property to the value of a [template expression](#template-expressions). The most common property binding sets an element property to a component property value. An example is binding the `src` property of an image element to a component's `heroImageUrl` property:
 
 ```html
   <img [src]="heroImageUrl">
@@ -375,8 +332,7 @@ Another is setting a property of a directive:
   <div [ngClass]="classes">[ngClass] binding to the classes property</div>
 ```
 
-Yet another is setting the model property of a custom component (a great way
-for parent and child components to communicate):
+Yet another is setting the model property of a custom component (a great way for parent and child components to communicate):
 
 ```html
   <my-hero [hero]="currentHero"></my-hero>
@@ -388,11 +344,9 @@ People often describe property binding as *one-way data binding* because it flow
 
 Similarly, you can't use property binding to *call* a method on the target element. If the element raises events, you can listen to them with an [event binding](#event-binding). If you must read a target element property or call one of its methods, you need a different technique. See the API reference for [ViewChild]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/ViewChild-class.html) and [ContentChild]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/ContentChild-class.html).
 
-
 ### Binding target
 
-An element property between enclosing square brackets identifies the target property.
-The target property in the following code is the image element's `src` property.
+An element property between enclosing square brackets identifies the target property. The target property in the following code is the image element's `src` property.
 
 ```html
   <img [src]="heroImageUrl">
@@ -421,8 +375,7 @@ As mentioned previously, the evaluation of a template expression must have no vi
 
 ### Return the proper type
 
-The template expression should evaluate to the type of value expected by the target property.
-The `hero` property of `HeroComponent` expects a `Hero` object, which is exactly what you're sending in the property binding:
+The template expression should evaluate to the type of value expected by the target property. The `hero` property of `HeroComponent` expects a `Hero` object, which is exactly what you're sending in the property binding:
 
 ```html
   <my-hero [hero]="currentHero"></my-hero>
@@ -430,12 +383,7 @@ The `hero` property of `HeroComponent` expects a `Hero` object, which is exactly
 
 ### Remember the brackets
 
-The brackets tell Kelicap to evaluate the template expression.
-If you omit the brackets, Kelicap treats the string as a constant
-and *initializes the target property* with that string.
-It does *not* evaluate the string!
-
-If you forget the brackets around the `hero` property like this:
+The brackets tell Kelicap to evaluate the template expression. If you omit the brackets, Kelicap treats the string as a constant and *initializes the target property* with that string. It does *not* evaluate the string! If you forget the brackets around the `hero` property like this:
 
 ```html
   [!<-- DON'T do this: -->!]
