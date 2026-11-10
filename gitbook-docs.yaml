@@ -1,0 +1,11 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: Kelicap Documentation
+  structure:
+    - type: space
+      key: space-kelicap-docs
+      title: Kelicap Documentation
+      path: docs
+      default: true
+      content:
+        directory: ./

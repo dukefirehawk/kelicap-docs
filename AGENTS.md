@@ -6,12 +6,16 @@ Guidance for AI coding agents working in this repository.
 
 User-facing documentation for the [Kelicap](https://github.com/dukefirehawk/kelicap) web framework. Kelicap is a fork of AngularDart (ngdart) for Dart 3.13+ that uses `package:web` for all DOM access. The framework source lives in a separate repo (`../kelicap` in a typical workspace). Check API names, package names and behavior against that source, not against Angular or AngularDart docs.
 
-This repo has no build, no site generator and no Dart package. The docs are plain GitHub-flavored Markdown, read on GitHub.
+This repo has no build, no site generator and no Dart package. The docs are plain GitHub-flavored Markdown, read on GitHub and published with GitBook through Git Sync.
 
 ## Layout
 
 ```text
-README.md                  Top-level table of contents and docs version
+README.md                  Top-level table of contents and docs version; GitBook's landing page
+SUMMARY.md                 GitBook sidebar: every published page is listed here
+gitbook-docs.yaml          GitBook site config for site-wide Git Sync: maps the site's space to this directory
+.gitbook.yaml              GitBook space config: the root, the landing page and the sidebar file
+CHANGELOG.md               Changes to the docs, by docs version
 AUTHORS.md                 Maintainers
 assets/branding/           Logos and banners
 docs/
@@ -24,7 +28,13 @@ docs/
   deployment-guide/        Deployment docs
 ```
 
-Every section has a `README.md` holding its table of contents. When you add, rename or remove a page, update that section's README (and the root README if the section list changes).
+Every section has a `README.md` holding its table of contents. When you add, rename or remove a page, update that section's README (and the root README if the section list changes), and `SUMMARY.md`.
+
+## GitBook
+
+- **`SUMMARY.md` is the sidebar.** A page that isn't listed in it is not published. List each page once, under its group (`## Tutorial`, `## User Guide`, ...), nested under its section's README page.
+- **`gitbook-docs.yaml` belongs to GitBook.** GitBook rewrites it when the site's content mapping is saved, and recognises the space by its `key`. Never change a `key`: GitBook would create a new space and detach the old one. Change `title` to rename the space, and `path` to change its URL.
+- **Sync goes both ways.** Edits made in GitBook's editor become commits on the synced branch, so pull before you edit.
 
 ## Markdown format
 

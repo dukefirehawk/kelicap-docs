@@ -26,7 +26,7 @@ Build a small app step by step, from a starter project to a routed app that talk
 
 ### [User Guide](docs/user-guide/README.md)
 
-How each part of the framework works, from installation and architecture to templates, dependency injection, forms, routing and testing.
+How each part of the framework works, from installation and architecture to templates, dependency injection, forms, routing and testing. 
 
 ### [Deployment Guide](docs/deployment-guide/README.md)
 
