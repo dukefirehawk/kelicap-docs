@@ -1,6 +1,6 @@
 $schema: https://api.gitbook.com/gitbook-docs.yaml
 site:
-  title: Kelicap Documentation
+  title: Kelicap Docs
   structure:
     - type: space
       key: space-kelicap-docs
