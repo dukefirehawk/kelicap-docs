@@ -14,7 +14,7 @@ For more information about how Google handles security issues, see [Google's sec
 
 ## Best practices
 
-* **Keep current with the latest Kelicap library releases.** We regularly update the Kelicap libraries, and these updates may fix security defects discovered in previous versions. Check the Kelicap [change log](https://github.com/dart-lang/Kelicap/blob/master/Kelicap/CHANGELOG.md) for security-related updates.
+* **Keep current with the latest Kelicap library releases.** We regularly update the Kelicap libraries, and these updates may fix security defects discovered in previous versions. Check the Kelicap [change log](https://github.com/dukefirehawk/kelicap/blob/main/packages/kelicap/CHANGELOG.md) for security-related updates.
 
 * **Don't modify your copy of Kelicap.** Private, customized versions of Kelicap tend to fall behind the current version and may not include important security fixes and enhancements. Instead, share your Kelicap improvements with the community and make a pull request.
 
@@ -30,7 +30,7 @@ To block XSS attacks, you must prevent malicious code from entering the DOM (Doc
 
 To systematically block XSS bugs, Kelicap treats all values as untrusted by default. When a value is inserted into the DOM from a template, via property, attribute, style, class binding, or interpolation, Kelicap sanitizes and escapes untrusted values.
 
-_Kelicap templates are the same as executable code_: HTML, attributes, and binding expressions (but not the values bound) in templates are trusted to be safe. This means that apps must prevent values that an attacker can control from ever making it into the source code of a template. Never generate template source code by concatenating user input and templates. To prevent these vulnerabilities, use the [offline template compiler](#offline-template-compiler), also known as _template injection_.
+_Kelicap templates are the same as executable code_: HTML, attributes, and binding expressions (but not the values bound) in templates are trusted to be safe. This means that apps must prevent values that an attacker can control from ever making it into the source code of a template. Never generate template source code by concatenating user input and templates. To prevent these vulnerabilities, use the [offline template compiler](#use-the-offline-template-compiler), also known as _template injection_.
 
 ### Sanitization and security contexts
 
@@ -74,13 +74,12 @@ Kelicap recognizes the value as unsafe and automatically sanitizes it, which rem
 
 ### Avoid direct use of the DOM APIs
 
-The built-in browser DOM APIs don't automatically protect you from security vulnerabilities. For example, [document](https://api.dart.dev/stable/dart-html/document.html), and many third-party APIs contain unsafe methods. Avoid directly interacting with the DOM and instead use Kelicap templates where possible.
+The built-in browser DOM APIs don't automatically protect you from security vulnerabilities. For example, [document](https://pub.dev/documentation/web/latest/web/document.html), and many third-party APIs contain unsafe methods. Avoid directly interacting with the DOM and instead use Kelicap templates where possible.
 
 ### Content security policy
 
 Content Security Policy (CSP) is a defense-in-depth technique to prevent XSS. To enable CSP, configure your web server to return an appropriate `Content-Security-Policy` HTTP header. Read more at [Content Security Policy](https://developers.google.com/web/fundamentals/security/csp) on the Web Fundamentals site.
 
-<div><a id="offline-template-compiler"></a></div>
 ### Use the offline template compiler
 
 The offline template compiler prevents a whole class of vulnerabilities called template injection, and greatly improves app performance. Use the offline template compiler in production deployments; don't dynamically generate templates. Kelicap trusts template code, so generating templates, in particular templates containing user data, circumvents Kelicap's built-in protections.

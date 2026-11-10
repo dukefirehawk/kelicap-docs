@@ -61,8 +61,8 @@ You define a component's application logic - what it does to support the view - 
 
 ```dart
   class HeroListComponent implements OnInit {
-    List<Hero> heroes;
-    Hero selectedHero;
+    List<Hero> heroes = [];
+    Hero? selectedHero;
     final HeroService _heroService;
 
     HeroListComponent(this._heroService);
@@ -87,7 +87,7 @@ You define a component's view with its companion **template**. A template is a f
 
 A template looks like regular HTML, except for a few differences. Here is a template for the example `HeroListComponent`:
 
-```dart
+```html
   <h2>Hero List</h2>
 
   <p><i>Pick a hero from the list</i></p>
@@ -160,7 +160,7 @@ As the diagram shows, there are four forms of data binding syntax. Each form has
 
 The `HeroListComponent` [example](#templates) template includes three of the four forms of data binding syntax:
 
-```dart
+```html
   <li>{{hero.name}}</li>
   <hero-detail [hero]="selectedHero"></hero-detail>
   <li (click)="selectHero(hero)"></li>
@@ -178,7 +178,7 @@ The fourth form of data binding is [*two-way data binding*](template-syntax.md#t
 
 Here's an example of two-way binding from the `HeroDetailComponent` template:
 
-```dart
+```html
   <input [(ngModel)]="hero.name">
 ```
 
@@ -202,7 +202,7 @@ While **a component is technically a directive**, this architectural overview se
 
 The [example template](#templates) uses two built-in structural directives:
 
-```dart
+```html
   <li *ngFor="let hero of heroes"></li>
   <hero-detail *ngIf="selectedHero != null"></hero-detail>
 ```
@@ -214,7 +214,7 @@ In Dart, **the only value that is true is the boolean value `true`**; all other 
 
 **Attribute** directives alter the appearance or behavior of an existing element. In templates they look like regular HTML attributes, hence the name. The `ngModel` directive, which implements two-way data binding, is an example of an attribute directive. `ngModel` modifies the behavior of an existing element (typically an `<input>`) by setting its display value property and responding to change events.
 
-```dart
+```html
   <input [(ngModel)]="hero.name">
 ```
 
@@ -252,7 +252,7 @@ Here's a `HeroService` that uses a `Future` to fetch heroes. The `HeroService` d
   class HeroService {
     final BackendService _backendService;
     final Logger _logger;
-    List<Hero> heroes;
+    List<Hero> heroes = [];
 
     HeroService(this._logger, this._backendService);
 

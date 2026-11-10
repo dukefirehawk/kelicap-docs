@@ -95,7 +95,7 @@ The `HeroComponent` template binds to the component's `hero` property. Add that 
 
 Later in this page, the parent `AppComponent` will tell the child `HeroComponent` which hero to display by binding its `selected` to the `hero` property of the `HeroComponent`. The binding will look like this:
 
-```dart
+```html
   <my-hero [hero]="selected"></my-hero>
 ```
 
@@ -106,7 +106,7 @@ Putting square brackets around the `hero` property, to the left of the equal sig
   Hero? hero;
 ```
 
-Read more about _input_ properties in the [Attribute Directives](../user-guide/attribute-directives.md#why-input) page.
+Read more about _input_ properties in the [Attribute Directives](../user-guide/attribute-directives.md#appendix-why-add-input) page.
 
 That's it. The `hero` property is the only thing in the `HeroComponent` class. All it does is receive a hero object through its `hero` input property and then bind to that property with its template. Here's the complete `HeroComponent`.
 
@@ -145,7 +145,7 @@ The `AppComponent` is still a master/detail view. It used to display the hero de
 
 Recall that `my-hero` is the CSS `selector` in the `HeroComponent` metadata. That's the tag name of the element that represents the `HeroComponent`. Add a `<my-hero>` element near the bottom of the `AppComponent` template, where the hero detail view used to be. Coordinate the master `AppComponent` with the `HeroComponent` by binding the `selected` property of the `AppComponent` to the `hero` property of the `HeroComponent`.
 
-```dart
+```html
   <my-hero [hero]="selected"></my-hero>
 ```
 

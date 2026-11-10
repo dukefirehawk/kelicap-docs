@@ -669,7 +669,7 @@ To navigate somewhere else, users can click one of the two links in the `AppComp
 
 You'll wire this method with an event binding to a *Back* button that you'll add to the component template.
 
-```dart
+```html
   <button (click)="goBack()">Back</button>
 ```
 
@@ -792,7 +792,7 @@ Add the following import and method stub to `HeroListComponent`:
   // ···
   class HeroListComponent implements OnInit {
     // ···
-    Future<NavigationResult> gotoDetail() => null;
+    Future<NavigationResult> gotoDetail() => throw UnimplementedError();
   }
 ```
 

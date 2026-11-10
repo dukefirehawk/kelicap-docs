@@ -376,7 +376,7 @@ To add a hero, the app needs the hero's name. You can use an `input` element pai
 
 Insert the following into the heroes component HTML, just after the heading:
 
-```dart
+```html
   <div>
     <label>Hero name:</label> <input #heroName />
     <button (click)="add(heroName)">
@@ -421,14 +421,14 @@ Each hero in the heroes view should have a delete button.
 
 Add the following button element to the heroes component HTML, after the hero name in the repeated `<li>` element.
 
-```dart
+```html
   <button class="delete"
     (click)="delete(hero, $event)">x</button>
 ```
 
 The `<li>` element should now look like this:
 
-```dart
+```html
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
       (click)="onSelect(hero)">
@@ -538,7 +538,7 @@ Create a `HeroSearchComponent` that calls the new `HeroSearchService`.
 
 The component template is simple&mdash;just a text box and a list of matching search results.
 
-```dart
+```html
   <div id="search-component">
     <h4>Hero Search</h4>
     <input #searchBox id="search-box"
@@ -677,7 +677,7 @@ Instead, you can chain `Stream` operators that reduce the request flow to the st
 
 Add the hero search HTML element to the bottom of the `DashboardComponent` template.
 
-```dart
+```html
   <h3>Top Heroes</h3>
   <div class="grid grid-pad">
     <a *ngFor="let hero of heroes" class="col-1-4"

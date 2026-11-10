@@ -23,16 +23,20 @@ Run the following to install `kelicap_cli`:
 
 ## Create a starter project
 
-For generic purposes, use `kelicap create <app_name>` to create a new Kelicap application. If you want to follow the examples in this guide and tutorial, they are based on the [Quickstart](https://github.com/dukefirehawk/kelicap-templates/tree/quickstart) project on GitHub. You can get the project's files by cloning the repo.
+For generic purposes, use `kelicap create <app_name>` to create a new Kelicap application. If you want to follow the examples in this guide and tutorial, they are based on the [starter_app](https://github.com/dukefirehawk/kelicap-templates/tree/main/templates/starter_app) template of the kelicap-templates repo on GitHub. You can get the project's files by cloning the repo.
 
 ```bash
-  git clone https://github.com/dukefirehawk/kelicap-templates/quickstart
+  git clone https://github.com/dukefirehawk/kelicap-templates.git
+  cd kelicap-templates/templates/starter_app
 ```
 
 ## Get dependencies
 
+Some code samples in this guide and the tutorial use [`package:web`](https://pub.dev/packages/web) for DOM access, such as the host element of a directive. Add it as a direct dependency of your app, then get the dependencies:
+
 ```bash
-  dart pub update
+  dart pub add web
+  dart pub get
 ```
 
 ## Customize the project

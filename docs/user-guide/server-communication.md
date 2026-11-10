@@ -2,7 +2,7 @@
 
 Use HTTP to talk to a remote server.
 
-Most frontend apps communicate with backend services using the HTTP protocol. Dart web apps typically do this using the XMLHttpRequest (XHR) API, using [HttpRequest] from the [http] package. The following demos, which use the http package, illustrate server communication:
+Most frontend apps communicate with backend services using the HTTP protocol. Dart web apps typically do this with the [http] package, whose [BrowserClient] uses the browser's XMLHttpRequest (XHR) API. The following demos, which use the http package, illustrate server communication:
 
 - [HTTP client demo: Tour of Heroes](#http-client).
 
@@ -62,7 +62,7 @@ Here's the component class:
 ```dart
   class HeroListComponent implements OnInit {
     final HeroService _heroService;
-    String errorMessage;
+    String? errorMessage;
     List<Hero> heroes = [];
 
     HeroListComponent(this._heroService);
@@ -136,7 +136,7 @@ It's time to get real data. The following code makes `HeroService` get the heroe
 
     Future<List<Hero>> getAll() async {
       try {
-        final response = await _http.get(_heroesUrl);
+        final response = await _http.get(Uri.parse(_heroesUrl));
         final heroes = (_extractData(response) as List)
             .map((value) => Hero.fromJson(value))
             .toList();
@@ -162,7 +162,7 @@ Here's the code that uses the client's `get()` method to fetch data:
   // ···
   Future<List<Hero>> getAll() async {
     try {
-      final response = await _http.get(_heroesUrl);
+      final response = await _http.get(Uri.parse(_heroesUrl));
       final heroes = (_extractData(response) as List)
           .map((value) => Hero.fromJson(value))
           .toList();
@@ -214,7 +214,7 @@ An important part of dealing with I/O is anticipating errors by preparing to cat
 ```dart
   Future<List<Hero>> getAll() async {
     try {
-      final response = await _http.get(_heroesUrl);
+      final response = await _http.get(Uri.parse(_heroesUrl));
       final heroes = (_extractData(response) as List)
           .map((value) => Hero.fromJson(value))
           .toList();
@@ -268,7 +268,7 @@ The server generates the `id` and returns the JSON representation of the new her
 ```dart
   Future<Hero> create(String name) async {
     try {
-      final response = await _http.post(_heroesUrl,
+      final response = await _http.post(Uri.parse(_heroesUrl),
           headers: _headers, body: json.encode({'name': name}));
       return Hero.fromJson(_extractData(response));
     } catch (e) {
@@ -298,7 +298,7 @@ As in `_getHeroes()`, the `_extractData()` helper [extracts the data](#decode-js
 ```
 
 
-[HttpRequest]: https://api.dart.dev/stable/dart-html/HttpRequest-class.html
+[BrowserClient]: https://pub.dev/documentation/http/latest/browser_client/BrowserClient-class.html
 [factory provider]: dependency-injection.md#factory-providers
 [Future]: https://api.dart.dev/stable/dart-async/Future-class.html
 [http]: https://pub.dev/packages/http

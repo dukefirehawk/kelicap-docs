@@ -19,7 +19,7 @@ There are three kinds of directives in Kelicap:
 There are two kinds of attribute directive:
 
 - [Class-based](#write-the-directive-code): A full-featured attribute directive, implemented using a class.
-- [Functional](#functional): A stateless attribute directive, implemented using a top-level function.
+- [Stateless](#write-a-stateless-directive): A class-based directive that only sets up its host element when it is created.
 
 ## Create a class-based attribute directive
 
@@ -38,13 +38,12 @@ Follow the [setup](setup.md) instructions for creating a new local project named
 Create the following source file in the indicated folder:
 
 ```dart
-  import 'dart:html';
-
   import 'package:kelicap/kelicap.dart';
+  import 'package:web/web.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
-    HighlightDirective(Element el) {
+    HighlightDirective(HTMLElement el) {
       el.style.backgroundColor = 'yellow';
     }
   }
@@ -52,16 +51,16 @@ Create the following source file in the indicated folder:
 
 `@Directive()` requires a CSS selector to identify the HTML in the template that is associated with the directive. The [CSS selector for an attribute](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors) is the attribute name in square brackets. Here, the directive's selector is `[myHighlight]`. Kelicap locates all elements in the template that have an attribute named `myHighlight`.
 
-### Why not call it "highlight"?
-
-  Though *highlight* is a more concise name than *myHighlight* and would work, a best practice is to prefix selector names to ensure they don't conflict with standard HTML attributes. This also reduces the risk of colliding with third-party directive names.
-
-  Make sure you do **not** prefix the `highlight` directive name with **`ng`** because that prefix is reserved for Kelicap and using it could cause bugs that are difficult to diagnose. For a simple demo, the short prefix, `my`, helps distinguish your custom directive.
-</div>
+> [!NOTE]
+> **Why not call it "highlight"?**
+>
+> Though *highlight* is a more concise name than *myHighlight* and would work, a best practice is to prefix selector names to ensure they don't conflict with standard HTML attributes. This also reduces the risk of colliding with third-party directive names.
+>
+> Make sure you do **not** prefix the `highlight` directive name with **`ng`** because that prefix is reserved for Kelicap and using it could cause bugs that are difficult to diagnose. For a simple demo, the short prefix, `my`, helps distinguish your custom directive.
 
 After the `@Directive()` metadata comes the directive's controller class, called `HighlightDirective`, which contains the logic for the directive.
 
-Kelicap creates a new instance of the directive's controller class for each matching element, injecting an HTML [Element](https://api.dart.dev/stable/dart-html/Element-class.html) into the constructor.
+Kelicap creates a new instance of the directive's controller class for each matching element, injecting the host element, an [HTMLElement](https://pub.dev/documentation/web/latest/web/HTMLElement-extension-type.html) from `package:web`, into the constructor.
 
 ## Apply the attribute directive
 
@@ -76,19 +75,18 @@ Put the template in its own `app_component.html` file that looks like this:
 
 Now reference this template in the `AppComponent`, and add the `Highlight` directive to the `directives` list. This way Kelicap recognizes the directive when it encounters `myHighlight` in the template.
 
-```html
+```dart
   import 'package:kelicap/kelicap.dart';
 
-  import 'src/auto_id_directive.dart';
   import 'src/highlight_directive.dart';
 
   @Component(
     selector: 'my-app',
     templateUrl: 'app_component.html',
-    directives: [autoIdDirective, HighlightDirective],
+    directives: [HighlightDirective],
   )
   class AppComponent {
-    String color;
+    String? color;
   }
 ```
 
@@ -96,18 +94,18 @@ Now reference this template in the `AppComponent`, and add the `Highlight` direc
 
 ![First Highlight](assets/attribute-directives/first-highlight.png)
 
-### Your directive isn't working?
-
-  Did you remember to set the `directives` attribute of `@Component`? It is easy to forget! Open the console in the browser tools and look for an error like this:
-
-    EXCEPTION: Template parse errors: Can't bind to 'myHighlight' since it isn't a known property of 'p'.
-
-  Kelicap detects that you're trying to bind to *something* but it can't find this directive. You let Kelicap know by listing `HighlightDirective` in the `directives` list.
-</div>
+> [!NOTE]
+> **Your directive isn't working?**
+>
+> Did you remember to set the `directives` attribute of `@Component`? It is easy to forget! Open the console in the browser tools and look for an error like this:
+>
+> ```text
+> EXCEPTION: Template parse errors: Can't bind to 'myHighlight' since it isn't a known property of 'p'.
+> ```
+>
+> Kelicap detects that you're trying to bind to *something* but it can't find this directive. You let Kelicap know by listing `HighlightDirective` in the `directives` list.
 
 To summarize, Kelicap found the `myHighlight` attribute on the `<p>` element. It created an instance of the `HighlightDirective` class and injected a reference to the `<p>` element into the directive's constructor which sets the `<p>` element's background style to yellow.
-
-<a id="respond-to-user"></a>
 
 ## Respond to user-initiated events
 
@@ -126,7 +124,7 @@ Add two eventhandlers that respond when the mouse enters or leaves, each adorned
     _highlight();
   }
 
-  void _highlight([String color]) {
+  void _highlight([String color = '']) {
     _el.style.backgroundColor = color;
   }
 ```
@@ -151,13 +149,12 @@ The handlers delegate to a helper method that sets the color on the DOM element,
 Here's the updated directive in full:
 
 ```dart
-  import 'dart:html';
-
   import 'package:kelicap/kelicap.dart';
+  import 'package:web/web.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
-    final Element _el;
+    final HTMLElement _el;
 
     HighlightDirective(this._el);
 
@@ -171,18 +168,15 @@ Here's the updated directive in full:
       _highlight();
     }
 
-    void _highlight([String color]) {
+    void _highlight([String color = '']) {
       _el.style.backgroundColor = color;
     }
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** Confirm that the background color appears when the mouse hovers over the `p` and disappears as it moves out.
 
 ![Second Highlight](assets/attribute-directives/highlight-directive-anim.gif)
-
-<a id="bindings"></a>
 
 ## Pass values into the directive with an *@Input* data binding
 
@@ -192,14 +186,14 @@ Start by adding a `highlightColor` property to the directive class like this:
 
 ```dart
   @Input()
-  String highlightColor;
+  String? highlightColor;
 ```
 
 ### Binding to an *@Input* property
 
 Notice the `@Input` annotation. It adds metadata to the class that makes the directive's `highlightColor` property available for binding.
 
-It's called an *input* property because data flows from the binding expression *into* the directive. Without that input metadata, Kelicap rejects the binding; see [below](#why-input "Why add @Input?") for more about that.
+It's called an *input* property because data flows from the binding expression *into* the directive. Without that input metadata, Kelicap rejects the binding; see [below](#appendix-why-add-input "Why add @Input?") for more about that.
 
 Try it by adding the following directive binding variations to the `AppComponent` template:
 
@@ -234,7 +228,7 @@ You'll have to rename the directive's `highlightColor` property to `myHighlight`
 
 ```dart
   @Input()
-  String myHighlight;
+  String? myHighlight;
 ```
 
 This is disagreeable. The word, `myHighlight`, is a terrible property name and it doesn't convey the property's intent.
@@ -247,7 +241,7 @@ Restore the original property name and specify the selector as the alias in the 
 
 ```dart
   @Input('myHighlight')
-  String highlightColor;
+  String? highlightColor;
 ```
 
 *Inside* the directive the property is known as `highlightColor`. *Outside* the directive, where you bind to it, it's known as `myHighlight`.
@@ -268,18 +262,17 @@ Now that you're binding to `highlightColor`, modify the `onMouseEnter()` method 
 Here's the latest version of the directive class.
 
 ```dart
-  import 'dart:html';
-
   import 'package:kelicap/kelicap.dart';
+  import 'package:web/web.dart';
 
   @Directive(selector: '[myHighlight]')
   class HighlightDirective {
-    final Element _el;
+    final HTMLElement _el;
 
     HighlightDirective(this._el);
 
     @Input('myHighlight')
-    String highlightColor;
+    String? highlightColor;
 
     @HostListener('mouseenter')
     void onMouseEnter() => _highlight(highlightColor ?? 'red');
@@ -287,7 +280,7 @@ Here's the latest version of the directive class.
     @HostListener('mouseleave')
     void onMouseLeave() => _highlight();
 
-    void _highlight([String color]) {
+    void _highlight([String color = '']) {
       _el.style.backgroundColor = color;
     }
   }
@@ -315,11 +308,10 @@ Revise the `AppComponent.color` so that it has no initial value.
 
 ```dart
   class AppComponent {
-    String color;
+    String? color;
   }
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** Here are the harness and directive in action.
 
 ![Highlight v.2](assets/attribute-directives/highlight-directive-v2-anim.gif)
@@ -334,7 +326,7 @@ Add a second **input** property to `HighlightDirective` called `defaultColor`:
 
 ```dart
   @Input()
-  String defaultColor;
+  String? defaultColor;
 ```
 
 Revise the directive's `onMouseEnter` so that it first tries to highlight with the `highlightColor`, then with the `defaultColor`, and falls back to "red" if both properties are undefined.
@@ -356,44 +348,33 @@ As with components, you can add as many directive property bindings as you need 
 
 Kelicap knows that the `defaultColor` binding belongs to the `HighlightDirective` because you made it *public* with the `@Input` annotation.
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** Here's how the harness should work when you're done coding.
 
 ![Final Highlight](assets/attribute-directives/highlight-directive-final-anim.gif)
 
-<a id="functional"></a>
+## Write a stateless directive
 
-## Write a functional directive
+Some directives only need to set up their host element once, when Kelicap creates them. Such a directive is a class whose constructor does all the work, and that has no inputs, outputs or host listeners.
 
-A functional directive is a stateless directive that is rendered once. You create a functional directive by annotating a public, top-level function with [@Directive()][].
-
-Create the following functional attribute directive:
+Create the following attribute directive, which gives its host element a unique ID:
 
 ```dart
-  import 'dart:html';
   import 'package:kelicap/kelicap.dart';
-
-  int _idCounter = 0;
+  import 'package:web/web.dart';
 
   @Directive(selector: '[autoId]')
-  void autoIdDirective(
-    Element el,
-    @Attribute('autoId') String prefix,
-  ) {
-    el.id = '$prefix${_idCounter++}';
+  class AutoIdDirective {
+    static int _idCounter = 0;
+
+    AutoIdDirective(HTMLElement el, @Attribute('autoId') String? prefix) {
+      el.id = '${prefix ?? ''}${_idCounter++}';
+    }
   }
 ```
 
-Like constructor parameters in class-based directives, function parameters define the functional directive's dependencies.
+The constructor parameters define the directive's dependencies: the host element, and the value of its `autoId` attribute, which [@Attribute()][] reads once, when the directive is created.
 
-When you write a functional directive, follow these rules:
-
-- Make the function return type `void`.
-- In the [@Directive()][] annotation, use only the `selector` parameter and, if necessary, `providers`.
-
-While functional directives are stateless, they can be impure (making use of global state), as the `autoId` directive shows.
-
-Add the following lines at the end of the app component template:
+In `app_component.dart`, import `src/auto_id_directive.dart` and add `AutoIdDirective` to the `directives` list. Then add the following lines at the end of the app component template:
 
 ```html
   <h4 #h1 autoId="heading-">Auto-ID at work</h4>
@@ -403,7 +384,6 @@ Add the following lines at the end of the app component template:
   <p>The previous heading has ID {{h2.id}}</p>
 ```
 
-<i class="material-icons">open_in_browser</i>
 **Refresh the browser.** The app reports headings ID `heading-0` and `heading-1`.
 
 ## Summary
@@ -412,11 +392,9 @@ This page covered how to:
 
 - [Create a **class-based attribute directive**](#write-the-directive-code) that modifies the behavior of an element.
 - [Apply an attribute directive](#apply-the-attribute-directive) to an element in a template.
-- [Respond to **events**](#respond-to-user) that change a class-based directive's behavior.
-- [**Bind** values](#bindings) to a class-based directive.
-- [Write a **functional** attribute directive](#functional).
-
-<a id="why-input"></a>
+- [Respond to **events**](#respond-to-user-initiated-events) that change a class-based directive's behavior.
+- [**Bind** values](#pass-values-into-the-directive-with-an-input-data-binding) to a class-based directive.
+- [Write a **stateless** attribute directive](#write-a-stateless-directive).
 
 ### Appendix: Why add *@Input*?
 
@@ -424,14 +402,14 @@ In this demo, the `hightlightColor` property is an ***input*** property of the `
 
 ```dart
   @Input()
-  String highlightColor;
+  String? highlightColor;
 ```
 
 You've seen it with an alias:
 
 ```dart
   @Input('myHighlight')
-  String highlightColor;
+  String? highlightColor;
 ```
 
 Either way, the `@Input` annotation tells Kelicap that this property is *public* and available for binding by a parent component. Without  `@Input`, Kelicap refuses to bind to the property.
@@ -458,4 +436,5 @@ Now apply that reasoning to the following example:
 
 - The `myHighlight` property on the left refers to an *aliased* property of the `HighlightDirective`, not a property of the template's component. There are trust issues. Therefore, the directive property must carry the `@Input` annotation.
 
-[@Directive()]: https://pub.dev/documentation/kelicap/latest/di/Directive-class.html
+[@Attribute()]: https://pub.dev/documentation/kelicap/latest/kelicap/Attribute-class.html
+[@Directive()]: https://pub.dev/documentation/kelicap/latest/kelicap/Directive-class.html

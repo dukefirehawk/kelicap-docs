@@ -42,7 +42,7 @@ There are two other kinds of Kelicap directives, described extensively elsewhere
 
 A _component_ manages a region of HTML in the manner of a native HTML element. Technically it's a directive with a template.
 
-An [_attribute_ directive](attribute-directives.md) changes the appearance or behavior of an element, component, or another directive. For example, the built-in [`NgStyle`](template-syntax.md#ngstyle) directive changes several element styles at the same time. You can apply many _attribute_ directives to one host element. You can [only apply one](#one-per-element) _structural_ directive to a host element.
+An [_attribute_ directive](attribute-directives.md) changes the appearance or behavior of an element, component, or another directive. For example, the built-in [`NgStyle`](template-syntax.md#ngstyle) directive changes several element styles at the same time. You can apply many _attribute_ directives to one host element. You can [only apply one](#one-structural-directive-per-host-element) _structural_ directive to a host element.
 
 ## NgIf case study
 
@@ -123,7 +123,7 @@ None of these forms are actually rendered. Only the finished product ends up in 
 
 Kelicap consumed the `<template>` content during its actual rendering and replaced the `<template>` with a diagnostic comment.
 
-The [NgFor](#inside-_ngfor_) and [NgSwitch](#inside-_ngswitch_-directives) directives follow the same pattern.
+The [NgFor](#inside-ngfor) and [NgSwitch](#inside-ngswitch-directives) directives follow the same pattern.
 
 ## Inside _*ngFor_
 
@@ -180,14 +180,13 @@ You declare a template _reference_ variable by prefixing the variable name with 
 
 Template _input_ and _reference_ variable names have their own namespaces. The `hero` in `let hero` is never the same variable as the `hero` declared as `#hero`.
 
-<div id="one-per-element"></div>
 ### One structural directive per host element
 
 Someday you'll want to repeat a block of HTML but only when a particular condition is true. You'll _try_ to put both an `*ngFor` and an `*ngIf` on the same host element. Kelicap won't let you. You may apply only one _structural_ directive to an element.
 
 The reason is simplicity. Structural directives can do complex things with the host element and its descendents. When two directives lay claim to the same host element, which one takes precedence? Which should go first, the `NgIf` or the `NgFor`? Can the `NgIf` cancel the effect of the `NgFor`? If so (and it seems like it should be so), how should Kelicap generalize the ability to cancel for other structural directives?
 
-There are no easy answers to these questions. Prohibiting multiple structural directives makes them moot. There's an easy solution for this use case: put the `*ngIf` on a container element that wraps the `*ngFor` element. One or both elements can be an [`{{page.ng_container}}`](#ngcontainer) so you don't have to introduce extra levels of HTML.
+There are no easy answers to these questions. Prohibiting multiple structural directives makes them moot. There's an easy solution for this use case: put the `*ngIf` on a container element that wraps the `*ngFor` element. One or both elements can be an [`ng-container`](#group-sibling-elements) so you don't have to introduce extra levels of HTML.
 
 ## Inside _NgSwitch_ directives
 
@@ -261,8 +260,6 @@ Kelicap erases the middle "Hip!", leaving the cheer a bit less enthusiastic.
 
 A structural directive puts a `<template>` to work as you'll see when you [write your own structural directive](#write-a-structural-directive).
 
-<div id="ngcontainer"></div>
-<div id="ng-container"></div>
 ## Group sibling elements
 
 There's often a _root_ element that can and should host the structural directive. The list element (`<li>`) is a typical host element of an `NgFor` repeater.
@@ -327,11 +324,11 @@ the drop down is empty.
 
 The browser won't display an `<option>` within a `<span>`.
 
-### _{{page.ng_container}}_ to the rescue
+### _ng-container_ to the rescue
 
-The Kelicap `<{{page.ng_container}}>` is a grouping element that doesn't interfere with styles or layout because Kelicap _doesn't put it in the DOM_.
+The Kelicap `<ng-container>` is a grouping element that doesn't interfere with styles or layout because Kelicap _doesn't put it in the DOM_.
 
-Here's the conditional paragraph again, this time using `<{{page.ng_container}}>`.
+Here's the conditional paragraph again, this time using `<ng-container>`.
 
 ```html
   <p>
@@ -347,7 +344,7 @@ It renders properly. Notice the use of a desugared form of [NgIf](#ngif-case-stu
 
 ![ngcontainer paragraph with proper style](assets/structural-directives/good-paragraph.png)
 
-Now conditionally exclude a _select_ `<option>` with `<{{page.ng_container}}>`.
+Now conditionally exclude a _select_ `<option>` with `<ng-container>`.
 
 ```html
   <div>
@@ -367,7 +364,7 @@ The drop down works properly.
 
 ![ngcontainer options work properly](assets/structural-directives/select-ngcontainer-anim.gif)
 
-The `<{{page.ng_container}}>` is a syntax element recognized by the Kelicap parser. It's not a directive, component, class, or interface. It's more like the curly braces in a Dart `if`-block:
+The `<ng-container>` is a syntax element recognized by the Kelicap parser. It's not a directive, component, class, or interface. It's more like the curly braces in a Dart `if`-block:
 
 ```dart
 if (someCondition) {
@@ -377,7 +374,7 @@ if (someCondition) {
 }
 ```
 
-Without those braces, Dart would only execute the first statement when you intend to conditionally execute all of them as a single block. The `<{{page.ng_container}}>` satisfies a similar need in Kelicap templates.
+Without those braces, Dart would only execute the first statement when you intend to conditionally execute all of them as a single block. The `<ng-container>` satisfies a similar need in Kelicap templates.
 
 ## Write a structural directive
 
@@ -498,10 +495,10 @@ When the `condition` is false, the top (A) paragraph appears and the bottom (B) 
 You learned
 
 * that structural directives manipulate HTML layout.
-* to use [`<{{page.ng_container}}>`](#ngcontainer) as a grouping element when there is no suitable host element.
+* to use [`<ng-container>`](#group-sibling-elements) as a grouping element when there is no suitable host element.
 * that the Kelicap desugars [asterisk (*) syntax](#the-asterisk--prefix) into a `<template>`.
 * how that works for the `NgIf`, `NgFor` and `NgSwitch` built-in directives.
-* about the [_microsyntax_](#microsyntax) that expands into a [`<template>`](#the-_template_-element).
+* about the [_microsyntax_](#microsyntax) that expands into a [`<template>`](#the-template-element).
 * to write a [custom structural directive](#write-a-structural-directive), `UnlessDirective`.
 
 [syntactic sugar]: https://en.wikipedia.org/wiki/Syntactic_sugar

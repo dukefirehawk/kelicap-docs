@@ -108,8 +108,6 @@ The heroes test works as follows:
 - The `setUp()` method selects a hero.
 - The test expects a _single_ call to the mock router's `navigate()` method, with an appropriate path a parameter.
 
-<a id="heroes-go-to-detail-test"></a>
-
 ### Testing routerLink attribute navigation
 
 The app [dashboard][], from [part 5][] of the [tutorial][], supports direct navigation to hero details using router links:
@@ -277,7 +275,7 @@ Using this navigation history, the go-to-detail test illustrated previously when
   });
 ```
 
-Contrast this with the [heroes "go to details" test](#heroes-go-to-detail-test) shown earlier. While the dashboard test requires more testing infrastructure, the test has the advantage of ensuring that [route configurations][] are declared as expected.
+Contrast this with the [heroes "go to details" test](#testing-routerlink-attribute-navigation) shown earlier. While the dashboard test requires more testing infrastructure, the test has the advantage of ensuring that [route configurations][] are declared as expected.
 
 Alternatively, for a simple test scenario like go-to-detail, you can simply test the last URL cached by the mock platform location:
 
@@ -295,7 +293,7 @@ Alternatively, for a simple test scenario like go-to-detail, you can simply test
 [base href]: ../../router/1.md#set-the-base-href
 [dashboard]: ../../../tutorial/toh-pt5.md#add-heroes-to-the-dashboard
 [deep linking]: https://en.wikipedia.org/wiki/Deep_linking
-[link parameter list]: ../../router/appendices.md#link-parameters-list
+[link parameter list]: ../../router/appendices.md#appendix-link-parameters-list
 [package:mockito]: https://pub.dev/packages/mockito
 [part 5]: ../../../tutorial/toh-pt5.md
 [PlatformLocation]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/PlatformLocation-class.html

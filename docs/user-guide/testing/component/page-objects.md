@@ -74,6 +74,7 @@ You'll first see POs and tests for the [tutorial][]'s simple [Hero Editor][toh-p
 [final code]: ../../../tutorial/toh-pt1.md#the-road-youve-travelled
 
 <a id="toh-1-template"></a>
+
 ```dart
   template: '''
     <h1>{{title}}</h1>
@@ -143,14 +144,14 @@ You can declaratively identify HTML elements that occur in a component's templat
   }
 ```
 
-Because of its [@ByTagName()](https://pub.dev/documentation/pageloader/latest/webdriver/ByTagName-class.html) annotation, the `_h1` field will get bound to the app component [template's `<h1>` element](#toh-1-template).
+Because of its [@ByTagName()](https://pub.dev/documentation/ngpageloader/latest/webdriver/ByTagName-class.html) annotation, the `_h1` field will get bound to the app component [template's `<h1>` element](#toh-1-template).
 
 Other basic tags, which you'll soon see examples of, include:
-- [@ByClass()](https://pub.dev/documentation/pageloader/latest/webdriver/ByClass-class.html)
-- [@ByCss()](https://pub.dev/documentation/pageloader/latest/webdriver/ByCss-class.html)
-- [@ById()](https://pub.dev/documentation/pageloader/latest/webdriver/ById-class.html)
-- [@First()](https://pub.dev/documentation/pageloader/latest/webdriver/First-class.html)
-- [@WithVisibleText()](https://pub.dev/documentation/pageloader/latest/webdriver/WithVisibleText-class.html)
+- [@ByClass()](https://pub.dev/documentation/ngpageloader/latest/webdriver/ByClass-class.html)
+- [@ByCss()](https://pub.dev/documentation/ngpageloader/latest/webdriver/ByCss-class.html)
+- [@ById()](https://pub.dev/documentation/ngpageloader/latest/webdriver/ById-class.html)
+- [@First()](https://pub.dev/documentation/ngpageloader/latest/webdriver/First-class.html)
+- [@WithVisibleText()](https://pub.dev/documentation/ngpageloader/latest/webdriver/WithVisibleText-class.html)
 
 The PO `title` field returns the heading element's text.
 
@@ -282,10 +283,8 @@ To determine whether an optionally displayed page element is present, test its `
 ```
 
 [kelicap_test]: https://pub.dev/packages/kelicap_test
-[@optional]: https://pub.dev/documentation/pageloader/latest/webdriver/optional-constant.html
-[issue 1351]: https://github.com/dart-lang/site-webdev/issues/1351
 [page object]: https://martinfowler.com/bliki/PageObject.html
-[pageloader]: https://pub.dev/packages/pageloader
+[pageloader]: https://pub.dev/packages/ngpageloader
 [rootElement]: https://pub.dev/documentation/kelicap_test/latest/kelicap_test/NgTestFixture/rootElement.html
 [separate concerns]: https://en.wikipedia.org/wiki/Separation_of_concerns
 [toh-pt1]: ../../../tutorial/toh-pt1.md

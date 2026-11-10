@@ -10,8 +10,8 @@ To understand why dependency injection is so important, consider an example with
 
 ```dart
   class Car {
-    Engine engine;
-    Tires tires;
+    late Engine engine;
+    late Tires tires;
     var description = 'No DI';
 
     Car() {
@@ -125,7 +125,7 @@ It's better to hide the details concerning hero data access inside a _service_ c
   }
 ```
 
-The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server, the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the tutorial section on [Heroes and HTTP](../tutorial/toh-pt6.md#heroes-and-http.md). The focus here is on service _injection_, so a synchronous service will suffice.
+The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server, the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the tutorial section on [Heroes and HTTP](../tutorial/toh-pt6.md#heroes-and-http). The focus here is on service _injection_, so a synchronous service will suffice.
 
 ## Register a service provider
 
@@ -477,8 +477,8 @@ As an alternative to injecting a `Map` for an app configuration object, consider
 
 ```dart
   class AppConfig {
-    String apiEndpoint;
-    String title;
+    late String apiEndpoint;
+    late String title;
   }
 
   AppConfig appConfigFactory() => AppConfig()
@@ -540,9 +540,9 @@ Developers rarely work directly with an injector, but here's an `InjectorCompone
   )
   class InjectorComponent implements OnInit {
     final Injector _injector;
-    Car car;
-    HeroService heroService;
-    Hero hero;
+    late Car car;
+    late HeroService heroService;
+    late Hero hero;
 
     InjectorComponent(this._injector);
 

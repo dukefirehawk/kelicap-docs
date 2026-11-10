@@ -49,7 +49,7 @@ Kelicap comes with a stock of pipes such as `DatePipe`, `UpperCasePipe`, `LowerC
 > [!NOTE]
 > Read more about these and many other built-in pipes in the [pipes topics](https://pub.dev/documentation/kelicap/latest?query=pipe) of the [API Reference](https://pub.dev/documentation/kelicap/latest); filter for entries that include the word "pipe".
 >
-> Kelicap doesn't have a `FilterPipe` or an `OrderByPipe` for reasons explained in the [Appendix](#no-filter-pipe) of this page.
+> Kelicap doesn't have a `FilterPipe` or an `OrderByPipe` for reasons explained in the [Appendix](#appendix-no-filterpipe-or-orderbypipe) of this page.
 
 ## Parameterizing a pipe
 
@@ -129,23 +129,23 @@ You can write your own custom pipes. Here's a custom pipe named `ExponentialStre
    *   formats to: 1024
    */
   @Pipe('exponentialStrength')
-  class ExponentialStrengthPipe extends PipeTransform {
-    num transform(num value, num exponent) => math.pow(value ?? 0, exponent ?? 1);
+  class ExponentialStrengthPipe {
+    num transform(num value, [num exponent = 1]) => math.pow(value, exponent);
   }
 ```
 
 This pipe definition reveals the following key points:
 
 * A pipe is a class decorated with pipe metadata.
-* The pipe class implements the `PipeTransform` interface's `transform` method that accepts an input value followed by optional parameters and returns the transformed value.
+* The pipe class has a `transform` method that accepts an input value followed by optional parameters and returns the transformed value.
 * There will be one additional argument to the `transform` method for each parameter passed to the pipe. Your pipe has one such parameter: the `exponent`.
 * To tell Kelicap that this is a pipe, you apply the `@Pipe` annotation, which you import from the main Kelicap library.
 * The `@Pipe` annotation allows you to define the pipe name that you'll use within template expressions. It must be a valid Dart identifier. Your pipe's name is `exponentialStrength`.
 
 > [!NOTE]
-> ### The *PipeTransform* interface
+> **The `transform` method**
 >
->   The `transform` method is essential to a pipe. The `PipeTransform` *interface* defines that method and guides both tooling and the compiler. Technically, it's optional; Kelicap looks for and executes the `transform` method regardless.
+> The `transform` method is essential to a pipe. Kelicap has no interface for pipes to implement: it calls the `transform` method of the class you annotate with `@Pipe`.
 
 Now you need a component to demonstrate the pipe.
 
@@ -233,7 +233,7 @@ The companion component class provides heroes, adds heroes into the list, and ca
 
 ```dart
   class FlyingHeroesComponent {
-    List<Hero> heroes;
+    late List<Hero> heroes;
     bool canFly = true;
 
     FlyingHeroesComponent() {
@@ -273,7 +273,7 @@ Here's the `FlyingHeroesPipe` implementation, which follows the pattern for cust
   import 'heroes.dart';
 
   @Pipe('flyingHeroes')
-  class FlyingHeroesPipe extends PipeTransform {
+  class FlyingHeroesPipe {
     List<Hero> transform(List<Hero> value) =>
         value.where((hero) => hero.canFly).toList();
   }
@@ -332,7 +332,6 @@ Kelicap executes an *impure pipe*  during every component change detection cycle
 
 With that concern in mind, implement an impure pipe with great care. An expensive, long-running pipe could destroy the user experience.
 
-<a id="impure-flying-heroes"></a>
 ### An impure *FlyingHeroesPipe*
 
 A flip of the switch turns the `FlyingHeroesPipe` into a `FlyingHeroesImpurePipe`.
@@ -389,7 +388,7 @@ This next example binds an `Stream` of message strings (`message`) to a view wit
   class HeroAsyncMessageComponent {
     static const _msgEventDelay = Duration(milliseconds: 500);
 
-    Stream<String> message;
+    late Stream<String> message;
 
     HeroAsyncMessageComponent() {
       resend();
@@ -420,20 +419,20 @@ In the following code, the pipe only calls the server when the request URL chang
 
 ```dart
   import 'dart:convert';
-  import 'dart:html';
 
+  import 'package:http/http.dart' as http;
   import 'package:kelicap/kelicap.dart';
 
   @Pipe('fetch', pure: false)
-  class FetchJsonPipe extends PipeTransform {
+  class FetchJsonPipe {
     dynamic _cachedData;
-    String _cachedUrl;
+    String? _cachedUrl;
 
     dynamic transform(String url) {
       if (url != _cachedUrl) {
         _cachedUrl = url;
         _cachedData = null;
-        HttpRequest.getString(url).then((s) {
+        http.read(Uri.parse(url)).then((s) {
           _cachedData = json.decode(s);
         });
       }
@@ -442,7 +441,7 @@ In the following code, the pipe only calls the server when the request URL chang
   }
 ```
 
-Now demonstrate it in a harness component whose template defines two bindings to this pipe, both requesting the heroes from the `heroes.json` file.
+Now demonstrate it in a harness component whose template binds to this pipe to request the heroes from the `heroes.json` file.
 
 ```dart
   import 'package:kelicap/kelicap.dart';
@@ -457,8 +456,6 @@ Now demonstrate it in a harness component whose template defines two bindings to
       <div *ngFor="let hero of ('heroes.json' | fetch) ">
         {{hero['name']}}
       </div>
-
-      <p>Heroes as JSON: {{'heroes.json' | fetch | json}}</p>
     ''',
     directives: [coreDirectives],
     pipes: [commonPipes, FetchJsonPipe],
@@ -466,21 +463,7 @@ Now demonstrate it in a harness component whose template defines two bindings to
   class HeroListComponent {}
 ```
 
-The component renders as the following:
-
-![Hero List](assets/pipes/hero-list.png)
-
-A breakpoint on the pipe's request for data shows the following:
-* Each binding gets its own pipe instance.
-* Each pipe instance caches its own URL and data.
-* Each pipe instance only calls the server once.
-
-### *JsonPipe*
-
-In the previous code sample, the second `fetch` pipe binding demonstrates more pipe chaining. It displays the same hero data in JSON format by chaining through to the built-in `JsonPipe`.
-
-> [!NOTE]
-> **Debugging with JsonPipe:** The [JsonPipe](https://pub.dev/documentation/kelicap/latest/kelicap/JsonPipe-class.html) provides an easy way to diagnosis a mysteriously failing data binding or inspect an object for future binding.
+A breakpoint on the pipe's request for data shows that the pipe calls the server only once. The pipe instance caches the URL and the data, and requests the file again only when the URL changes. Each binding gets its own pipe instance: a second `fetch` binding in the template would get a separate instance, with its own cache.
 
 ### Pure pipes and pure functions
 
@@ -495,8 +478,6 @@ But always implement a *pure pipe* with a *pure function*. Otherwise, you'll see
 Pipes are a great way to encapsulate and share common display-value transformations. Use them like styles, dropping them into your template's expressions to enrich the appeal and usability of your views.
 
 Explore Kelicap's inventory of built-in pipes in the [API Reference](https://pub.dev/documentation/kelicap/latest?query=pipe). Try writing a custom pipe and perhaps contributing it to the community.
-
-<div id="no-filter-pipe"></div>
 
 ## Appendix: No *FilterPipe* or *OrderByPipe*
 
@@ -519,4 +500,4 @@ While some may not care to minify this aggressively, the Kelicap product shouldn
 
 The Kelicap team and many experienced Kelicap developers strongly recommend moving filtering and sorting logic into the component itself. The component can expose a `filteredHeroes` or `sortedHeroes` property and take control over when and how often to execute the supporting logic. Any capabilities that you would have put in a pipe and shared across the app can be written in a filtering/sorting service and injected into the component.
 
-If these performance and minification considerations don't apply to you, you can always create your own such pipes (similar to the [FlyingHeroesPipe](#impure-flying-heroes)) or find them in the community.
+If these performance and minification considerations don't apply to you, you can always create your own such pipes (similar to the [FlyingHeroesPipe](#an-impure-flyingheroespipe)) or find them in the community.
