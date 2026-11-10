@@ -233,7 +233,7 @@ The companion component class provides heroes, adds heroes into the list, and ca
 
 ```dart
   class FlyingHeroesComponent {
-    List<Hero> heroes;
+    late List<Hero> heroes;
     bool canFly = true;
 
     FlyingHeroesComponent() {
@@ -388,7 +388,7 @@ This next example binds an `Stream` of message strings (`message`) to a view wit
   class HeroAsyncMessageComponent {
     static const _msgEventDelay = Duration(milliseconds: 500);
 
-    Stream<String> message;
+    late Stream<String> message;
 
     HeroAsyncMessageComponent() {
       resend();
@@ -463,10 +463,7 @@ Now demonstrate it in a harness component whose template binds to this pipe to r
   class HeroListComponent {}
 ```
 
-A breakpoint on the pipe's request for data shows the following:
-* Each binding gets its own pipe instance.
-* Each pipe instance caches its own URL and data.
-* Each pipe instance only calls the server once.
+A breakpoint on the pipe's request for data shows that the pipe calls the server only once. The pipe instance caches the URL and the data, and requests the file again only when the URL changes. Each binding gets its own pipe instance: a second `fetch` binding in the template would get a separate instance, with its own cache.
 
 ### Pure pipes and pure functions
 

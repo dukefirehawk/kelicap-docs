@@ -32,8 +32,11 @@ For generic purposes, use `kelicap create <app_name>` to create a new Kelicap ap
 
 ## Get dependencies
 
+Some code samples in this guide and the tutorial use [`package:web`](https://pub.dev/packages/web) for DOM access, such as the host element of a directive. Add it as a direct dependency of your app, then get the dependencies:
+
 ```bash
-  dart pub update
+  dart pub add web
+  dart pub get
 ```
 
 ## Customize the project

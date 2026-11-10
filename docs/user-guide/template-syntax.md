@@ -709,7 +709,7 @@ The `[(x)]` syntax is easy to demonstrate when the element has a settable proper
     int get size => _size;
     @Input()
     void set size(/*String|int*/ val) {
-      int z = val is int ? val : int.tryParse(val);
+      int? z = val is int ? val : int.tryParse('$val');
       if (z != null) _size = min(maxSize, max(minSize, z));
     }
 
@@ -1147,7 +1147,7 @@ Target properties must be explicitly marked as inputs or outputs. In the `HeroCo
 
 ```dart
   @Input()
-  Hero hero;
+  Hero? hero;
   final _deleteRequest = StreamController<Hero>();
   @Output()
   Stream<Hero> get deleteRequest => _deleteRequest.stream;

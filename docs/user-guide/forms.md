@@ -58,7 +58,8 @@ As users enter form data, you'll capture their changes and update an instance of
 ```dart
   class Hero {
     int id;
-    String name, power, alterEgo;
+    String name, power;
+    String? alterEgo;
 
     Hero(this.id, this.name, this.power, [this.alterEgo]);
 

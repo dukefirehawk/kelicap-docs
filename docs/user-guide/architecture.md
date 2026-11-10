@@ -61,8 +61,8 @@ You define a component's application logic - what it does to support the view - 
 
 ```dart
   class HeroListComponent implements OnInit {
-    List<Hero> heroes;
-    Hero selectedHero;
+    List<Hero> heroes = [];
+    Hero? selectedHero;
     final HeroService _heroService;
 
     HeroListComponent(this._heroService);
@@ -252,7 +252,7 @@ Here's a `HeroService` that uses a `Future` to fetch heroes. The `HeroService` d
   class HeroService {
     final BackendService _backendService;
     final Logger _logger;
-    List<Hero> heroes;
+    List<Hero> heroes = [];
 
     HeroService(this._logger, this._backendService);
 

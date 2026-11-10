@@ -284,7 +284,7 @@ To determine whether an optionally displayed page element is present, test its `
 
 [kelicap_test]: https://pub.dev/packages/kelicap_test
 [page object]: https://martinfowler.com/bliki/PageObject.html
-[pageloader]: https://pub.dev/packages/pageloader
+[pageloader]: https://pub.dev/packages/ngpageloader
 [rootElement]: https://pub.dev/documentation/kelicap_test/latest/kelicap_test/NgTestFixture/rootElement.html
 [separate concerns]: https://en.wikipedia.org/wiki/Separation_of_concerns
 [toh-pt1]: ../../../tutorial/toh-pt1.md

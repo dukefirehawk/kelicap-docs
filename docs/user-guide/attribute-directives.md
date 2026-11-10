@@ -78,16 +78,15 @@ Now reference this template in the `AppComponent`, and add the `Highlight` direc
 ```dart
   import 'package:kelicap/kelicap.dart';
 
-  import 'src/auto_id_directive.dart';
   import 'src/highlight_directive.dart';
 
   @Component(
     selector: 'my-app',
     templateUrl: 'app_component.html',
-    directives: [autoIdDirective, HighlightDirective],
+    directives: [HighlightDirective],
   )
   class AppComponent {
-    String color;
+    String? color;
   }
 ```
 
@@ -125,7 +124,7 @@ Add two eventhandlers that respond when the mouse enters or leaves, each adorned
     _highlight();
   }
 
-  void _highlight([String color]) {
+  void _highlight([String color = '']) {
     _el.style.backgroundColor = color;
   }
 ```
@@ -187,7 +186,7 @@ Start by adding a `highlightColor` property to the directive class like this:
 
 ```dart
   @Input()
-  String highlightColor;
+  String? highlightColor;
 ```
 
 ### Binding to an *@Input* property
@@ -229,7 +228,7 @@ You'll have to rename the directive's `highlightColor` property to `myHighlight`
 
 ```dart
   @Input()
-  String myHighlight;
+  String? myHighlight;
 ```
 
 This is disagreeable. The word, `myHighlight`, is a terrible property name and it doesn't convey the property's intent.
@@ -242,7 +241,7 @@ Restore the original property name and specify the selector as the alias in the 
 
 ```dart
   @Input('myHighlight')
-  String highlightColor;
+  String? highlightColor;
 ```
 
 *Inside* the directive the property is known as `highlightColor`. *Outside* the directive, where you bind to it, it's known as `myHighlight`.
@@ -309,7 +308,7 @@ Revise the `AppComponent.color` so that it has no initial value.
 
 ```dart
   class AppComponent {
-    String color;
+    String? color;
   }
 ```
 
@@ -327,7 +326,7 @@ Add a second **input** property to `HighlightDirective` called `defaultColor`:
 
 ```dart
   @Input()
-  String defaultColor;
+  String? defaultColor;
 ```
 
 Revise the directive's `onMouseEnter` so that it first tries to highlight with the `highlightColor`, then with the `defaultColor`, and falls back to "red" if both properties are undefined.
@@ -375,7 +374,7 @@ Create the following attribute directive, which gives its host element a unique 
 
 The constructor parameters define the directive's dependencies: the host element, and the value of its `autoId` attribute, which [@Attribute()][] reads once, when the directive is created.
 
-Add `AutoIdDirective` to the `directives` list of the app component, and add the following lines at the end of its template:
+In `app_component.dart`, import `src/auto_id_directive.dart` and add `AutoIdDirective` to the `directives` list. Then add the following lines at the end of the app component template:
 
 ```html
   <h4 #h1 autoId="heading-">Auto-ID at work</h4>
@@ -403,14 +402,14 @@ In this demo, the `hightlightColor` property is an ***input*** property of the `
 
 ```dart
   @Input()
-  String highlightColor;
+  String? highlightColor;
 ```
 
 You've seen it with an alias:
 
 ```dart
   @Input('myHighlight')
-  String highlightColor;
+  String? highlightColor;
 ```
 
 Either way, the `@Input` annotation tells Kelicap that this property is *public* and available for binding by a parent component. Without  `@Input`, Kelicap refuses to bind to the property.

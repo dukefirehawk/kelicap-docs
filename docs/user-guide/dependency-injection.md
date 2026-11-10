@@ -10,8 +10,8 @@ To understand why dependency injection is so important, consider an example with
 
 ```dart
   class Car {
-    Engine engine;
-    Tires tires;
+    late Engine engine;
+    late Tires tires;
     var description = 'No DI';
 
     Car() {
@@ -477,8 +477,8 @@ As an alternative to injecting a `Map` for an app configuration object, consider
 
 ```dart
   class AppConfig {
-    String apiEndpoint;
-    String title;
+    late String apiEndpoint;
+    late String title;
   }
 
   AppConfig appConfigFactory() => AppConfig()
@@ -540,9 +540,9 @@ Developers rarely work directly with an injector, but here's an `InjectorCompone
   )
   class InjectorComponent implements OnInit {
     final Injector _injector;
-    Car car;
-    HeroService heroService;
-    Hero hero;
+    late Car car;
+    late HeroService heroService;
+    late Hero hero;
 
     InjectorComponent(this._injector);
 

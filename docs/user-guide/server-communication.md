@@ -62,7 +62,7 @@ Here's the component class:
 ```dart
   class HeroListComponent implements OnInit {
     final HeroService _heroService;
-    String errorMessage;
+    String? errorMessage;
     List<Hero> heroes = [];
 
     HeroListComponent(this._heroService);
@@ -136,7 +136,7 @@ It's time to get real data. The following code makes `HeroService` get the heroe
 
     Future<List<Hero>> getAll() async {
       try {
-        final response = await _http.get(_heroesUrl);
+        final response = await _http.get(Uri.parse(_heroesUrl));
         final heroes = (_extractData(response) as List)
             .map((value) => Hero.fromJson(value))
             .toList();
@@ -162,7 +162,7 @@ Here's the code that uses the client's `get()` method to fetch data:
   // ···
   Future<List<Hero>> getAll() async {
     try {
-      final response = await _http.get(_heroesUrl);
+      final response = await _http.get(Uri.parse(_heroesUrl));
       final heroes = (_extractData(response) as List)
           .map((value) => Hero.fromJson(value))
           .toList();
@@ -214,7 +214,7 @@ An important part of dealing with I/O is anticipating errors by preparing to cat
 ```dart
   Future<List<Hero>> getAll() async {
     try {
-      final response = await _http.get(_heroesUrl);
+      final response = await _http.get(Uri.parse(_heroesUrl));
       final heroes = (_extractData(response) as List)
           .map((value) => Hero.fromJson(value))
           .toList();
@@ -268,7 +268,7 @@ The server generates the `id` and returns the JSON representation of the new her
 ```dart
   Future<Hero> create(String name) async {
     try {
-      final response = await _http.post(_heroesUrl,
+      final response = await _http.post(Uri.parse(_heroesUrl),
           headers: _headers, body: json.encode({'name': name}));
       return Hero.fromJson(_extractData(response));
     } catch (e) {

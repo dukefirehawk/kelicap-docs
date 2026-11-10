@@ -792,7 +792,7 @@ Add the following import and method stub to `HeroListComponent`:
   // ···
   class HeroListComponent implements OnInit {
     // ···
-    Future<NavigationResult> gotoDetail() => null;
+    Future<NavigationResult> gotoDetail() => throw UnimplementedError();
   }
 ```
 
