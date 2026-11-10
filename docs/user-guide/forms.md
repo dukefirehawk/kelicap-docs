@@ -210,7 +210,7 @@ You don't see hero data because you're not binding to the `Hero` yet. You know h
 
 Find the `<input>` tag for *Name* and update it like this:
 
-```dart
+```html
   <!-- TODO: remove the next diagnostic line -->
   <mark>{{model.name}}</mark><hr>
   <div class="form-group">

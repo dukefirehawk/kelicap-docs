@@ -108,11 +108,11 @@ Kelicap duplicates the `<li>` for each item in the list, setting the `hero` vari
 
 ### @Component(directives: ...)
 
-Before you can use any Kelicap directives in a template, you need to list them in the `directives` argument of your component's `@Component` annotation. You can list directives individually, or for convenience you can use groups like [CORE_DIRECTIVES]:
+Before you can use any Kelicap directives in a template, you need to list them in the `directives` argument of your component's `@Component` annotation. You can list directives individually, or for convenience you can use groups like [coreDirectives]:
 
-[CORE_DIRECTIVES]: https://pub.dev/documentation/kelicap/latest/kelicap/CORE_DIRECTIVES-constant.html
+[coreDirectives]: https://pub.dev/documentation/kelicap/latest/kelicap/coreDirectives-constant.html
 
-```html
+```dart
   import 'package:kelicap/kelicap.dart';
 
   @Component(

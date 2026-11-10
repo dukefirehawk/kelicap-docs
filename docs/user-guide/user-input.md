@@ -15,6 +15,7 @@ To bind to a DOM event, surround the DOM event name in parentheses and assign a 
 ```
 
 <a id="click"></a>
+
 The `(click)` to the left of the equal sign identifies the button's click event as the **target of the binding**. The text in quotes to the right of the equals sign is the **template statement**, which responds to the click event by calling the component's `onClickMe()` method.
 
 When writing a binding, be aware of a template statement's **execution context**. The identifiers in a template statement belong to a specific context object, usually the Kelicap component controlling the template. The example above shows a single line of HTML, but that HTML belongs to a larger component:

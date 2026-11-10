@@ -2,7 +2,7 @@
 
 Use HTTP to talk to a remote server.
 
-Most frontend apps communicate with backend services using the HTTP protocol. Dart web apps typically do this using the XMLHttpRequest (XHR) API, using [HttpRequest] from the [http] package. The following demos, which use the http package, illustrate server communication:
+Most frontend apps communicate with backend services using the HTTP protocol. Dart web apps typically do this with the [http] package, whose [BrowserClient] uses the browser's XMLHttpRequest (XHR) API. The following demos, which use the http package, illustrate server communication:
 
 - [HTTP client demo: Tour of Heroes](#http-client).
 
@@ -298,7 +298,7 @@ As in `_getHeroes()`, the `_extractData()` helper [extracts the data](#decode-js
 ```
 
 
-[HttpRequest]: https://api.dart.dev/stable/dart-html/HttpRequest-class.html
+[BrowserClient]: https://pub.dev/documentation/http/latest/browser_client/BrowserClient-class.html
 [factory provider]: dependency-injection.md#factory-providers
 [Future]: https://api.dart.dev/stable/dart-async/Future-class.html
 [http]: https://pub.dev/packages/http

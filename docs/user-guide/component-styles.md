@@ -44,7 +44,7 @@ This is a big improvement in modularity compared to how CSS traditionally works.
 Kelicap supports a few special selectors from the world of shadow DOM style scoping (described in [CSS Scoping Module Level 1][] on the [W3C][] site). The following sections describe these selectors.
 
 > [!WARNING]
-> These special selectors have no effect when view encapsulation is disabled. For details, see [Controlling view encapsulation](#view-encapsulation).
+> These special selectors have no effect when view encapsulation is disabled. For details, see [Controlling view encapsulation](#controlling-view-encapsulation).
 
 ### :host and :host()
 
@@ -156,26 +156,24 @@ In *this* case the URL is relative to the CSS file into which we are importing.
   @import 'hero_details_box.css';
 ```
 
-<a id="view-encapsulation"></a>
 ## Controlling view encapsulation
 
 By default, component styles are _encapsulated_, affecting only the HTML in the component's template. You can use the [special selectors](#special-selectors) to reach outside of the component's view, or you can disable view encapsulation completely for the component.
 
-Disabling view encapsulation makes the component's styles global. To do this, set the component's metadata [encapsulation][] parameter to `ViewEncapsulation.None`:
+Disabling view encapsulation makes the component's styles global. To do this, set the component's metadata [encapsulation][] parameter to `ViewEncapsulation.none`:
 
 ```dart
   @Component(
     // ···
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.none,
   )
 ```
 
 The [ViewEncapsulation][] enum can have two values:
 
-* `Emulated` (the default): Kelicap emulates the behavior of shadow DOM by preprocessing (and renaming) the CSS to effectively scope the CSS to the component's view. For details, see [Appendix 1](#inspect-generated-css).
-* `None`: Kelicap does no view encapsulation. Instead it makes the component's styles global. The scoping rules, isolations, and protections discussed earlier don't apply. This is essentially the same as pasting the component's styles into the HTML.
+* `emulated` (the default): Kelicap emulates the behavior of shadow DOM by preprocessing (and renaming) the CSS to effectively scope the CSS to the component's view. For details, see [Appendix 1](#appendix-1-inspecting-view-encapsulated-styles).
+* `none`: Kelicap does no view encapsulation. Instead it makes the component's styles global. The scoping rules, isolations, and protections discussed earlier don't apply. This is essentially the same as pasting the component's styles into the HTML.
 
-<a id="inspect-generated-css"></a>
 ## Appendix 1: Inspecting view encapsulated styles
 
 When using emulated view encapsulation, Kelicap preprocesses all component styles so that they approximate the standard shadow CSS scoping rules.
@@ -230,8 +228,8 @@ Thankfully, this is the default interpretation of relative URLs in KelicapDart:
 ```
 
 [CSS Scoping Module Level 1]: https://www.w3.org/TR/css-scoping-1
-[encapsulation]: https://pub.dev/documentation/kelicap/latest/di/Component/encapsulation.html
-[ViewEncapsulation]: https://pub.dev/documentation/kelicap/latest/kelicap/ViewEncapsulation-class.html
+[encapsulation]: https://pub.dev/documentation/kelicap/latest/kelicap/Component/encapsulation.html
+[ViewEncapsulation]: https://pub.dev/documentation/kelicap/latest/kelicap/ViewEncapsulation.html
 [W3C]: https://www.w3.org
 [:host]: https://developer.mozilla.org/en-US/docs/Web/CSS/:host
 [:host()]: https://developer.mozilla.org/en-US/docs/Web/CSS/:host()

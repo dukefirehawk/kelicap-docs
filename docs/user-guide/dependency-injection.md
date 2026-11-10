@@ -125,7 +125,7 @@ It's better to hide the details concerning hero data access inside a _service_ c
   }
 ```
 
-The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server, the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the tutorial section on [Heroes and HTTP](../tutorial/toh-pt6.md#heroes-and-http.md). The focus here is on service _injection_, so a synchronous service will suffice.
+The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server, the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the tutorial section on [Heroes and HTTP](../tutorial/toh-pt6.md#heroes-and-http). The focus here is on service _injection_, so a synchronous service will suffice.
 
 ## Register a service provider
 

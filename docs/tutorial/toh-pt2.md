@@ -213,7 +213,7 @@ Add a click event binding to the `<li>` like this:
 
 The parentheses identify the `<li>` element's  `click` event as the target. The `onSelect(hero)` expression calls the  `AppComponent` method, `onSelect()`, passing the template input variable `hero`, as an argument. That's the same `hero` variable you defined previously in the `ngFor` directive.
 
-Learn more about event binding at the [User Input](../user-guide/user-input.md) page and the [Event binding](../user-guide/template-syntax.md#event-binding-event.md) section of the [Template Syntax](../user-guide/template-syntax.md) page.
+Learn more about event binding at the [User Input](../user-guide/user-input.md) page and the [Event binding](../user-guide/template-syntax.md#event-binding-event) section of the [Template Syntax](../user-guide/template-syntax.md) page.
 
 ### Add a click handler to expose the selected hero
 
@@ -269,7 +269,7 @@ Don't forget the asterisk (`*`) in front of `ngIf`.
 
 When there is no selected hero, the `ngIf` directive removes the hero detail HTML from the DOM. There are no hero detail elements or bindings to worry about. When the user picks a hero, `selected` becomes non-null and `ngIf` puts the hero detail content into the DOM and evaluates the nested bindings.
 
-Read more about `ngIf` and `ngFor` in the [Structural Directives](../user-guide/structural-directives.md) page and the [Built-in directives](../user-guide/template-syntax.md#built-in-directives.md) section of the [Template Syntax](../user-guide/template-syntax.md) page.
+Read more about `ngIf` and `ngFor` in the [Structural Directives](../user-guide/structural-directives.md) page and the [Built-in directives](../user-guide/template-syntax.md#built-in-directives) section of the [Template Syntax](../user-guide/template-syntax.md) page.
 
 ### Style the selected hero
 

@@ -23,10 +23,11 @@ Run the following to install `kelicap_cli`:
 
 ## Create a starter project
 
-For generic purposes, use `kelicap create <app_name>` to create a new Kelicap application. If you want to follow the examples in this guide and tutorial, they are based on the [Quickstart](https://github.com/dukefirehawk/kelicap-templates/tree/quickstart) project on GitHub. You can get the project's files by cloning the repo.
+For generic purposes, use `kelicap create <app_name>` to create a new Kelicap application. If you want to follow the examples in this guide and tutorial, they are based on the [starter_app](https://github.com/dukefirehawk/kelicap-templates/tree/main/templates/starter_app) template of the kelicap-templates repo on GitHub. You can get the project's files by cloning the repo.
 
 ```bash
-  git clone https://github.com/dukefirehawk/kelicap-templates/quickstart
+  git clone https://github.com/dukefirehawk/kelicap-templates.git
+  cd kelicap-templates/templates/starter_app
 ```
 
 ## Get dependencies

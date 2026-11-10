@@ -73,8 +73,8 @@ Here is an example of a PO method for adding a new hero. It makes use of both `c
   }
 ```
 
-[PageLoaderElement.clear()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/clear.html
-[PageLoaderElement.click()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/click.html
-[PageLoaderElement]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement-class.html
-[PageLoaderElement.type()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/type.html
+[PageLoaderElement.clear()]: https://pub.dev/documentation/ngpageloader/latest/webdriver/PageLoaderElement/clear.html
+[PageLoaderElement.click()]: https://pub.dev/documentation/ngpageloader/latest/webdriver/PageLoaderElement/click.html
+[PageLoaderElement]: https://pub.dev/documentation/ngpageloader/latest/webdriver/PageLoaderElement-class.html
+[PageLoaderElement.type()]: https://pub.dev/documentation/ngpageloader/latest/webdriver/PageLoaderElement/type.html
 [toh-pt1]: ../../../tutorial/toh-pt1.md

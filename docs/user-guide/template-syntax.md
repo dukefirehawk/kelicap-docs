@@ -883,7 +883,7 @@ Structural directives are responsible for HTML layout. They shape or reshape the
 * Why you must [*prefix the directive name with an asterisk* (\*)](structural-directives.md#the-asterisk--prefix "The * in *ngIf").
 * How to [group elements](structural-directives.md#group-sibling-elements) when there is no suitable host element for the directive.
 * How to write your own structural directive.
-* Why you can apply only [one structural directive](structural-directives.md#one-per-element "one per host element") to an element.
+* Why you can apply only [one structural directive](structural-directives.md#one-structural-directive-per-host-element "one per host element") to an element.
 
 *This* section is an introduction to the common structural directives:
 
@@ -1219,21 +1219,6 @@ You can also [apply parameters](pipes.md#parameterizing-a-pipe) to a pipe:
 ```html
   <!-- pipe with configuration argument => "February 25, 1970" -->
   <div>Birthdate: {{currentHero?.birthdate | date:'longDate'}}</div>
-```
-
-The `json` pipe can be helpful for debugging bindings:
-
-```html
-  <div>{{currentHero | json}}</div>
-```
-
-The generated output looks something like this:
-
-```json
-{ "id": 0, "name": "Hercules", "emotion": "happy",
-  "birthdate": "1970-02-25T08:00:00.000Z",
-  "url": "http://www.imdb.com/title/tt0065832/",
-  "rate": 325 }
 ```
 
 ### The safe navigation operator (`?.`) and null property paths

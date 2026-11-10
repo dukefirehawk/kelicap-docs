@@ -4,7 +4,6 @@ The balance of this guide is a set of appendices that elaborate some of the poin
 
 The appendix material isn't essential. Continued reading is for the curious.
 
-<a id="link-parameters-list"></a>
 ## Appendix: Link parameters list
 
 A link parameters list holds the ingredients for router navigation:
@@ -14,7 +13,7 @@ A link parameters list holds the ingredients for router navigation:
 
 You can bind the `RouterLink` directive to such an list like this:
 
-```dart
+```html
   <a [routerLink]="RoutePaths.heroes.toUrl()"
      [routerLinkActive]="'active-route'">Heroes</a>
 ```
@@ -58,7 +57,6 @@ Take it a step further. Consider the following router link that navigates from t
 
 In summary, you can write apps with one, two or more levels of routing. The link parameters list affords the flexibility to represent any routing depth and any legal sequence of route names and route parameter values.
 
-<a id="browser-url-styles"></a>
 ## Appendix: *LocationStrategy* and browser URL styles
 
 When the router navigates to a new component view, it updates the browser's location and history with a URL for that view. This is a strictly local URL. The browser shouldn't send this URL to the server and should not reload the page.
@@ -108,7 +106,7 @@ The preferred way to configure the strategy is to add a [&lt;base href> element]
 ```html
   <script>
     // WARNING: DO NOT set the <base href> like this in production!
-    // Details: https://webdev.dartlang.org/kelicap/guide/router
+    // Details: https://github.com/dukefirehawk/kelicap-docs/blob/main/docs/user-guide/router/appendices.md
     (function () {
       var m = document.location.pathname.match(/^(\/[-\w]+)+\/web($|\/)/);
       document.write('<base href="' + (m ? m[0] : '/') + '" />');

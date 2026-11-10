@@ -68,7 +68,7 @@ API links point to the latest docs on pub.dev, e.g. `https://pub.dev/documentati
 There's no build or CI. Before finishing:
 
 - Check that every relative link and image path you added or changed points to a file that exists.
-- Search the pages you edited for old site syntax and wrong imports: `grep -nE '\{%|\{\{site|<\?code|\{!\{|l-sub-section|package:(ng|Kelicap)' <files>`.
+- Search the pages you edited for old site syntax and wrong imports: `grep -nE '\{%|\{\{ ?(site|page)\.|\{ ?#|<\?code|\{!\{|l-sub-section|dart:html|package:(ng|Kelicap)' <files>`.
 - Preview the Markdown (GitHub, or your editor's preview) when you change tables, nested lists or code fences.
 
 ## Git

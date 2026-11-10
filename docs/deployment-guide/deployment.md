@@ -45,7 +45,7 @@ You can specify dart2js options in a build config file, as described in the [bui
 The following steps are optional, but they can help make your app more reliable and responsive.
 
 - [Deployment](#deployment)
-  - [Building your app {#compiling-to-javascript}](#building-your-app)
+  - [Building your app](#building-your-app)
     - [Compile using webdev](#compile-using-webdev)
     - [Use dart2js flags to produce better JavaScript](#use-dart2js-flags-to-produce-better-javascript)
     - [Make your app smaller, faster, and more reliable](#make-your-app-smaller-faster-and-more-reliable)
@@ -64,7 +64,7 @@ The [pwa package](https://pub.dev/packages/pwa) simplifies the task of making yo
 
 #### Use deferred loading to reduce your app's initial size
 
-You can use Dart's support for deferred loading to reduce your app's initial download size. For details, see the language tour's coverage of [deferred loading](https://dart.dev/guides/language/language-tour#lazily-loading-a-library) and the dart-lang/Kelicap page [Imperative Component Loading.](https://github.com/dart-lang/Kelicap/blob/master/doc/faq/component-loading.md)
+You can use Dart's support for deferred loading to reduce your app's initial download size. For details, see the language tour's coverage of [deferred loading](https://dart.dev/language/libraries#lazily-loading-a-library) and Kelicap's [ComponentLoader](https://pub.dev/documentation/kelicap/latest/kelicap/ComponentLoader-class.html), which loads components imperatively.
 
 #### Follow best practices for web apps
 
