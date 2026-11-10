@@ -31,11 +31,11 @@ Add the package to the pubspec dependencies:
 @@ -11,6 +12,7 @@
  dev_dependencies:
    kelicap_test: ^1.1.0
-   build_runner: ^2.2.0
-   build_test: ^2.1.5
-   build_web_compilers: ^3.2.4
+   build_runner: ^2.14.0
+   build_test: ^3.0.0
+   build_web_compilers: ^4.6.0
 +  ngpageloader: ^5.0.0
-   test: ^1.21.0
+   test: ^1.31.0
 ```
 
 ## Imports
