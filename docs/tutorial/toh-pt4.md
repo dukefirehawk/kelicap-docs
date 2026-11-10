@@ -26,12 +26,11 @@ tour_of_heroes
 
 ## Creating a hero service
 
-The stakeholders want to show the heroes in various ways on different pages. Users can already select a hero from a list. Soon you'll add a dashboard with the top performing heroes and create a separate view for editing hero details. All three views need hero data. At the moment, the `AppComponent` defines mock heroes for display. However, *defining* heroes is not the component's job, and you can't easily share the list of heroes with other components and views. In this page, you'll move the hero data acquisition business to a single service that provides the data and
-share that service with all components that need the data.
+The stakeholders want to show the heroes in various ways on different pages. Users can already select a hero from a list. Soon you'll add a dashboard with the top performing heroes and create a separate view for editing hero details. All three views need hero data. At the moment, the `AppComponent` defines mock heroes for display. However, *defining* heroes is not the component's job, and you can't easily share the list of heroes with other components and views. In this page, you'll move the hero data acquisition business to a single service that provides the data and share that service with all components that need the data.
 
 ### Create an injectable *HeroService*
 
-Create the file `hero_service.dart` under `lib/src`. The naming convention for service files is the service name in lowercase followed by `_service`. For a multi-word service name, use lower [snake_case](/glossary#snake_case). For example, the filename for `SpecialSuperHeroService` is `special_super_hero_service.dart`.
+Create the file `hero_service.dart` under `lib/src`. The naming convention for service files is the service name in lowercase followed by `_service`. For a multi-word service name, use lower snake_case. For example, the filename for `SpecialSuperHeroService` is `special_super_hero_service.dart`.
 
 Name the class `HeroService`.
 
@@ -90,7 +89,7 @@ Here are the property and the constructor:
   AppComponent(this._heroService);
 ```
 
-The constructor does nothing except set the `_heroService` property. The `HeroService` type of `_heroService` identifies the constructor's parameter as a `HeroService` injection point. Now Kelicap knows to supply a `HeroService` instance when it creates a new `AppComponent`. Read more about dependency injection in the [Dependency Injection](../guide/dependency-injection) page. The *injector* doesn't know yet how to create a `HeroService`. If you run the code now, Kelicap would fail with this error:
+The constructor does nothing except set the `_heroService` property. The `HeroService` type of `_heroService` identifies the constructor's parameter as a `HeroService` injection point. Now Kelicap knows to supply a `HeroService` instance when it creates a new `AppComponent`. Read more about dependency injection in the [Dependency Injection](../user-guide/dependency-injection.md) page. The *injector* doesn't know yet how to create a `HeroService`. If you run the code now, Kelicap would fail with this error:
 
 ```terminal
 EXCEPTION: No provider for HeroService! (AppComponent -> HeroService)
@@ -106,8 +105,7 @@ The `providers` parameter tells Kelicap to create a fresh instance of the `HeroS
 
 ### The *AppComponent.getHeroes()* method
 
-Add a `getHeroes()` method to the app component,
-and give `heroes` an empty list as its initial value.
+Add a `getHeroes()` method to the app component, and give `heroes` an empty list as its initial value.
 
 ```dart
   List<Hero> heroes = <Hero>[];
@@ -125,10 +123,9 @@ and give `heroes` an empty list as its initial value.
 
 To have Kelicap call `getHeroes()`, you can implement the Kelicap *ngOnInit lifecycle hook*. Kelicap offers interfaces for tapping into critical moments in the component lifecycle: at creation, after each change, and at its eventual destruction.
 
-Each interface has a single method. When the component implements that method, Kelicap calls it at the appropriate time. Read more about lifecycle hooks in the [Lifecycle Hooks](../guide/lifecycle-hooks) page.
+Each interface has a single method. When the component implements that method, Kelicap calls it at the appropriate time. Read more about lifecycle hooks in the [Lifecycle Hooks](../user-guide/lifecycle-hooks.md) page.
 
 Add [OnInit][] to the list of interfaces implemented by `AppComponent`, and write an `ngOnInit()` method with the initialization logic inside. Kelicap will call it at the right time. In this case, initialize by calling `getHeroes()`.
-
 
 ```dart
   class AppComponent implements OnInit {
@@ -140,7 +137,7 @@ Add [OnInit][] to the list of interfaces implemented by `AppComponent`, and writ
 
 **Refresh the browser.** The app should show a list of heroes and a hero detail view when you click on a hero name.
 
-## Async hero services {#async}
+## Async hero services
 
 The `HeroService` returns a list of mock heroes immediately; its `getAll()` signature is synchronous.
 
@@ -162,10 +159,9 @@ This is a simplified explanation. Read more about Futures in the Dart language t
   Future<List<Hero>> getAll() async => mockHeroes;
 ```
 
-You're still mocking the data. You're simulating the behavior of an ultra-fast, zero-latency server,
-by returning a `Future` whose mock heroes become available immediately.
+You're still mocking the data. You're simulating the behavior of an ultra-fast, zero-latency server, by returning a `Future` whose mock heroes become available immediately.
 
-Marking a method as `async` automatically sets the return type to `Future`. For more information on `async` functions, see [Declaring async functions]({{site.dartlang}}/guides/language/language-tour#async) in the Dart language tour.
+Marking a method as `async` automatically sets the return type to `Future`. For more information on `async` functions, see [Declaring async functions](https://dart.dev/guides/language/language-tour#async) in the Dart language tour.
 
 ### Processing the *Future*
 
@@ -201,7 +197,7 @@ An asynchronous method containing one or more `Future.then()` methods can be dif
   }
 ```
 
-The `Future<void>` return type is the asynchronous equivalent of `void`. To learn more about using `async` and `await`, read the [asynchronous programming codelab.]({{site.dartlang}}/codelabs/async-await). At the end of this page, [Appendix: Take it slow](#slow) describes what the app might be like with a poor connection.
+The `Future<void>` return type is the asynchronous equivalent of `void`. To learn more about using `async` and `await`, read the [asynchronous programming codelab.](https://dart.dev/codelabs/async-await). At the end of this page, [Appendix: Take it slow](#appendix-take-it-slow) describes what the app might be like with a poor connection.
 
 ## Review the app structure
 
@@ -235,13 +231,11 @@ Here's what you achieved in this page:
 * You defined the `HeroService` as a provider for the `AppComponent`.
 * You designed the service to return a `Future` and the component to get the data from the `Future`.
 
-Your app should look like this {% example_ref %}.
-
 ## The road ahead
 
 The Tour of Heroes has become more reusable using shared components and services. The next goal is to create a dashboard, add menu links that route between the views, and format data in a template. As the app evolves, you'll discover how to design it to make it easier to grow and maintain. Read about the Kelicap component router and navigation among the views in the [next tutorial](toh-pt5.md) page.
 
-## Appendix: Take it slow {#slow}
+## Appendix: Take it slow
 
 To simulate a slow connection, add the following `getAllSlowly()` method to the `HeroService`.
 
@@ -253,6 +247,6 @@ To simulate a slow connection, add the following `getAllSlowly()` method to the 
 
 Like `getAll()`, it also returns a `Future`, but this `Future` waits two seconds before completing. Back in the `AppComponent`, replace `getAll()` with `getAllSlowly()` and see how the app behaves.
 
-[dart:async]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/dart-async-library.html
-[Future]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/Future-class.html
-[OnInit]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/OnInit-class.html
+[dart:async]: https://api.dart.dev/stable/dart-async/dart-async-library.html
+[Future]: https://api.dart.dev/stable/dart-async/Future-class.html
+[OnInit]: https://pub.dev/documentation/kelicap/latest/kelicap/OnInit-class.html

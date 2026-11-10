@@ -4,18 +4,16 @@ Setting up a new Kelicap project is straightforward using common Dart tools.This
 
 ## Get prerequisites
 
-For information on how to get the Dart SDK,
-see [the Dart site]({{site.dartlang}}/get-dart):
+For information on how to get the Dart SDK, see [the Dart site](https://dart.dev/get-dart):
 
-- **Dart SDK** {{site.data.pkg-vers.SDK.vers}} or a compatible version. For
-  KelicapDart, SDK >= 3.13.0 is required.
+- **Dart SDK** 3.13 or a compatible version. For KelicapDart, SDK >= 3.13.0 is required.
 - Your favorite IDE & code editor, such as WebStorm, Eclipse, or **Visual Studio Code** (recommended).
 
 ## Install Command-line Tools
 
 ### kelicap_cli (recommended)
 
-[`kelicap_cli`]({{site.pub-pkg}}/kelicap_cli) is a community-maintained command-line tool for creating and managing KelicapDart applications. KelicapDart can still run without it, but `kelicap_cli` makes your life much easier by providing some handy commands such as `kelicap create <project_name>` to create a new project and `kelicap clean` to clean all build artifacts and cache, similar to `flutter clean` if you come from Flutter. For more info on `kelicap_cli`, see [`kelicap_cli`'s Pub page]({{site.pub-pkg}}/kelicap_cli).
+[`kelicap_cli`](https://pub.dev/packages/kelicap_cli) is a community-maintained command-line tool for creating and managing KelicapDart applications. KelicapDart can still run without it, but `kelicap_cli` makes your life much easier by providing some handy commands such as `kelicap create <project_name>` to create a new project and `kelicap clean` to clean all build artifacts and cache, similar to `flutter clean` if you come from Flutter. For more info on `kelicap_cli`, see [`kelicap_cli`'s Pub page](https://pub.dev/packages/kelicap_cli).
 
 Run the following to install `kelicap_cli`:
 
@@ -31,7 +29,7 @@ For generic purposes, use `kelicap create <app_name>` to create a new Kelicap ap
   git clone https://github.com/dukefirehawk/kelicap-templates/quickstart
 ```
 
-## Get dependencies  {#get}
+## Get dependencies
 
 ```bash
   dart pub update
@@ -115,13 +113,10 @@ Then, to view your app, use the Chrome/Firefox/Edge browser to visit [localhost:
 
 Regardless of your method, you should see the following app in a browser window:
 
-![A web page with the header: Hello Kelicap](/guide/images/starter-app.png)
-
 ## Reload the app
 
 Whenever you change the app, reload the browser window. As you save updates to the code, the dart `serve` automatically detects changes and serves the new app.
 
 ## Next step
 
-If you're new to Kelicap, we recommend staying on the [learning path](learning-kelicap.md).
-If you'd like to know more about the app you just created, see [User Guide](README.md)
+If you're new to Kelicap, we recommend staying on the [learning path](learning-kelicap.md). If you'd like to know more about the app you just created, see [User Guide](README.md)

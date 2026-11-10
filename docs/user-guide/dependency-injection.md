@@ -77,8 +77,7 @@ The critical point is this: the `Car` class did not have to change. You'll take 
 
 **You just learned what dependency injection is**.
 
-It's a pattern in which a class receives its dependencies from external sources rather than creating them itself. But what about that poor consumer? Anyone who wants a `Car` must now
-create all three parts: the `Car`, `Engine`, and `Tires`. The `Car` class shed its problems at the consumer's expense. You need something that takes care of assembling these parts. You _could_ write a giant class to do that:
+It's a pattern in which a class receives its dependencies from external sources rather than creating them itself. But what about that poor consumer? Anyone who wants a `Car` must now create all three parts: the `Car`, `Engine`, and `Tires`. The `Car` class shed its problems at the consumer's expense. You need something that takes care of assembling these parts. You _could_ write a giant class to do that:
 
 ```dart
   import 'car.dart';
@@ -103,7 +102,7 @@ Everyone wins. The `Car` knows nothing about creating an `Engine` or `Tires`. Th
 
 ## Kelicap dependency injection
 
-Kelicap ships with its own dependency injection framework. You'll learn Kelicap dependency injection through a discussion of the sample app that accompanies this page. Run the application anytime. Start by reviewing the simplified version of the _heroes_ feature from the [The Tour of Heroes](../tutorial/). The `HeroesComponent` is the top-level heroes component. It's only purpose is to display the `HeroListComponent` which displays a list of hero names. This version of the `HeroListComponent` gets its heroes from `mockHeroes`, an in-memory collection defined in a separate file.
+Kelicap ships with its own dependency injection framework. You'll learn Kelicap dependency injection through a discussion of the sample app that accompanies this page. Run the application anytime. Start by reviewing the simplified version of the _heroes_ feature from the [The Tour of Heroes](../tutorial/README.md). The `HeroesComponent` is the top-level heroes component. It's only purpose is to display the `HeroListComponent` which displays a list of hero names. This version of the `HeroListComponent` gets its heroes from `mockHeroes`, an in-memory collection defined in a separate file.
 
 ```dart
   class HeroListComponent {
@@ -111,8 +110,7 @@ Kelicap ships with its own dependency injection framework. You'll learn Kelicap 
   }
 ```
 
-That may suffice in the early stages of development, but it's far from ideal. As soon as you try to test this component or get heroes from a remote server,
-you'll have to change the implementation of `HeroListComponent` and replace every other use of the `mockHeroes` data.
+That may suffice in the early stages of development, but it's far from ideal. As soon as you try to test this component or get heroes from a remote server, you'll have to change the implementation of `HeroListComponent` and replace every other use of the `mockHeroes` data.
 
 ## Create an injectable _HeroService_
 
@@ -127,9 +125,7 @@ It's better to hide the details concerning hero data access inside a _service_ c
   }
 ```
 
-The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server,
-the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the
-tutorial section on [Heroes and HTTP](/tutorial/toh-pt6#heroes-and-http.md). The focus here is on service _injection_, so a synchronous service will suffice.
+The service class exposes a `getHeroes()` method that returns the same mock data as before. Of course, this isn't a real data service. If the service were actually getting data from a remote server, the `getHeroes()` method signature would be asynchronous. Such a hero service is presented in the tutorial section on [Heroes and HTTP](../tutorial/toh-pt6.md#heroes-and-http.md). The focus here is on service _injection_, so a synchronous service will suffice.
 
 ## Register a service provider
 
@@ -137,19 +133,16 @@ A service is just a class (or a top-level function) until you register it with a
 
 Kelicap creates most injectors for you as it executes the app, including the app's _root injector_. When your app needs a custom root injector, supply it as an [argument to the `runApp()` function](#root-injector-providers). You must register _providers_ with an injector before the injector can create that service.
 
-**Providers** tell the injector _how to create the service_. Without a provider, the injector would not know that it is responsible for injecting the service
-nor be able to create the service. You'll learn more about [providers](#providers) below. For now it is sufficient to know that they create services and must be registered with an injector.
+**Providers** tell the injector _how to create the service_. Without a provider, the injector would not know that it is responsible for injecting the service nor be able to create the service. You'll learn more about [providers](#providers) below. For now it is sufficient to know that they create services and must be registered with an injector.
 
-The most common way to register a provider is with
-any Kelicap annotation that has a **`providers` list argument**.
-The most common of these is [@Component()].
+The most common way to register a provider is with any Kelicap annotation that has a **`providers` list argument**. The most common of these is [@Component()].
 
 ### _@Component_ providers
 
 Here's a revised `HeroesComponent` that registers the `HeroService` in its `providers` list.
 
 ```dart
-  import 'package:Kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   import 'hero_list_component.dart';
   import 'hero_service.dart';
@@ -299,8 +292,7 @@ There are many ways to provide something that implements `Logger`. The most comm
   providers: [ClassProvider(Logger)],
 ```
 
-But it's not the only way. You can configure the injector with alternative providers that can deliver a `Logger`. You can provide a substitute class.
-You can give it a provider that calls a logger factory function. Any of these approaches might be a good choice under the right circumstances. What matters is that the injector has a provider to go to when it needs a `Logger`.
+But it's not the only way. You can configure the injector with alternative providers that can deliver a `Logger`. You can provide a substitute class. You can give it a provider that calls a logger factory function. Any of these approaches might be a good choice under the right circumstances. What matters is that the injector has a provider to go to when it needs a `Logger`.
 
 ### Use-class providers
 
@@ -508,7 +500,7 @@ You might use the app config like this:
   AppComponent(AppConfig config, this._userService) : title = config.title;
 ```
 
-## Optional dependencies {#optional}
+## Optional dependencies
 
 The `HeroService` _requires_ a `Logger`, but what if it could get by without a logger? You can tell Kelicap that the dependency is optional by annotating the constructor argument with [@Optional()]:
 
@@ -518,8 +510,7 @@ The `HeroService` _requires_ a `Logger`, but what if it could get by without a l
   }
 ```
 
-When using `@Optional()`, your code must be prepared for a null value. If you don't register a logger somewhere up the line, the injector will set the
-value of `logger` to null.
+When using `@Optional()`, your code must be prepared for a null value. If you don't register a logger somewhere up the line, the injector will set the value of `logger` to null.
 
 ## Summary
 
@@ -527,19 +518,18 @@ You learned the basics of Kelicap dependency injection in this page. You can reg
 
 Kelicap dependency injection is more capable than this page has described. You can learn more about its advanced features, beginning with its support for nested injectors, in [Hierarchical Dependency Injection](hierarchical-dependency-injection.md).
 
-## Appendix: Working with injectors directly {#explicit-injector}
+## Appendix: Working with injectors directly
 
-Developers rarely work directly with an injector, but
-here's an `InjectorComponent` that does.
+Developers rarely work directly with an injector, but here's an `InjectorComponent` that does.
 
 ```dart
   @Component(
     selector: 'my-injectors',
     template: '''
         <h2>Other Injections</h2>
-        <div id="car">{!{car.drive()}!}</div>
-        <div id="hero">{!{hero.name}!}</div>
-        <div id="rodent">{!{rodent}!}</div>''',
+        <div id="car">{{car.drive()}}</div>
+        <div id="hero">{{hero.name}}</div>
+        <div id="rodent">{{rodent}}</div>''',
     providers: [
       ClassProvider(Car),
       ClassProvider(Engine),

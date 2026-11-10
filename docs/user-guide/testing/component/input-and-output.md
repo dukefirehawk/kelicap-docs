@@ -1,31 +1,26 @@
----
-title: "Component Testing: @Input() and @Output()"
-description: Techniques and practices for component testing of KelicapDart apps.
-sideNavGroup: advanced
-prevpage:
-  title: "Component Testing: Services"
-  url: /guide/testing/component/services
-nextpage:
-  title: "Component Testing: Routing Components"
-  url: /guide/testing/component/routing-components
----
-<?code-excerpt path-base="examples/ng/doc"?>
+# Component Testing: @Input() and @Output()
 
-{% include_relative _page-top-toc.md %}
+**Component testing topics:**
 
-This section describes how to test components with [@Input(), and @Output()
-properties](/guide/template-syntax#inputs-outputs).
+- [Component testing](README.md)
+- [Running component tests](running-tests.md)
+- Writing component tests
+  - [Basics](basics.md): pubspec config, test API fundamentals
+  - [Page objects](page-objects.md): field annotation, initialization, and more
+  - [Simulating user action](simulating-user-action.md): click, type, clear
+  - [Services](services.md): local, external, mock, real
+  - [`@Input()` and `@Output()`](input-and-output.md)
+  - [Routing components](routing-components.md)
+
+This section describes how to test components with [@Input(), and @Output() properties](../../template-syntax.md#input-and-output-properties--input-and-output-).
 
 ## Running example
 
-The app from [part 3][] of the [tutorial][] will be used as a running example
-to illustrate how to test a component with `@Input()` properties, specifically
-the `HeroDetailComponent`:
+The app from [part 3][] of the [tutorial][] will be used as a running example to illustrate how to test a component with `@Input()` properties, specifically the `HeroDetailComponent`:
 
-<?code-excerpt "toh-3/lib/src/hero_component.dart" title?>
-```
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngforms/ngforms.dart';
+```dart
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
 
@@ -33,8 +28,8 @@ the `HeroDetailComponent`:
     selector: 'my-hero',
     template: '''
       <div *ngIf="hero != null">
-        <h2>{!{hero!.name}!}</h2>
-        <div><label>id: </label>{!{hero!.id}!}</div>
+        <h2>{{hero!.name}}</h2>
+        <div><label>id: </label>{{hero!.id}}</div>
         <div>
           <label>name: </label>
           <input [(ngModel)]="hero!.name" placeholder="name">
@@ -50,8 +45,7 @@ the `HeroDetailComponent`:
 
 Here is the [page object][] for this component:
 
-<?code-excerpt "toh-3/test/hero_detail_po.dart" title?>
-```
+```dart
   import 'dart:async';
 
   import 'package:ngpageloader/pageloader.dart';
@@ -86,37 +80,31 @@ Here is the [page object][] for this component:
   }
 ```
 
-The app component template contains a `<my-hero>` element that binds the
-`hero` property to the app component's `selectedHero`:
+The app component template contains a `<my-hero>` element that binds the `hero` property to the app component's `selectedHero`:
 
-<?code-excerpt "toh-3/lib/app_component.html (my-hero)" title?>
-```
+```html
   <my-hero [hero]="selected"></my-hero>
 ```
 
 The tests shown below use the following target hero data:
 
-<?code-excerpt "toh-3/test/hero_detail_test.dart (targetHero)" title?>
-```
+```dart
   const targetHero = {'id': 1, 'name': 'Alice'};
 ```
 
-## @Input(): No initial value {#input-uninitialized}
+## @Input(): No initial value
 
 This case occurs when either of the following is true:
 
-- The input is bound to an initial null value,
-  such as when app component's `selectedHero` is null above.
+- The input is bound to an initial null value, such as when app component's `selectedHero` is null above.
 - A component uses a `<my-hero>` element without a `hero` property:
   ```html
   <my-hero></my-hero>
     ```
 
-When a component is created, its inputs are left uninitialized, so
-basic [page object][] setup is sufficient to test for this case:
+When a component is created, its inputs are left uninitialized, so basic [page object][] setup is sufficient to test for this case:
 
-<?code-excerpt "toh-3/test/hero_detail_test.dart (no initial hero)" title?>
-```
+```dart
   group('No initial @Input() hero:', () {
     setUp(() async {
       fixture = await testBed.create();
@@ -133,14 +121,11 @@ basic [page object][] setup is sufficient to test for this case:
   });
 ```
 
-## @Input(): Non-null initial value {#input-initialized}
+## @Input(): Non-null initial value
 
-Initialization of an input property with a non-null value must be done when
-the test fixture is created. Provide an initialization callback as the
-named parameter `beforeChangeDetection` of the `NgTestBed.create()` method:
+Initialization of an input property with a non-null value must be done when the test fixture is created. Provide an initialization callback as the named parameter `beforeChangeDetection` of the `NgTestBed.create()` method:
 
-<?code-excerpt "toh-3/test/hero_detail_test.dart (initial hero)" title?>
-```
+```dart
   group('${targetHero['name']} initial @Input() hero:', () {
     // ···
     setUp(() async {
@@ -163,12 +148,9 @@ named parameter `beforeChangeDetection` of the `NgTestBed.create()` method:
 
 ## @Input(): Change value
 
-To emulate an input binding's change in value, use the
-`NgTestFixture.update()` method. This applies whether or not the input
-property was [explicitly initialized](#input-initialized):
+To emulate an input binding's change in value, use the `NgTestFixture.update()` method. This applies whether or not the input property was [explicitly initialized](#input-non-null-initial-value):
 
-<?code-excerpt "toh-3/test/hero_detail_test.dart (transition to hero)" title?>
-```
+```dart
   group('No initial @Input() hero:', () {
     setUp(() async {
       fixture = await testBed.create();
@@ -192,19 +174,13 @@ property was [explicitly initialized](#input-initialized):
 
 ## @Output() properties
 
-An `@Output()` property allows a component to raise [custom events][]
-in response to a timeout or input event. Output properties are
-visible from a component's API as public [Stream][] fields.
+An `@Output()` property allows a component to raise [custom events][] in response to a timeout or input event. Output properties are visible from a component's API as public [Stream][] fields.
 
-You can test an output property by first triggering a change. Then
-wait for an expected update on the output property's stream, from
-inside the callback passed as argument to the `NgTestFixture.update()` method.
+You can test an output property by first triggering a change. Then wait for an expected update on the output property's stream, from inside the callback passed as argument to the `NgTestFixture.update()` method.
 
-For example, you might test the font [sizer component][], from the
-[Two-way binding][] section of the [Template Syntax][] page, as follows:
+For example, you might test the font [sizer component][], from the [Two-way binding][] section of the [Template Syntax][] page, as follows:
 
-<?code-excerpt "template-syntax/test/sizer_test.dart (Output after inc)" title?>
-```
+```dart
   group('inc:', () {
     const expectedSize = initSize + 1;
 
@@ -222,26 +198,13 @@ For example, you might test the font [sizer component][], from the
   });
 ```
 
-In this test group, the `setUp()` method initiates a font increment event,
-and the output test awaits for the updated font size to appear on the
-`sizeChange` stream.
+In this test group, the `setUp()` method initiates a font increment event, and the output test awaits for the updated font size to appear on the `sizeChange` stream.
 
-Here is the full test file along with other relevant files and excerpts:
-
-<?code-excerpt path-base="examples/ng/doc/template-syntax"?>
-
-<code-tabs>
-  <?code-pane "test/sizer_test.dart (full)" region="" linenums?>
-  <?code-pane "test/sizer_po.dart" linenums?>
-  <?code-pane "lib/src/sizer_component.dart" linenums?>
-  <?code-pane "lib/app_component.html (template excerpt)" region="two-way-1" linenums?>
-</code-tabs>
-
-[custom events]: /guide/template-syntax#custom-events
-[page object]: page-objects
-[part 3]: /tutorial/toh-pt3
-[Stream]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/Stream-class.html
-[sizer component]: /guide/template-syntax#two-way
-[Two-way binding]: /guide/template-syntax#two-way
-[Template Syntax]: /guide/template-syntax
-[tutorial]: /tutorial
+[custom events]: ../../template-syntax.md#custom-events
+[page object]: page-objects.md
+[part 3]: ../../../tutorial/toh-pt3.md
+[Stream]: https://api.dart.dev/stable/dart-async/Stream-class.html
+[sizer component]: ../../template-syntax.md#two-way-binding---
+[Two-way binding]: ../../template-syntax.md#two-way-binding---
+[Template Syntax]: ../../template-syntax.md
+[tutorial]: ../../../tutorial/README.md

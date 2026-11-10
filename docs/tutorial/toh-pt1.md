@@ -37,8 +37,7 @@ Make the following changes to `AppComponent`:
 
 ### Add multi-line template HTML
 
-Update the template parameter in the `@Component` annotation with data bindings
-to these new properties:
+Update the template parameter in the `@Component` annotation with data bindings to these new properties:
 
 ```dart
   template: '''
@@ -115,7 +114,7 @@ Refactor the hero name in the template so it looks like this:
   </div>
 ```
 
-`[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property to the textbox. Data flows _in both directions:_ from the property to the textbox, and from the textbox back to the property. Read more about `ngModel` in the [Kelicap Forms](../user-guide/forms.md#ngModel) and [Kelicap Template Syntax](../user-guide/template-syntax.md#ngModel) pages.
+`[(ngModel)]` is the Kelicap syntax to bind the `hero.name` property to the textbox. Data flows _in both directions:_ from the property to the textbox, and from the textbox back to the property. Read more about `ngModel` in the [Kelicap Forms](../user-guide/forms.md#two-way-data-binding-with-ngmodel) and [Kelicap Template Syntax](../user-guide/template-syntax.md#ngmodel---two-way-binding-to-form-elements-with-ngmodel) pages.
 
 ## Declare non-core directives
 
@@ -143,7 +142,7 @@ The `kelicap_forms` library comes in its own package. Add the package to the pub
     kelicap_forms: ^1.1.0
 ```
 
-### Add @Component(directives: ...) {#component-directives}
+### Add @Component(directives: ...)
 
 Although `NgModel` is a valid Kelicap directive defined in the [kelicap_forms] library, it isn't available by default. Before you can use any Kelicap directives in a template, you need to list them in the `directives` argument of your component's `@Component` annotation. You can add directives individually, or for convenience you can add the [formDirectives] list (note the new import statement):
 
@@ -179,4 +178,4 @@ In the [next tutorial page](toh-pt2.md), you'll build on the Tour of Heroes app 
 
 [kelicap_forms]: https://pub.dev/packages/kelicap_forms
 [formDirectives]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/formDirectives-constant.html
-[interpolation syntax]: ../user-guide/template-syntax.md#interpolation
+[interpolation syntax]: ../user-guide/template-syntax.md#interpolation-

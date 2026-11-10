@@ -41,7 +41,7 @@ Instead, provide the `VillainsService` in the `providers` metadata of the `Villa
       <div>
         <h3>Villains</h3>
         <ul>
-          <li *ngFor="let villain of villains | async">{!{villain.name}!}</li>
+          <li *ngFor="let villain of villains | async">{{villain.name}}</li>
         </ul>
       </div>
     ''',
@@ -55,8 +55,7 @@ By providing `VillainsService` in the `VillainsListComponent` metadata and nowhe
 
 ### Scenario: multiple edit sessions
 
-Many apps allow users to work on several open tasks at the same time.
-For example, in a tax preparation app, the preparer could be working on several tax returns, switching from one to the other throughout the day.
+Many apps allow users to work on several open tasks at the same time. For example, in a tax preparation app, the preparer could be working on several tax returns, switching from one to the other throughout the day.
 
 The sample app demonstrates that scenario with an example in the Tour of Heroes theme. Imagine an outer `HeroListComponent` that displays a list of heroes. To open a hero's tax return, the preparer clicks on a hero name, which opens a component for editing that return. Each selected hero tax return opens in its own component and multiple returns can be open at the same time. Each tax return component has the following characteristics:
 
@@ -105,8 +104,8 @@ Here is the `HeroTaxReturnComponent` that makes use of it.
 ```dart
   import 'dart:async';
 
-  import 'package:Kelicap/Kelicap.dart';
-  import 'package:Kelicap_forms/Kelicap_forms.dart';
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
   import 'hero_tax_return_service.dart';
@@ -115,10 +114,10 @@ Here is the `HeroTaxReturnComponent` that makes use of it.
     selector: 'hero-tax-return',
     template: '''
       <div class="tax-return">
-        <div class="msg" [class.canceled]="message==='Canceled'">{!{message}!}</div>
+        <div class="msg" [class.canceled]="message==='Canceled'">{{message}}</div>
         <fieldset>
-          <span id="name">{!{taxReturn.name}!}</span>
-          <label id="tid">TID: {!{taxReturn.taxId}!}</label>
+          <span id="name">{{taxReturn.name}}</span>
+          <label id="tid">TID: {{taxReturn.taxId}}</label>
         </fieldset>
         <fieldset>
           <label>
@@ -126,7 +125,7 @@ Here is the `HeroTaxReturnComponent` that makes use of it.
           </label>
         </fieldset>
         <fieldset>
-          <label>Tax: {!{taxReturn.tax}!}</label>
+          <label>Tax: {{taxReturn.tax}}</label>
         </fieldset>
         <fieldset>
           <button (click)="onSaved()">Save</button>
@@ -188,7 +187,7 @@ The `HeroTaxReturnComponent` has its own provider of the `HeroTaxReturnService`.
 
 ### Scenario: specialized providers
 
-Another reason to re-provide a service is to substitute a _more specialized_ implementation of that service, deeper in the component tree. Consider again the Car example from the [Dependency Injection](dependency-injection) page. Suppose you configured the root injector (marked as A) with _generic_ providers for `CarService`, `EngineService` and `TiresService`.
+Another reason to re-provide a service is to substitute a _more specialized_ implementation of that service, deeper in the component tree. Consider again the Car example from the [Dependency Injection](dependency-injection.md) page. Suppose you configured the root injector (marked as A) with _generic_ providers for `CarService`, `EngineService` and `TiresService`.
 
 You create a car component (A) that displays a car constructed from these three generic services. Then you create a child component (B) that defines its own, _specialized_ providers for `CarService` and `EngineService` that have special capabilites suitable for whatever is going on in component (B). Component (B) is the parent of another component (C) that defines its own, even _more specialized_ provider for `CarService`.
 

@@ -1,30 +1,24 @@
----
-title: "Component Testing: Services"
-description: Techniques and practices for component testing of KelicapDart apps.
-sideNavGroup: advanced
-prevpage:
-  title: "Component Testing: Simulating user action"
-  url: /guide/testing/component/simulating-user-action
-nextpage:
-  title: "Component Testing: @Input() and @Output()"
-  url: /guide/testing/component/input-and-output
----
-<?code-excerpt path-base="examples/ng/doc"?>
+# Component Testing: Services
 
-{% include_relative _page-top-toc.md %}
+**Component testing topics:**
 
-Components make use of services to accomplish tasks such as accessing and
-persisting data. Your main choice, when testing a component that uses
-services, will be to decide whether or not to mock the service. This page
-illustrates how to do both.
+- [Component testing](README.md)
+- [Running component tests](running-tests.md)
+- Writing component tests
+  - [Basics](basics.md): pubspec config, test API fundamentals
+  - [Page objects](page-objects.md): field annotation, initialization, and more
+  - [Simulating user action](simulating-user-action.md): click, type, clear
+  - [Services](services.md): local, external, mock, real
+  - [`@Input()` and `@Output()`](input-and-output.md)
+  - [Routing components](routing-components.md)
+
+Components make use of services to accomplish tasks such as accessing and persisting data. Your main choice, when testing a component that uses services, will be to decide whether or not to mock the service. This page illustrates how to do both.
 
 ## Using real, locally provided services
 
-The `AppComponent` from [part 4][] of the [tutorial][] declares its need for a
-`HeroService` by including the service in the `@Component` `provider` list:
+The `AppComponent` from [part 4][] of the [tutorial][] declares its need for a `HeroService` by including the service in the `@Component` `provider` list:
 
-<?code-excerpt "toh-4/lib/app_component_2.dart (locally provided service)" title?>
-```
+```dart
   @Component(
     selector: 'my-app',
     // ···
@@ -39,20 +33,14 @@ The `AppComponent` from [part 4][] of the [tutorial][] declares its need for a
   }
 ```
 
-**No special measures are necessary** to test `AppComponent` with a
-(real) `HeroService`. For components under test, such locally provided
-services are instatiated, as usual, thanks to Kelicap's
-[dependency injection][] subsystem.
+**No special measures are necessary** to test `AppComponent` with a (real) `HeroService`. For components under test, such locally provided services are instatiated, as usual, thanks to Kelicap's [dependency injection][] subsystem.
 
 ## Component-external services: mock or real
 
-When testing a component that expects a service, you need to supply the
-`NgTestBed` with a root injector factory. The provider list of the generated
-injector factory can contain both real and mock services, as shown here:
+When testing a component that expects a service, you need to supply the `NgTestBed` with a root injector factory. The provider list of the generated injector factory can contain both real and mock services, as shown here:
 
-<?code-excerpt "toh-5/test/heroes_test.dart (rootInjector)" title remove="Probe" replace="/injector.factory/rootInjector/g; /rootInjector(?!\$)/[!$&!]/g"?>
-```
-  import 'package:Kelicap_tour_of_heroes/src/hero_list_component.template.dart'
+```dart
+  import 'package:tour_of_heroes/src/hero_list_component.template.dart'
       as ng;
   // ···
   import 'heroes_test.template.dart' as self;
@@ -61,28 +49,25 @@ injector factory can contain both real and mock services, as shown here:
     ClassProvider(HeroService),
     ClassProvider(Router, useClass: MockRouter),
   ])
-  final InjectorFactory [!rootInjector!] = self.rootInjector$Injector;
+  final InjectorFactory rootInjector = self.rootInjector$Injector;
 
   void main() {
     final testBed = NgTestBed<HeroListComponent>(
       ng.HeroListComponentNgFactory,
-      [!rootInjector!]: [!rootInjector!],
+      rootInjector: rootInjector,
     );
     // ···
   }
 ```
 
-See [Component Testing: Routing Components][] for details concerning the use of
-mock routers.
+See [Component Testing: Routing Components][] for details concerning the use of mock routers.
 
 ## Mocking locally provided services
 
-Mock locally provided services (to the component under test) in the same way as
-for [component-external services]: add the requisite mock providers to the
-`NgTestBed` before instantiating the fixture.
+Mock locally provided services (to the component under test) in the same way as for [component-external services]: add the requisite mock providers to the `NgTestBed` before instantiating the fixture.
 
 [component-external services]: #component-external-services-mock-or-real
-[dependency injection]: /guide/dependency-injection#Kelicap-dependency-injection
-[part 4]: /tutorial/toh-pt4
-[Component Testing: Routing Components]: ./routing-components
-[tutorial]: /tutorial
+[dependency injection]: ../../dependency-injection.md#kelicap-dependency-injection
+[part 4]: ../../../tutorial/toh-pt4.md
+[Component Testing: Routing Components]: routing-components.md
+[tutorial]: ../../../tutorial/README.md

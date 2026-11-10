@@ -30,8 +30,7 @@ You'll build this form in small steps:
 1. Create the `Hero` model class.
 2. Create the component that controls the form.
 3. Create a template with the initial form layout.
-4. Bind data properties to each form control using the [ngModel][NgModel]
-   two-way data-binding syntax.
+4. Bind data properties to each form control using the [ngModel][NgModel] two-way data-binding syntax.
 5. Add an [ngControl][NgControl] directive to each form-input control.
 6. Add custom CSS to provide visual feedback.
 7. Show and hide validation-error messages.
@@ -42,7 +41,7 @@ You'll build this form in small steps:
 
 Follow the [setup] instructions to create a new project named `forms`.
 
-### Add Kelicap_forms
+### Add kelicap_forms
 
 The Kelicap forms functionality is in the [kelicap_forms] library, which comes in [its own package][kelicap_forms@pub]. Add the package to the pubspec dependencies:
 
@@ -111,20 +110,16 @@ Create the following file with the given content:
   }
 ```
 
-There’s nothing special about this component, nothing form-specific,
-nothing to distinguish it from any component you've written before.
+There’s nothing special about this component, nothing form-specific, nothing to distinguish it from any component you've written before.
 
 Understanding this component requires only the Kelicap concepts covered in previous pages.
 
 * The code imports the main Kelicap library and the `Hero` model you just created.
-* The `@Component` selector value of `hero-form` means you can drop this form
-  in a parent template with a `<hero-form>` element.
-* The `templateUrl` property points to a separate file (which
-  [you'll create shortly](#create-an-initial-form-template))
-  for the template HTML.
+* The `@Component` selector value of `hero-form` means you can drop this form in a parent template with a `<hero-form>` element.
+* The `templateUrl` property points to a separate file (which [you'll create shortly](#create-an-initial-form-template)) for the template HTML.
 * You defined mock data for `model` and `powers`.
 
-Down the road, you can inject a data service to get and save real data or perhaps expose these properties as inputs and outputs (see [Input and output properties](template-syntax.md#inputs-outputs) in the [Template Syntax](template-syntax.md) page) for binding to a parent component. This is not a concern now and these future changes won't affect the form.
+Down the road, you can inject a data service to get and save real data or perhaps expose these properties as inputs and outputs (see [Input and output properties](template-syntax.md#input-and-output-properties--input-and-output-) in the [Template Syntax](template-syntax.md) page) for binding to a parent component. This is not a concern now and these future changes won't affect the form.
 
 ### Revise the app component
 
@@ -198,7 +193,7 @@ Add the following HTML *immediately below* the *Alter Ego* group:
   <div class="form-group">
     <label for="power">Hero Power&nbsp;*</label>
     <select class="form-control" id="power" required>
-      <option *ngFor="let p of powers" [value]="p">{!{p}!}</option>
+      <option *ngFor="let p of powers" [value]="p">{{p}}</option>
     </select>
   </div>
 ```
@@ -217,7 +212,7 @@ Find the `<input>` tag for *Name* and update it like this:
 
 ```dart
   <!-- TODO: remove the next diagnostic line -->
-  <mark>{!{model.name}!}</mark><hr>
+  <mark>{{model.name}}</mark><hr>
   <div class="form-group">
     <label for="name">Name&nbsp;*</label>
     <input type="text" class="form-control" id="name" required
@@ -232,18 +227,17 @@ You added a diagnostic interpolation before the form-group so you can see what y
 
 ![Name NgModel](assets/forms/name-ngmodel.png)
 
-The diagnostic is evidence that values really are flowing from the input to the model and back again. That's *two-way data binding*. For more information, see [Two-way binding with NgModel](template-syntax.md#ngModel) on the the [Template Syntax](template-syntax.md) page.
+The diagnostic is evidence that values really are flowing from the input to the model and back again. That's *two-way data binding*. For more information, see [Two-way binding with NgModel](template-syntax.md#ngmodel---two-way-binding-to-form-elements-with-ngmodel) on the the [Template Syntax](template-syntax.md) page.
 
 Notice that you also added an `ngControl` directive to the `<input>` tag and set it to "name", which makes sense for the hero's name. Any unique value will do, but using a descriptive name is helpful. Defining an `ngControl` directive is a requirement when using `[(ngModel)]` in combination with a form.
 
 Internally, Kelicap creates `NgFormControl` instances and registers them with an `NgForm` directive that Kelicap attached to the `<form>` tag. Each `NgFormControl` is registered under the name you assigned to the `ngControl` directive. You'll read more about `NgForm` later in this guide(#ngForm).
 
-Add similar `[(ngModel)]` bindings and `ngControl` directives to *Alter Ego* and *Hero Power*. Replace the diagnostic binding expression with `model`. This way you can
-confirm that two-way data binding works for the *entire hero model*. After revision, the core of the form should look like this:
+Add similar `[(ngModel)]` bindings and `ngControl` directives to *Alter Ego* and *Hero Power*. Replace the diagnostic binding expression with `model`. This way you can confirm that two-way data binding works for the *entire hero model*. After revision, the core of the form should look like this:
 
 ```html
   <!-- TODO: remove the next diagnostic line -->
-  <mark>{!{model}!}</mark><hr>
+  <mark>{{model}}</mark><hr>
   <div class="form-group">
     <label for="name">Name&nbsp;*</label>
     <input type="text" class="form-control" id="name" required
@@ -261,7 +255,7 @@ confirm that two-way data binding works for the *entire hero model*. After revis
     <select class="form-control" id="power" required
             [(ngModel)]="model.power"
             ngControl="power">
-      <option *ngFor="let p of powers" [value]="p">{!{p}!}</option>
+      <option *ngFor="let p of powers" [value]="p">{{p}}</option>
     </select>
   </div>
 ```
@@ -295,7 +289,7 @@ Each control [NgControl] in an Kelicap form tracks its own state and makes the s
 
 The `valid` control property is the most interesting, because you want to send a strong visual signal when a control value is invalid. To create such visual feedback, you'll use the [Bootstrap custom-forms] classes `is-valid` and `is-invalid`.
 
-Add a [template reference variable](template-syntax.md#ref-vars) called `name` to the *Name* `<input>` tag. Use `name` and [class bindings][class binding] to conditionally assign the appropriate form validity class. Temporarily add another template reference variable named `spy` to the *Name* `<input>` tag and use it to display the input's CSS classes.
+Add a [template reference variable](template-syntax.md#template-reference-variables--var-) called `name` to the *Name* `<input>` tag. Use `name` and [class bindings][class binding] to conditionally assign the appropriate form validity class. Temporarily add another template reference variable named `spy` to the *Name* `<input>` tag and use it to display the input's CSS classes.
 
 ```html
   <input type="text" class="form-control" id="name" required
@@ -311,7 +305,7 @@ Add a [template reference variable](template-syntax.md#ref-vars) called `name` t
 
 #### Template reference variables
 
-The `spy` [template reference variable](template-syntax.md#ref-vars) gets bound to the  `<input>` DOM element, whereas the `name` variable (through the `#name="ngForm"` syntax) gets bound to the [NgModel] associated with the input element.
+The `spy` [template reference variable](template-syntax.md#template-reference-variables--var-) gets bound to the  `<input>` DOM element, whereas the `name` variable (through the `#name="ngForm"` syntax) gets bound to the [NgModel] associated with the input element.
 
 Why "ngForm"?  A [Directive]'s [exportAs] property tells Kelicap how to link the reference variable to the directive. You set `name` to "ngForm" because the [NgModel] directive's `exportAs` property is "ngForm".
 
@@ -336,7 +330,7 @@ As an alternative to class bindings, you can use an [NgClass] directive to style
   }
 ```
 
-Use the map value returned by this method to bind to the [NgClass]directive - read more about this directive and its alternatives in the [template syntax](template-syntax.md#ngClass) page.
+Use the map value returned by this method to bind to the [NgClass]directive - read more about this directive and its alternatives in the [template syntax](template-syntax.md#ngclass) page.
 
 ```html
   <select class="form-control" id="power" required
@@ -344,7 +338,7 @@ Use the map value returned by this method to bind to the [NgClass]directive - re
           #power="ngForm"
           [ngClass]="setCssValidityClass(power)"
           ngControl="power">
-    <option *ngFor="let p of powers" [value]="p">{!{p}!}</option>
+    <option *ngFor="let p of powers" [value]="p">{{p}}</option>
   </select>
 ```
 
@@ -376,9 +370,7 @@ Some developers want the message to display at all times.  If you ignore the `pr
 
 Some developers want the message to display only when the user makes an invalid change. Hiding the message while the control is "pristine" achieves that goal. You'll see the significance of this choice when you [add a *Clear* button](#add-a-clear-button) to the form. The hero *Alter Ego* is optional so you can leave that be.
 
-Hero *Power* selection is required. You can add the same kind of error message
-to the `<select>` if you want, but it's not imperative because the selection box
-already constrains the power to valid values.
+Hero *Power* selection is required. You can add the same kind of error message to the `<select>` if you want, but it's not imperative because the selection box already constrains the power to valid values.
 
 ## Add a *Clear* button
 
@@ -482,15 +474,15 @@ Now add the following HTML below the `<div>` wrapper you just wrote:
     <table class="table">
       <tr>
         <th>Name</th>
-        <td>{!{model.name}!}</td>
+        <td>{{model.name}}</td>
       </tr>
       <tr>
         <th>Alter Ego</th>
-        <td>{!{model.alterEgo}!}</td>
+        <td>{{model.alterEgo}}</td>
       </tr>
       <tr>
         <th>Power</th>
-        <td>{!{model.power}!}</td>
+        <td>{{model.power}}</td>
       </tr>
     </table>
 
@@ -513,9 +505,7 @@ Kelicap forms provide support for data modification, validation, and more. In th
 * Template reference variables, such as `heroForm` and `name`.
 * Two-way data bindings (`[(ngModel)]`).
 * `NgControl` directives for validation and form-element change tracking.
-* The `valid` property of input controls
-  (accessed through template reference variables),
-  for checking control validity and showing/hiding error messages.
+* The `valid` property of input controls (accessed through template reference variables), for checking control validity and showing/hiding error messages.
 * [NgForm.form][] validity to set the *Submit* button's enabled state.
 * Custom CSS classes to provide visual feedback to users about control state.
 
@@ -542,7 +532,7 @@ kelicap_forms
 [Bootstrap custom-forms]: https://getbootstrap.com/docs/4.0/components/forms/#custom-forms
 [class binding]: template-syntax.md#class-binding
 [hidden]: https://developer.mozilla.org/docs/Web/HTML/Global_attributes/hidden
-[NgClass]: https://pub.dev/documentation/kelicap_forms/latest/kelicap/NgClass-class.html
+[NgClass]: https://pub.dev/documentation/kelicap/latest/kelicap/NgClass-class.html
 [NgControl]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgControl-class.html
 [NgForm]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgForm-class.html
 [NgForm.form]: https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/AbstractNgForm/form.html
