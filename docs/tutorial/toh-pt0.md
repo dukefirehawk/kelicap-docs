@@ -15,18 +15,18 @@ Run the app from your IDE or the command line, as explained in the [Run the app]
 Kelicap apps are made up of _components_. A _component_ is the combination of an HTML template and a component class that controls a portion of the screen. The starter app has a component that displays a simple string:
 
 ```dart
-  import 'package:ngdart/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   @Component(
     selector: 'my-app',
-    template: '<h1>Hello {!{name}!}</h1>',
+    template: '<h1>Hello {{name}}</h1>',
   )
   class AppComponent {
     var name = 'Kelicap';
   }
 ```
 
-Every component begins with an `@Component` [annotation](/glossary#annotation '"annotation" explained') that describes how the HTML template and component class work together. The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
+Every component begins with an `@Component` annotation that describes how the HTML template and component class work together. The `selector` property tells Kelicap to display the component inside a custom `<my-app>` tag in the `index.html`.
 
 ```html
   <my-app>Loading...</my-app>
@@ -57,7 +57,7 @@ All the examples in this documentation have _at least these core files_. Each fi
 | File | Purpose |
 | :--- | :--- |
 | lib/app_component.dart | Defines `<my-app>`, the **root** component of what will become a tree of nested components as the app evolves. |
-| test/app_test.dart | Defines `AppComponent` tests. While testing isn't covered in this tutorial, you can learn how to test the Tour of Heroes app from the [Testing](../guide/testing) page. |
+| test/app_test.dart | Defines `AppComponent` tests. While testing isn't covered in this tutorial, you can learn how to test the Tour of Heroes app from the [Testing](../user-guide/testing/README.md) page. |
 | web/main.dart | Launches the app in the browser. |
 | web/index.html | Contains the `<my-app>` tag in its `<body>`. This is where the app lives! |
 | web/styles.css | A set of styles used throughout the app. |

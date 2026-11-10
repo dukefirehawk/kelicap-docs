@@ -1,36 +1,27 @@
----
-title: Running Component Tests
-description: Running component tests
-sideNavGroup: advanced
-prevpage:
-  title: Component Testing
-  url: /guide/testing/component
-nextpage:
-  title: "Component Testing: Basics"
-  url: /guide/testing/component/basics
-toc: false
----
-<?code-excerpt path-base="examples/ng/doc"?>
+# Running Component Tests
 
-{% include_relative _page-top-toc.md %}
+**Component testing topics:**
 
-Whether you've just started the [tutorial](/tutorial), or
-finished the [Get Started](/guide/setup) page,
-you are ready to run your first tests!
-If you haven't worked through these projects recently, don't worry.
-You can follow along by first setting up the
-tutorial's [Starter App](/tutorial/toh-pt0).
+- [Component testing](README.md)
+- [Running component tests](running-tests.md)
+- Writing component tests
+  - [Basics](basics.md): pubspec config, test API fundamentals
+  - [Page objects](page-objects.md): field annotation, initialization, and more
+  - [Simulating user action](simulating-user-action.md): click, type, clear
+  - [Services](services.md): local, external, mock, real
+  - [`@Input()` and `@Output()`](input-and-output.md)
+  - [Routing components](routing-components.md)
 
-The [tutorial](/tutorial)'s [Starter App](/tutorial/toh-pt0)
-includes a few basic tests for its `AppComponent` in the following test file:
+Whether you've just started the [tutorial](../../../tutorial/README.md), or finished the [Get Started](../../setup.md) page, you are ready to run your first tests! If you haven't worked through these projects recently, don't worry. You can follow along by first setting up the tutorial's [Starter App](../../../tutorial/toh-pt0.md).
 
-<?code-excerpt "toh-0/test/app_test.dart (excerpt)" region="initial" title?>
-```
+The [tutorial](../../../tutorial/README.md)'s [Starter App](../../../tutorial/toh-pt0.md) includes a few basic tests for its `AppComponent` in the following test file:
+
+```dart
   @TestOn('browser')
 
-  import 'package:ngtest/ngtest.dart';
-  import 'package:Kelicap_tour_of_heroes/app_component.dart';
-  import 'package:Kelicap_tour_of_heroes/app_component.template.dart' as ng;
+  import 'package:kelicap_test/kelicap_test.dart';
+  import 'package:tour_of_heroes/app_component.dart';
+  import 'package:tour_of_heroes/app_component.template.dart' as ng;
   import 'package:test/test.dart';
 
   void main() {
@@ -50,36 +41,27 @@ includes a few basic tests for its `AppComponent` in the following test file:
   }
 ```
 
-If you've used modern testing frameworks, then you'll recognize
-elements such as the [test fixture][], and setup and teardown functions.
+If you've used modern testing frameworks, then you'll recognize elements such as the [test fixture][], and setup and teardown functions.
 
-The file contains a test named "Default greeting" that checks whether
-the app component template generates the text "Hello Kelicap":
+The file contains a test named "Default greeting" that checks whether the app component template generates the text "Hello Kelicap":
 
-<?code-excerpt "toh-0/test/app_test.dart (default test)"?>
-```
+```dart
   test('Default greeting', () {
     expect(fixture.text, 'Hello Kelicap');
   });
 ```
 
-To run tests, open a terminal, and from the project root issue the following
-command:
+To run tests, open a terminal, and from the project root issue the following command:
 
 ```terminal
 $ pub run build_runner test --fail-on-severe -- -p chrome
 ```
 
-The optional [build_runner][] `test` flag `--fail-on-severe` prevents tests from
-being run if there is a severe build error. For a complete list of
-command line options run `pub run build_runner test -h`.
+The optional [build_runner][] `test` flag `--fail-on-severe` prevents tests from being run if there is a severe build error. For a complete list of command line options run `pub run build_runner test -h`.
 
-Arguments after `--` (like `-p chrome` above) are passed directly to the [test package][] runner.
-To see all command-line options for the test runner, use this command:
-`pub run build_runner test -- -h`.
+Arguments after `--` (like `-p chrome` above) are passed directly to the [test package][] runner. To see all command-line options for the test runner, use this command: `pub run build_runner test -- -h`.
 
-The first test run builds the entire app.
-Incremental compilation makes subsequent test runs much quicker.
+The first test run builds the entire app. Incremental compilation makes subsequent test runs much quicker.
 
 ```terminal
   [INFO] Entrypoint: Generating build script completed, took 230ms
@@ -96,6 +78,6 @@ Incremental compilation makes subsequent test runs much quicker.
 ```
 
 [build_runner]: https://pub.dev/packages/build_runner
-[serves the app]: /guide/setup#running-the-app
+[serves the app]: ../../setup.md#run-the-app
 [test fixture]: https://github.com/junit-team/junit4/wiki/test-fixtures
 [test package]: https://pub.dev/packages/test

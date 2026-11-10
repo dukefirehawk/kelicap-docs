@@ -80,5 +80,4 @@ dart run build_runner build --release -o build
 
 The output in `build/web/` is ready to be served by any web server (e.g., Nginx, Apache, Firebase Hosting, Vercel)
 
----
-[← Previous: Introduction](intro.md) | [Next: Architecture →](architecture.md)
+--- [← Previous: Introduction](intro.md) | [Next: Architecture →](architecture.md)

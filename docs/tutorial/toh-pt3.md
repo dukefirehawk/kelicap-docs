@@ -2,10 +2,9 @@
 
 Refactor the master/detail view into separate components. The `AppComponent` is doing _everything_ at the moment. In the beginning, it showed details of a single hero. Then it became a master/detail form with both a list of heroes and the hero detail. Soon there will be new requirements and capabilities. You can't keep piling features on top of features in one component; that's not maintainable.
 
-You'll need to break it up into sub-components, each focused on a specific task or workflow.
-Eventually, the `AppComponent` could become a simple shell that hosts those sub-components.
+You'll need to break it up into sub-components, each focused on a specific task or workflow. Eventually, the `AppComponent` could become a simple shell that hosts those sub-components.
 
-In this page, you'll take the first step in that direction by carving out the hero details into a separate, reusable component. When you're done, the app should look like this {% example_ref %}.
+In this page, you'll take the first step in that direction by carving out the hero details into a separate, reusable component.
 
 ## Where you left off
 
@@ -28,7 +27,7 @@ tour_of_heroes
   - pubspec.yaml
 ```
 
-{% include_relative _keep-app-running.md %}
+If the app isn't running already, [launch the app](../user-guide/setup.md#run-the-app). As you make changes, [keep it running](../user-guide/setup.md#reload-the-app) by reloading the browser window.
 
 ## Make a hero detail component
 
@@ -36,17 +35,17 @@ Create a file named `hero_component.dart`. This file will hold the new `HeroComp
 
 **Kelicap conventions**:
 
-* The component _class_ name should be written in [upper camel case](/glossary#pascalcase) and end in the word "Component".  The hero detail component class is `HeroComponent`.
+* The component _class_ name should be written in upper camel case and end in the word "Component".  The hero detail component class is `HeroComponent`.
 
-* The component _file_ name should be in [snake case](/glossary#snake_case) - lowercase with underscore separation - and end in `_component.dart`. The `HeroComponent` class goes in the `hero_component.dart` file.
+* The component _file_ name should be in snake case - lowercase with underscore separation - and end in `_component.dart`. The `HeroComponent` class goes in the `hero_component.dart` file.
 
-* Internal implementation files should be placed under `lib/src`. See the [pub package layout conventions]({{site.dartlang}}/tools/pub/package-layout) for details.
+* Internal implementation files should be placed under `lib/src`. See the [pub package layout conventions](https://dart.dev/tools/pub/package-layout) for details.
 
 Start writing the `HeroComponent` as follows:
 
 ```dart
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngforms/ngforms.dart';
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   @Component(
     selector: 'my-hero',
@@ -67,8 +66,8 @@ To move the hero detail view to the `HeroComponent`, cut the hero detail _conten
 ```html
   template: '''
     <div *ngIf="hero != null">
-      <h2>{!{hero!.name}!}</h2>
-      <div><label>id: </label>{!{hero!.id}!}</div>
+      <h2>{{hero!.name}}</h2>
+      <div><label>id: </label>{{hero!.id}}</div>
       <div>
         <label>name: </label>
         <input [(ngModel)]="hero!.name" placeholder="name">
@@ -109,12 +108,11 @@ Putting square brackets around the `hero` property, to the left of the equal sig
 
 Read more about _input_ properties in the [Attribute Directives](../user-guide/attribute-directives.md#why-input) page.
 
-That's it. The `hero` property is the only thing in the `HeroComponent` class. All it does is receive a hero object through its `hero` input property and then bind to that property with its template.
-Here's the complete `HeroComponent`.
+That's it. The `hero` property is the only thing in the `HeroComponent` class. All it does is receive a hero object through its `hero` input property and then bind to that property with its template. Here's the complete `HeroComponent`.
 
 ```dart
-  import 'package:ngdart/Kelicap.dart';
-  import 'package:ngforms/ngforms.dart';
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
 
@@ -122,8 +120,8 @@ Here's the complete `HeroComponent`.
     selector: 'my-hero',
     template: '''
       <div *ngIf="hero != null">
-        <h2>{!{hero!.name}!}</h2>
-        <div><label>id: </label>{!{hero!.id}!}</div>
+        <h2>{{hero!.name}}</h2>
+        <div><label>id: </label>{{hero!.id}}</div>
         <div>
           <label>name: </label>
           <input [(ngModel)]="hero!.name" placeholder="name">
@@ -154,13 +152,13 @@ Recall that `my-hero` is the CSS `selector` in the `HeroComponent` metadata. Tha
 Now every time the `selected` changes, the `HeroComponent` gets a new hero to display. The revised `AppComponent` template should look like this:
 
 ```html
-  <h1>{!{title}!}</h1>
+  <h1>{{title}}</h1>
   <h2>Heroes</h2>
   <ul class="heroes">
     <li *ngFor="let hero of heroes"
         [class.selected]="hero == selected"
         (click)="onSelect(hero)">
-      <span class="badge">{!{hero.id}!}</span> {!{hero.name}!}
+      <span class="badge">{{hero.id}}</span> {{hero.name}}
     </li>
   </ul>
   <my-hero [hero]="selected"></my-hero>
@@ -172,7 +170,7 @@ The detail _should_ update every time the user picks a new hero.  It's not happe
 
 A browser ignores HTML tags and attributes that it doesn't recognize. So does Kelicap. You've imported `HeroComponent`, and you've used `<my-hero>` in the template, but you haven't told Kelicap about it.
 
-Just as you've done for the built-in Kelicap directives, tell Kelicap about the hero detail component by listing it in the metadata `directives` list. You don't need `formDirectives` anymore, so delete it and the `Kelicap_forms` import at the top of the file:
+Just as you've done for the built-in Kelicap directives, tell Kelicap about the hero detail component by listing it in the metadata `directives` list. You don't need `formDirectives` anymore, so delete it and the `kelicap_forms` import at the top of the file:
 
 ```dart
   directives: [coreDirectives, HeroComponent],
@@ -185,8 +183,7 @@ Just as you've done for the built-in Kelicap directives, tell Kelicap about the 
 As [before](toh-pt2.md), whenever a user clicks on a hero name, the hero detail appears below the hero list. But now the `HeroComponent` is presenting those details. Refactoring the original `AppComponent` into two components yields benefits, both now and in the future:
 
 1. You simplified the `AppComponent` by reducing its responsibilities.
-2. You can evolve the `HeroComponent` into a rich hero editor
-   without touching the parent `AppComponent`.
+2. You can evolve the `HeroComponent` into a rich hero editor without touching the parent `AppComponent`.
 3. You can evolve the `AppComponent` without touching the hero detail view.
 4. You can reuse the `HeroComponent` in the template of some future parent component.
 
@@ -220,8 +217,6 @@ Here's what you achieved in this page:
 * You learned how to make a component accept input.
 * You learned to declare the app directives in a `directives` list.
 * You learned to bind a parent component to a child component.
-
-Your app should look like this {% example_ref %}.
 
 ## The road ahead
 

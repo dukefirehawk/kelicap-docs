@@ -1,54 +1,42 @@
----
-title: "Component Testing: Simulating user action"
-description: Techniques and practices for component testing of KelicapDart apps.
-sideNavGroup: advanced
-prevpage:
-  title: "Component Testing: Page Objects"
-  url: /guide/testing/component/page-objects
-nextpage:
-  title: "Component Testing: Services"
-  url: /guide/testing/component/services
----
-<?code-excerpt path-base="examples/ng/doc"?>
+# Component Testing: Simulating user action
 
-{% include_relative _page-top-toc.md %}
+**Component testing topics:**
+
+- [Component testing](README.md)
+- [Running component tests](running-tests.md)
+- Writing component tests
+  - [Basics](basics.md): pubspec config, test API fundamentals
+  - [Page objects](page-objects.md): field annotation, initialization, and more
+  - [Simulating user action](simulating-user-action.md): click, type, clear
+  - [Services](services.md): local, external, mock, real
+  - [`@Input()` and `@Output()`](input-and-output.md)
+  - [Routing components](routing-components.md)
 
 ## Click
-{%comment%}Previous title: Simulated click: button and hero selection {#click}{%endcomment%}
 
-Use the [PageLoaderElement.click()][] method to simulate a user
-click on a given PO element. Here is an example for a _back_ button:
+Use the [PageLoaderElement.click()][] method to simulate a user click on a given PO element. Here is an example for a _back_ button:
 
-<?code-excerpt "toh-5/test/hero_po.dart (back button)" title?>
-```
+```dart
   @ByTagName('button')
   PageLoaderElement get _button;
   // ···
   Future<void> back() => _button.click();
 ```
 
-Similarly, you might define a PO method for selecting a hero from
-a list as follows:
+Similarly, you might define a PO method for selecting a hero from a list as follows:
 
-<?code-excerpt "toh-2/test/app_po.dart (selectHero)" title?>
-```
+```dart
   @ByTagName('li')
   List<PageLoaderElement> get _heroes;
   // ···
   Future<void> selectHero(int index) => _heroes[index].click();
 ```
 
-{%comment%}Note how both methods avoid exposing the `PageLoaderElement` type.{%endcomment%}
-
 ## Input: add text
-{%comment%}Previous title: Simulated typing: hero name update{%endcomment%}
 
-The [Hero Editor][toh-pt1] allows a user to edit a hero's name by means of
-an `<input>` element. Use the [PageLoaderElement.type()][] method to
-simulate adding text to the input element:
+The [Hero Editor][toh-pt1] allows a user to edit a hero's name by means of an `<input>` element. Use the [PageLoaderElement.type()][] method to simulate adding text to the input element:
 
-<?code-excerpt "toh-1/test/app_po.dart (AppPO input)" title?>
-```
+```dart
   @ByTagName('input')
   PageLoaderElement get _input;
   // ···
@@ -57,8 +45,7 @@ simulate adding text to the input element:
 
 Here is an example of how the `type()` method might be used to update a hero's name:
 
-<?code-excerpt "toh-1/test/app_test.dart (update name)" title?>
-```
+```dart
   const nameSuffix = 'X';
 
   test('update hero name', () async {
@@ -72,16 +59,13 @@ Here is an example of how the `type()` method might be used to update a hero's n
 
 You can clear an input using the [PageLoaderElement.clear()][] method:
 
-<?code-excerpt "toh-2/test/app_po.dart (clear)" title?>
-```
+```dart
   Future<void> clear() => _input.clear();
 ```
 
-Here is an example of a PO method for adding a new hero. It makes use of both
-`clear()` and `type()`:
+Here is an example of a PO method for adding a new hero. It makes use of both `clear()` and `type()`:
 
-<?code-excerpt "toh-6/test/heroes_po.dart (addHero)" title?>
-```
+```dart
   Future<void> addHero(String name) async {
     await _input.clear();
     await _input.type(name);
@@ -89,8 +73,8 @@ Here is an example of a PO method for adding a new hero. It makes use of both
   }
 ```
 
-[PageLoaderElement.clear()]: {{site.pub-api}}/pageloader/latest/webdriver/PageLoaderElement/clear.html
-[PageLoaderElement.click()]: {{site.pub-api}}/pageloader/latest/webdriver/PageLoaderElement/click.html
-[PageLoaderElement]: {{site.pub-api}}/pageloader/latest/webdriver/PageLoaderElement-class.html
-[PageLoaderElement.type()]: {{site.pub-api}}/pageloader/latest/webdriver/PageLoaderElement/type.html
-[toh-pt1]: /tutorial/toh-pt1
+[PageLoaderElement.clear()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/clear.html
+[PageLoaderElement.click()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/click.html
+[PageLoaderElement]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement-class.html
+[PageLoaderElement.type()]: https://pub.dev/documentation/pageloader/latest/webdriver/PageLoaderElement/type.html
+[toh-pt1]: ../../../tutorial/toh-pt1.md

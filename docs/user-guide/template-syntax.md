@@ -3,9 +3,9 @@
 
 Learn how to write templates that display data and consume user events with the help of data binding. This page covers the basic elements of the Kelicap template syntax for constructing views. The Kelicap app manages what the user sees and can do, achieving this through the interaction of a component class instance (the *component*) and its user-facing template. You might be familiar with the combination of component and template from experience with model-view-controller (MVC) or model-view-viewmodel (MVVM). In Kelicap, the component plays the part of the controller/viewmodel, and the template represents the view.
 
-## HTML in templates  {#html}
+## HTML in templates
 
-HTML is the language of the Kelicap template. Almost all HTML syntax is valid template syntax. The `<script>` element is a notable exception; it's forbidden, eliminating the risk of script injection attacks. In practice, `<script>` is ignored and a warning appears in the browser console. See the [Security](security) page for details.
+HTML is the language of the Kelicap template. Almost all HTML syntax is valid template syntax. The `<script>` element is a notable exception; it's forbidden, eliminating the risk of script injection attacks. In practice, `<script>` is ignored and a warning appears in the browser console. See the [Security](security.md) page for details.
 
 Some legal HTML doesn't make much sense in a template. The `<html>`, `<body>`, and `<base>` elements have no useful role. Pretty much everything else can be used. You can extend the HTML vocabulary of templates with components and directives that appear as new elements and attributes. In the following sections, you'll learn how to get and set DOM (Document Object Model) values dynamically through data binding.
 
@@ -42,11 +42,11 @@ The expression can invoke methods of the host component such as `getVal()`, seen
   <p>The sum of 1 + 1 is not {{1 + 1 + getVal()}}</p>
 ```
 
-Kelicap evaluates all expressions in double curly braces, converts the expression results to strings, and links them with neighboring literal strings. Finally, it assigns this composite interpolated result to an **element or directive property**. From a quick glance at the syntax, it looks as if you're inserting the result between element tags and assigning it to attributes. That's a convenient way to think of what's happening, but it's not exactly true. Interpolation is a special syntax that Kelicap converts into a [property binding](#property-binding). See the details [below](#property-binding-or-interpolation). But first, let's take a closer look at template expressions and statements.
+Kelicap evaluates all expressions in double curly braces, converts the expression results to strings, and links them with neighboring literal strings. Finally, it assigns this composite interpolated result to an **element or directive property**. From a quick glance at the syntax, it looks as if you're inserting the result between element tags and assigning it to attributes. That's a convenient way to think of what's happening, but it's not exactly true. Interpolation is a special syntax that Kelicap converts into a [property binding](#property-binding--property-). See the details [below](#property-binding-or-interpolation). But first, let's take a closer look at template expressions and statements.
 
 ## Template expressions
 
-A template **expression** produces a value. Kelicap executes the expression and assigns it to a property of a binding target; the target might be an HTML element, a component, or a directive. The interpolation braces in `{{1 + 1}}` surround the template expression `1 + 1`. In the [property binding](#property-binding) section below, a template expression appears in quotes to the right of the `=` symbol, as in `[property]="expression"`. You write these template expressions in a language that looks like Dart. Many Dart expressions are legal template expressions, but not all are. Dart expressions that have or promote side effects are prohibited, including the following:
+A template **expression** produces a value. Kelicap executes the expression and assigns it to a property of a binding target; the target might be an HTML element, a component, or a directive. The interpolation braces in `{{1 + 1}}` surround the template expression `1 + 1`. In the [property binding](#property-binding--property-) section below, a template expression appears in quotes to the right of the `=` symbol, as in `[property]="expression"`. You write these template expressions in a language that looks like Dart. Many Dart expressions are legal template expressions, but not all are. Dart expressions that have or promote side effects are prohibited, including the following:
 
 * Assignments (`=`, `+=`, `-=`, ...)
 * `new` or `const`
@@ -68,14 +68,14 @@ The *expression context* is typically the *component* instance. In the following
   <span [hidden]="isUnchanged">changed</span>
 ```
 
-An expression can also refer to properties of the *template's* context, such as a `template input variable` (`let hero`)or a [template reference variable](#ref-vars) (`#heroInput`).
+An expression can also refer to properties of the *template's* context, such as a `template input variable` (`let hero`)or a [template reference variable](#template-reference-variables--var-) (`#heroInput`).
 
 ```html
   <div *ngFor="let hero of heroes">{{hero.name}}</div>
   <input #heroInput> {{heroInput.value}}
 ```
 
-The context for terms in an expression is a blend of the *template variables* and the component's *members*. If you reference a name that belongs to more than one of these namespaces, the template variable name takes precedence, followed by a name in the directive's *context*, and, lastly, the component's member names. The previous example presents such a name collision. The component has a `hero` property and the `*ngFor` defines a `hero` template variable. The `hero` in `{% raw %}{{hero.name}}{% endraw %}` refers to the template input variable, not the component's property. Template expressions can refer to top-level and static-member constants and functions that are listed in a component's `exports` argument.
+The context for terms in an expression is a blend of the *template variables* and the component's *members*. If you reference a name that belongs to more than one of these namespaces, the template variable name takes precedence, followed by a name in the directive's *context*, and, lastly, the component's member names. The previous example presents such a name collision. The component has a `hero` property and the `*ngFor` defines a `hero` template variable. The `hero` in `{{hero.name}}` refers to the template input variable, not the component's property. Template expressions can refer to top-level and static-member constants and functions that are listed in a component's `exports` argument.
 
 ```dart
   import 'dart:math' as math;
@@ -84,7 +84,7 @@ The context for terms in an expression is a blend of the *template variables* an
   // ···
   @Component(
     // ···
-    [!exports: [Color, math.min],!]
+    exports: [Color, math.min],
     // ···
   )
   class AppComponent implements OnInit {
@@ -100,16 +100,14 @@ Access members of exported enums using the usual syntax:
 
 ### Expression guidelines
 
-Template expressions can make or break an app.
-Follow these guidelines:
+Template expressions can make or break an app. Follow these guidelines:
 
 * [No visible side effects](#no-visible-side-effects)
 * [Quick execution](#quick-execution)
 * [Simplicity](#simplicity)
 * [Idempotence](#idempotence)
 
-If you make an exception to the above guidelines, make sure you thoroughly
-understand the circumstances.
+If you make an exception to the above guidelines, make sure you thoroughly understand the circumstances.
 
 #### No visible side effects
 
@@ -129,7 +127,7 @@ An [idempotent](https://en.wikipedia.org/wiki/Idempotence) expression is ideal b
 
 ## Template statements
 
-A template **statement** responds to an **event** raised by a binding target such as an element, component, or directive. You'll see template statements in the [event binding](#event-binding) section appearing in quotes to the right of the `=` symbol as in `(event)="statement"`.
+A template **statement** responds to an **event** raised by a binding target such as an element, component, or directive. You'll see template statements in the [event binding](#event-binding-event) section appearing in quotes to the right of the `=` symbol as in `(event)="statement"`.
 
 ```html
   <button (click)="deleteHero()">Delete hero</button>
@@ -165,7 +163,7 @@ Template context names take precedence over component context names. In `deleteH
 
 As with expressions, avoid writing complex template statements. Method calls or simple property assignments are best. Now that you have a feel for template expressions and statements, you're ready to learn about the varieties of data binding syntax beyond interpolation.
 
-## Binding syntax: An overview  {#binding-syntax}
+## Binding syntax: An overview
 
 Data binding is a mechanism for coordinating what users see, with app data values. While you can push values to and pull values from HTML, the app is easier to write, read, and maintain if you use a binding framework. You declare bindings between binding sources and target HTML elements and then let the framework do the work. Below is a high-level summary of Kelicap data binding and its syntax. It's followed by more detailed information about most of the data binding types that Kelicap provides. Binding types can be grouped into three categories based on the direction of data flow: *source-to-view*, *view-to-source*, and two-way sequence *view-to-source-to-view*.
 
@@ -230,8 +228,7 @@ The HTML attribute `value` specifies the *initial* value; the DOM `value` proper
 
 **The HTML attribute and the DOM property are not the same thing, even when they have the same name.**
 
-This fact bears repeating:
-**Template binding works with *properties* and *events*, not *attributes*.**
+This fact bears repeating: **Template binding works with *properties* and *events*, not *attributes*.**
 
 > A world without attributes. In the world of Kelicap, the only role of attributes is to initialize element and directive state. When you write a data binding, you're dealing exclusively with properties and events of the target object. HTML attributes effectively disappear.
 
@@ -247,72 +244,78 @@ The **target of a data binding** is something in the DOM. Depending on the bindi
 <tr>
   <td>Property</td>
   <td>Element&nbsp;property<br>Component&nbsp;property<br>Directive&nbsp;property</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (property-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <img [src]="heroImageUrl">
     <my-hero [hero]="currentHero"></my-hero>
     <div [ngClass]="{'special': isSpecial}">...</div>
   ```
+
   </td>
 </tr>
 <tr>
   <td>Event</td>
   <td>Element&nbsp;event<br>Component&nbsp;event<br>Directive&nbsp;event</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (event-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <button (click)="onSave()">Save</button>
     <my-hero (deleteRequest)="deleteHero()"></my-hero>
     <div (myClick)="clicked=$event" clickable>click me</div>
   ```
+
   </td>
 </tr>
 <tr>
   <td>Two-way</td>
   <td>Event and property</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (2-way-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <input [(ngModel)]="name">
   ```
+
   </td>
 </tr>
 <tr>
   <td>Attribute</td>
   <td>Attribute (the&nbsp;exception)</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (attribute-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <button [attr.aria-label]="help">help</button>
   ```
+
   </td>
 </tr>
 <tr>
   <td>Class</td>
   <td><code>class</code> property</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (class-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <div [class.special]="isSpecial">Special</div>
   ```
+
   </td>
 </tr>
 <tr>
   <td>Style</td>
   <td><code>style</code> property</td>
-  <td markdown="1">
-  <?code-excerpt "lib/app_component.html (style-binding-syntax-1)"?>
-  ```
+  <td>
+
+  ```html
     <button [style.color]="isSpecial ? 'red' : 'green'">
   ```
+
   </td>
 </tr>
 </table>
 
 You're now ready to look at binding types in detail.
 
-## Property binding ( [property] ) {#property-binding}
+## Property binding ( [property] )
 
 Write a template **property binding** to set a property of a view element. The binding sets the property to the value of a [template expression](#template-expressions). The most common property binding sets an element property to a component property value. An example is binding the `src` property of an image element to a component's `heroImageUrl` property:
 
@@ -342,7 +345,7 @@ Yet another is setting the model property of a custom component (a great way for
 
 People often describe property binding as *one-way data binding* because it flows a value in one direction, from a component's data property into a target element property. You can't use property binding to pull values *out* of the target element. You can't bind to a property of the target element to *read* it.; you can only *set* it.
 
-Similarly, you can't use property binding to *call* a method on the target element. If the element raises events, you can listen to them with an [event binding](#event-binding). If you must read a target element property or call one of its methods, you need a different technique. See the API reference for [ViewChild]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/ViewChild-class.html) and [ContentChild]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/ContentChild-class.html).
+Similarly, you can't use property binding to *call* a method on the target element. If the element raises events, you can listen to them with an [event binding](#event-binding-event). If you must read a target element property or call one of its methods, you need a different technique. See the API reference for [ViewChild](https://pub.dev/documentation/kelicap/latest/kelicap/ViewChild-class.html) and [ContentChild](https://pub.dev/documentation/kelicap/latest/kelicap/ContentChild-class.html).
 
 ### Binding target
 
@@ -364,8 +367,7 @@ The target name is always the name of a property, even when it appears to be the
   <div [ngClass]="classes">[ngClass] binding to the classes property</div>
 ```
 
-Technically, Kelicap is matching the name to a directive [input](#inputs-outputs) or a property decorated with `@Input()`. Such inputs map to the directive's own properties.
-
+Technically, Kelicap is matching the name to a directive [input](#input-and-output-properties--input-and-output-) or a property decorated with `@Input()`. Such inputs map to the directive's own properties.
 
 If the name fails to match a property of a known directive or element, Kelicap reports an “unknown directive” error.
 
@@ -386,7 +388,7 @@ The template expression should evaluate to the type of value expected by the tar
 The brackets tell Kelicap to evaluate the template expression. If you omit the brackets, Kelicap treats the string as a constant and *initializes the target property* with that string. It does *not* evaluate the string! If you forget the brackets around the `hero` property like this:
 
 ```html
-  [!<-- DON'T do this: -->!]
+  <-- DON'T do this: -->
   <my-hero hero="currentHero"></my-hero>
 ```
 
@@ -396,7 +398,7 @@ You'll get the following build error:
 [error] A value of type 'String' can't be assigned to a variable of type 'Hero'.
 ```
 
-### One-time string initialization {#one-time-initialization}
+### One-time string initialization
 
 Omit the brackets when all of the following are true:
 
@@ -412,10 +414,9 @@ One-time string initialization is routine in standard HTML, and it works just as
 
 The `[hero]` binding, on the other hand, remains a live binding to the component's `currentHero` property.
 
-### Property binding or interpolation?  {#property-binding-or-interpolation}
+### Property binding or interpolation?
 
-You often have a choice between interpolation and property binding.
-The following binding pairs do the same thing:
+You often have a choice between interpolation and property binding. The following binding pairs do the same thing:
 
 ```html
   <p><img src="{{heroImageUrl}}"> is the <i>interpolated</i> image.</p>
@@ -427,9 +428,7 @@ The following binding pairs do the same thing:
 
 *Interpolation* is a convenient alternative to *property binding* in many cases.
 
-When rendering data values as strings, there is no technical reason to prefer one form to the other, but interpolation can be more readable.
-We suggest establishing coding style rules and choosing the form that
-both conforms to the rules and feels most natural for the task at hand.
+When rendering data values as strings, there is no technical reason to prefer one form to the other, but interpolation can be more readable. We suggest establishing coding style rules and choosing the form that both conforms to the rules and feels most natural for the task at hand.
 
 When setting an element property to a non-string data value, you must use *property binding*.
 
@@ -442,8 +441,7 @@ Imagine the following *malicious content*.
       'Template <script>alert("evil never sleeps")</script>Syntax';
 ```
 
-Fortunately, Kelicap data binding is on alert for dangerous HTML.
-It [*sanitizes*](security#sanitization-and-security-contexts) the values before displaying them. It **does not** allow HTML with script tags to leak into the browser, neither with interpolation nor property binding.
+Fortunately, Kelicap data binding is on alert for dangerous HTML. It [*sanitizes*](security.md#sanitization-and-security-contexts) the values before displaying them. It **does not** allow HTML with script tags to leak into the browser, neither with interpolation nor property binding.
 
 ```html
   <!--
@@ -458,7 +456,7 @@ Interpolation handles the script tags differently than property binding but both
 
 ![evil title made safe](assets/template-syntax/evil-title.png)
 
-## Attribute, class, and style bindings  {#other-bindings}
+## Attribute, class, and style bindings
 
 The template syntax provides specialized one-way bindings for scenarios less well suited to property binding.
 
@@ -470,8 +468,7 @@ This guide stresses repeatedly that setting an element property with a property 
 
 **You must use attribute binding when there is no element property to bind.**
 
-Consider the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA), [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG), and table span attributes. They are pure attributes.
-They do not correspond to element properties, and they do not set element properties. There are no property targets to bind to.
+Consider the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA), [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG), and table span attributes. They are pure attributes. They do not correspond to element properties, and they do not set element properties. There are no property targets to bind to.
 
 This fact becomes painfully obvious when writing something like this:
 
@@ -563,7 +560,7 @@ Some style binding styles have a unit extension. The following example condition
 
 While this is a fine way to set a single style, the `NgStyle` directive is generally preferred when setting several inline styles at the same time. Note that a *style property* name can be written in either `kebab-case`, as shown above, or `camelCase`, such as `fontSize`.
 
-## Event binding (event) {#event-binding}
+## Event binding (event)
 
 The bindings directives you've met so far flow data in one direction: **from a component to an element**. Users don't just stare at the screen. They enter text into input boxes. They pick items from lists. They click buttons. Such user actions can result in a flow of data in the opposite direction: **from an element to a component**. The only way to know about a user action is to listen for certain events such as keystrokes, mouse movements, clicks, and touches. You declare your interest in user actions through Kelicap event binding.
 
@@ -575,8 +572,7 @@ Event binding syntax consists of a **target event** name within parentheses on t
 
 ### Target event
 
-A **name between parentheses** &mdash; for example, `(click)` &mdash;
-identifies the target event. In the following example, the target is the button's click event.
+A **name between parentheses** &mdash; for example, `(click)` &mdash; identifies the target event. In the following example, the target is the button's click event.
 
 ```html
   <button (click)="onSave()">Save</button>
@@ -595,7 +591,7 @@ Element events might be the more common targets, but Kelicap looks first to see 
   <div (myClick)="clickMessage=$event" clickable>click with myClick</div>
 ```
 
-The `myClick` directive is further described in the section on [aliasing input/output properties](#aliasing-io). If the name fails to match an element event or an output property of a known directive, Kelicap reports an “unknown directive” error.
+The `myClick` directive is further described in the section on [aliasing input/output properties](#aliasing-inputoutput-properties). If the name fails to match an element event or an output property of a known directive, Kelicap reports an “unknown directive” error.
 
 ### *$event* and event handling statements
 
@@ -612,7 +608,7 @@ This code sets the input box `value` property by binding to the `name` property.
 
 ### Custom events
 
-Directives typically raise custom events using a [StreamController]({{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/StreamController-class.html). The directive creates a `StreamController` and exposes its underlying `stream` as a property. The directive calls `StreamController.add(payload)` to fire an event, passing in a message payload, which can be anything. Parent directives listen for the event by binding to this property and accessing the payload through the `$event` object. Consider a `HeroComponent` that presents hero information and responds to user actions. Although the `HeroComponent` has a delete button it doesn't know how to delete the hero itself. The best it can do is raise an event reporting the user's delete request. Here are the pertinent excerpts from that `HeroComponent`:
+Directives typically raise custom events using a [StreamController](https://api.dart.dev/stable/dart-async/StreamController-class.html). The directive creates a `StreamController` and exposes its underlying `stream` as a property. The directive calls `StreamController.add(payload)` to fire an event, passing in a message payload, which can be anything. Parent directives listen for the event by binding to this property and accessing the payload through the `$event` object. Consider a `HeroComponent` that presents hero information and responds to user actions. Although the `HeroComponent` has a delete button it doesn't know how to delete the hero itself. The best it can do is raise an event reporting the user's delete request. Here are the pertinent excerpts from that `HeroComponent`:
 
 ```dart
   template: '''
@@ -636,10 +632,7 @@ Directives typically raise custom events using a [StreamController]({{site.dart_
   }
 ```
 
-The component defines a private `StreamController` property and
-exposes the controller's stream through the `deleteRequest` getter.
-When a user clicks *Delete*, the component's `delete()` method is called,
-directing the `StreamController` to add a `Hero` to the stream.
+The component defines a private `StreamController` property and exposes the controller's stream through the `deleteRequest` getter. When a user clicks *Delete*, the component's `delete()` method is called, directing the `StreamController` to add a `Hero` to the stream.
 
 Now imagine a hosting parent component that binds to the `HeroComponent`'s `deleteRequest` event.
 
@@ -674,8 +667,7 @@ Event propagation stops if the binding statement returns a false value (as does 
   </div>
 ```
 
-Propagation continues if the statement returns a true value. In the next example, the click is heard by both the button
-and the outer `<div>`, causing a double save.
+Propagation continues if the statement returns a true value. In the next example, the click is heard by both the button and the outer `<div>`, causing a double save.
 
 ```html
   <!-- Will save twice -->
@@ -684,7 +676,7 @@ and the outer `<div>`, causing a double save.
   </div>
 ```
 
-## Two-way binding ( [(...)] )  {#two-way}
+## Two-way binding ( [(...)] )
 
 You often want to both display a data property and update that property when the user makes changes. On the element side that takes a combination of setting a specific element property and listening for an element change event.
 
@@ -697,7 +689,7 @@ The `[(x)]` syntax is easy to demonstrate when the element has a settable proper
 ```dart
   import 'dart:async';
   import 'dart:math';
-  import 'package:Kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   const minSize = 8;
   const maxSize = minSize * 5;
@@ -750,15 +742,11 @@ The `AppComponent.fontSizePx` establishes the initial `SizerComponent.size` valu
 
 The `$event` variable contains the payload of the `SizerComponent.sizeChange` event. Kelicap assigns the `$event` value to the `AppComponent.fontSizePx` when the user clicks the buttons. Clearly the two-way binding syntax is a great convenience compared to separate property and event bindings. It would be convenient to use two-way binding with HTML form elements like `<input>` and `<select>`. However, no native HTML element follows the `x` value and `xChange` event pattern. Fortunately, the Kelicap `NgModel` directive is a bridge that enables two-way binding to form elements.
 
-## Built-in directives  {#directives}
+## Built-in directives
 
-Earlier versions of Kelicap included over seventy built-in directives.
-The community contributed many more, and countless private directives
-have been created for internal apps.
+Earlier versions of Kelicap included over seventy built-in directives. The community contributed many more, and countless private directives have been created for internal apps.
 
-You don't need many of those directives in Kelicap.
-You can often achieve the same results with the more capable and expressive Kelicap binding system.
-Why create a directive to handle a click when you can write a simple binding such as this?
+You don't need many of those directives in Kelicap. You can often achieve the same results with the more capable and expressive Kelicap binding system. Why create a directive to handle a click when you can write a simple binding such as this?
 
 ```html
   <button (click)="onSave()">Save</button>
@@ -766,9 +754,9 @@ Why create a directive to handle a click when you can write a simple binding suc
 
 You still benefit from directives that simplify complex tasks. Kelicap still ships with built-in directives; just not as many. You'll write your own directives, just not as many. This segment reviews some of the most frequently used built-in directives, classified as either [*attribute* directives](attribute-directives.md) or [*structural* directives](structural-directives.md).
 
-## Built-in *attribute* directives  {#attribute-directives}
+## Built-in *attribute* directives
 
-Attribute directives listen to and modify the behavior of other HTML elements, attributes, properties, and components. They are usually applied to elements as if they were HTML attributes, hence the name. Many details are covered in the [*Attribute Directives*](attribute-directives.md) guide. Many Kelicap packages such as the [`Router`](router "Routing and Navigation") and [`Forms`](forms) packages define their own attribute directives. This section is an introduction to the most commonly used attribute directives:
+Attribute directives listen to and modify the behavior of other HTML elements, attributes, properties, and components. They are usually applied to elements as if they were HTML attributes, hence the name. Many details are covered in the [*Attribute Directives*](attribute-directives.md) guide. Many Kelicap packages such as the [`Router`](router/README.md "Routing and Navigation") and [`Forms`](forms.md) packages define their own attribute directives. This section is an introduction to the most commonly used attribute directives:
 
 * [`NgClass`]: Add and remove a set of CSS classes.
 * [`NgStyle`]: Add and remove a set of HTML styles.
@@ -847,18 +835,14 @@ When developing data entry forms, you often both display a data property and upd
 
 #### Inside [(ngModel)]
 
-Looking back at the `name` binding, note that
-you could achieve the same result with separate bindings to
-the `<input>` element's  `value` property and `input` event.
+Looking back at the `name` binding, note that you could achieve the same result with separate bindings to the `<input>` element's  `value` property and `input` event.
 
 ```html
   <input [value]="currentHero.name"
          (input)="currentHero.name=$event.target.value" >
 ```
 
-That's cumbersome. Who can remember which element property to set and which element event emits user changes?
-How do you extract the currently displayed text from the input box so you can update the data property?
-Who wants to look that up each time?
+That's cumbersome. Who can remember which element property to set and which element event emits user changes? How do you extract the currently displayed text from the input box so you can update the data property? Who wants to look that up each time?
 
 That `ngModel` directive hides these onerous details behind its own  `ngModel` input and `ngModelChange` output properties.
 
@@ -870,10 +854,9 @@ That `ngModel` directive hides these onerous details behind its own  `ngModel` i
 
 The `ngModel` data property sets the element's value property and the `ngModelChange` event property listens for changes to the element's value.
 
-The details are specific to each kind of element and therefore the `NgModel` directive only works for an element supported by a [ControlValueAccessor]({{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/ControlValueAccessor-class.html) that adapts an element to this protocol. The `<input>` box is one of those elements. Kelicap provides *value accessors* for all of the basic HTML form elements and the [*Forms*](forms) guide shows how to bind to them. You can't apply `[(ngModel)]` to a non-form native element or a third-party custom component until you write a suitable *value accessor*, a technique that is beyond the scope of this guide.
+The details are specific to each kind of element and therefore the `NgModel` directive only works for an element supported by a [ControlValueAccessor](https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/ControlValueAccessor-class.html) that adapts an element to this protocol. The `<input>` box is one of those elements. Kelicap provides *value accessors* for all of the basic HTML form elements and the [*Forms*](forms.md) guide shows how to bind to them. You can't apply `[(ngModel)]` to a non-form native element or a third-party custom component until you write a suitable *value accessor*, a technique that is beyond the scope of this guide.
 
-You don't need a *value accessor* for an Kelicap component that you write because you can name the value and event properties to suit Kelicap's basic [two-way binding syntax](#two-way) and skip `NgModel` altogether. The [`sizer` shown above](#two-way) is an example of this technique.
-Separate `ngModel` bindings is an improvement over binding to the element's native properties. You can do better.
+You don't need a *value accessor* for an Kelicap component that you write because you can name the value and event properties to suit Kelicap's basic [two-way binding syntax](#two-way-binding---) and skip `NgModel` altogether. The [`sizer` shown above](#two-way-binding---) is an example of this technique. Separate `ngModel` bindings is an improvement over binding to the element's native properties. You can do better.
 
 You shouldn't have to mention the data property twice. Kelicap should be able to capture the component's data property and set it with a single declaration, which it can with the `[(ngModel)]` syntax:
 
@@ -895,14 +878,12 @@ Here are all variations in action, including the uppercase version:
 
 ## Built-in *structural* directives
 
-Structural directives are responsible for HTML layout. They shape or reshape the DOM's *structure*, typically by adding, removing, and manipulating the host elements to which they are attached. The deep details of structural directives are covered in the [*Structural Directives*](structural-directives) guide, where you'll learn the following:
+Structural directives are responsible for HTML layout. They shape or reshape the DOM's *structure*, typically by adding, removing, and manipulating the host elements to which they are attached. The deep details of structural directives are covered in the [*Structural Directives*](structural-directives.md) guide, where you'll learn the following:
 
-* Why you must
-[*prefix the directive name with an asterisk* (\*)](structural-directives#asterisk "The * in *ngIf").
-* How to [group elements](structural-directives#group-sibling-elements)
-when there is no suitable host element for the directive.
+* Why you must [*prefix the directive name with an asterisk* (\*)](structural-directives.md#the-asterisk--prefix "The * in *ngIf").
+* How to [group elements](structural-directives.md#group-sibling-elements) when there is no suitable host element for the directive.
 * How to write your own structural directive.
-* Why you can apply only [one structural directive](structural-directives#one-per-element "one per host element") to an element.
+* Why you can apply only [one structural directive](structural-directives.md#one-per-element "one per host element") to an element.
 
 *This* section is an introduction to the common structural directives:
 
@@ -924,8 +905,7 @@ When the `isActive` expression returns a true value, `NgIf` adds the `HeroCompon
 
 #### Show/hide is not the same thing
 
-You can control the visibility of an element with a
-[class](#class-binding) or [style](#style-binding) binding:
+You can control the visibility of an element with a [class](#class-binding) or [style](#style-binding) binding:
 
 ```html
   <!-- isSpecial is true -->
@@ -954,11 +934,8 @@ Here we see `NgIf` guarding two `<div>`s. The `currentHero` name appears only wh
   <div *ngIf="nullHero != null">Hello, {{nullHero.name}}</div>
 ```
 
-<div class="l-sub-section" markdown="1">
-  See also the
-  [_safe navigation operator_](#safe-navigation-operator "Safe naviation operator (?.)")
-  described below.
-</div>
+> [!NOTE]
+> See also the [_safe navigation operator_](#the-safe-navigation-operator--and-null-property-paths "Safe navigation operator (?.)") described below.
 
 ### NgFor
 
@@ -997,8 +974,7 @@ To access the hero's properties, reference the `hero` input variable within the 
   <my-hero *ngFor="let hero of heroes" [hero]="hero"></my-hero>
 ```
 
-Learn more about *template input variables* in the
-[*Structural Directives*](structural-directives#template-input-variable) guide.
+Learn more about *template input variables* in the [*Structural Directives*](structural-directives.md#template-input-variable) guide.
 
 #### *ngFor with *index*
 
@@ -1008,12 +984,10 @@ The `index` property of the `NgFor` directive context  returns the zero-based in
   <div *ngFor="let hero of heroes; let i=index">{{i + 1}} - {{hero.name}}</div>
 ```
 
-<div class="l-sub-section" markdown="1">
-  Learn about the other `NgFor` context values such as `last`, `even`,
-  and `odd` in the [NgFor API reference]({{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/NgFor-class.html).
-</div>
+> [!NOTE]
+> Learn about the other `NgFor` context values such as `last`, `even`, and `odd` in the [NgFor API reference](https://pub.dev/documentation/kelicap/latest/kelicap/NgFor-class.html).
 
-#### *ngFor with *trackBy* {#trackBy}
+#### *ngFor with *trackBy*
 
 The `NgFor` directive can perform poorly, especially with large lists. A small change to one item, an item removed, or an item added can trigger a cascade of DOM manipulations. For example, re-querying the server might reset the list with all new hero objects. Most, if not all, are previously displayed heroes. *You* know this because the `id` of each hero hasn't changed. But Kelicap sees only a fresh list of new object references. It has no choice but to tear down the old DOM elements and insert all new DOM elements. Kelicap can avoid this churn with `trackBy`. Add a method to the component that returns the value `NgFor` *should* track. In this case, that value is the hero's `id`.
 
@@ -1029,27 +1003,21 @@ In the microsyntax expression, set `trackBy` to this method.
   </div>
 ```
 
-<aside class="alert alert-info" markdown="1">
-  **Note:** A track-by function's signature must match the [TrackByFn][] type.
-</aside>
+> [!NOTE]
+> A track-by function's signature must match the [TrackByFn][] type.
 
-Here is an illustration of the *trackBy* effect.
-"Reset heroes" creates new heroes with the same `hero.id`s.
-"Change ids" creates new heroes with new `hero.id`s.
+Here is an illustration of the *trackBy* effect. "Reset heroes" creates new heroes with the same `hero.id`s. "Change ids" creates new heroes with new `hero.id`s.
 
 * With no `trackBy`, both buttons trigger complete DOM element replacement.
 * With `trackBy`, only changing the `id` triggers element replacement.
 
 ![trackBy](assets/template-syntax/ng-for-track-by-anim.gif)
 
-### The *NgSwitch* directives { #ngSwitch }
+### The *NgSwitch* directives
 
-*NgSwitch* is like the Dart `switch` statement.
-It can display *one* element from among several possible elements, based on a *switch condition*.
-Kelicap puts only the *selected* element into the DOM.
+*NgSwitch* is like the Dart `switch` statement. It can display *one* element from among several possible elements, based on a *switch condition*. Kelicap puts only the *selected* element into the DOM.
 
-*NgSwitch* is actually a set of three, cooperating directives:
-`NgSwitch`, `NgSwitchCase`, and `NgSwitchDefault` as seen in this example.
+*NgSwitch* is actually a set of three, cooperating directives: `NgSwitch`, `NgSwitchCase`, and `NgSwitchDefault` as seen in this example.
 
 ```html
   <div [ngSwitch]="currentHero.emotion">
@@ -1073,7 +1041,7 @@ You might come across an `NgSwitchWhen` directive in older code. That is the dep
 * `NgSwitchCase` adds its element to the DOM when its bound value equals the switch value.
 * `NgSwitchDefault` adds its element to the DOM when there is no selected `NgSwitchCase`.
 
-The switch directives are particularly useful for adding and removing *component elements*. This example switches among four "emotional hero" components defined in the `hero_switch_components.dart` file. Each component has a `hero` [input property](#inputs-outputs "Input property") which is bound to the `currentHero` of the parent component.
+The switch directives are particularly useful for adding and removing *component elements*. This example switches among four "emotional hero" components defined in the `hero_switch_components.dart` file. Each component has a `hero` [input property](#input-and-output-properties--input-and-output- "Input property") which is bound to the `currentHero` of the parent component.
 
 Switch directives work as well with native elements and web components too. For example, you can replace the `<confused-hero>` switch case with the following.
 
@@ -1081,7 +1049,7 @@ Switch directives work as well with native elements and web components too. For 
   <div *ngSwitchCase="'confused'">Are you as confused as {{currentHero.name}}?</div>
 ```
 
-## Template reference variables ( #var )  {#ref-vars}
+## Template reference variables ( #var )
 
 A **template reference variable** is often a reference to a DOM element within a template. It can also refer to an Kelicap component or directive. Use the hash symbol (#) to declare a reference variable. The `#phone` declares a `phone` variable on an `<input>` element.
 
@@ -1089,7 +1057,7 @@ A **template reference variable** is often a reference to a DOM element within a
   <input #phone placeholder="phone number">
 ```
 
-You can refer to a template reference variable almost anywhere in the template (see [notes below](#template-reference-notes) for exceptions). The `phone` variable declared on this `<input>` is consumed in a `<button>` on the other side of the template
+You can refer to a template reference variable almost anywhere in the template (see [notes below](#template-reference-variable-warning-notes) for exceptions). The `phone` variable declared on this `<input>` is consumed in a `<button>` on the other side of the template
 
 ```html
   <input #phone placeholder="phone number">
@@ -1104,7 +1072,7 @@ You can refer to a template reference variable almost anywhere in the template (
 
 In most cases, Kelicap sets the reference variable's value to the element on which it was declared. In the previous example, `phone` refers to the *phone number* `<input>` box. The phone button click handler passes the *input* value to the component's `callPhone` method. But a directive can change that behavior and set the value to something else, such as itself. The `NgForm` directive does that.
 
-The following is a *simplified* version of the form example in the [Forms](forms) guide.
+The following is a *simplified* version of the form example in the [Forms](forms.md) guide.
 
 ```html
   <form (ngSubmit)="onSubmit(heroForm)" #heroForm="ngForm">
@@ -1123,72 +1091,55 @@ The following is a *simplified* version of the form example in the [Forms](forms
   </div>
 ```
 
-A template reference variable, `heroForm`, appears three times in this example, separated by a large amount of HTML. What is the value of `heroForm`? The `heroForm` is a reference to an Kelicap [NgForm]({{site.pub-api}}/Kelicap_forms/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_forms/NgForm-class.html "API: NgForm") directive with the ability to track the value and validity of every control in the form.
+A template reference variable, `heroForm`, appears three times in this example, separated by a large amount of HTML. What is the value of `heroForm`? The `heroForm` is a reference to an Kelicap [NgForm](https://pub.dev/documentation/kelicap_forms/latest/kelicap_forms/NgForm-class.html "API: NgForm") directive with the ability to track the value and validity of every control in the form.
 
 The native `<form>` element doesn't have a `form` property. But the `NgForm` directive does, which explains how you can disable the submit button if the `heroForm.form.valid` is invalid and pass the entire form control tree to the parent component's `onSubmit` method.
 
-### Template reference variable warning notes {#template-reference-notes}
+### Template reference variable warning notes
 
-A template *reference* variable (`#phone`) is *not* the same as a template *input* variable (`let phone`)
-such as you might see in an [`*ngFor`](#template-input-variable).
-Learn the difference in the [*Structural Directives*](structural-directives#template-input-variable) guide.
+A template *reference* variable (`#phone`) is *not* the same as a template *input* variable (`let phone`) such as you might see in an [`*ngFor`](#template-input-variables). Learn the difference in the [*Structural Directives*](structural-directives.md#template-input-variable) guide.
 
 The scope of a reference variable is the *entire template*, unless it's declared within an embedded view controlled by a [structural directive](#built-in-structural-directives). Reference variables declared within an embedded view are only visible to the portion of the template embedded by the structural directive. Note that a reference variable declared outside an embedded view can be referenced from within it, but not the other way around.
 
 Do not define the same variable name more than once in the same template. The runtime value will be unpredictable.
 
-## Input and output properties ( @Input and @Output )  {#inputs-outputs}
+## Input and output properties ( @Input and @Output )
 
-So far, this page has focused mainly on binding to component members within template expressions and statements
-that appear on the *right side of the binding declaration*.
-A member in that position is a data binding **source**.
+So far, this page has focused mainly on binding to component members within template expressions and statements that appear on the *right side of the binding declaration*. A member in that position is a data binding **source**.
 
-This section concentrates on binding to **targets**, which are directive
-properties on the *left side of the binding declaration*.
-These directive properties must be declared as **inputs** or **outputs**.
+This section concentrates on binding to **targets**, which are directive properties on the *left side of the binding declaration*. These directive properties must be declared as **inputs** or **outputs**.
 
-<div class="alert alert-warning" markdown="1">
-  Remember: All **components** are **directives**.
-</div>
+> [!WARNING]
+> Remember: All **components** are **directives**.
 
-<div class="l-sub-section" markdown="1">
-  Note the important distinction between a data binding **target** and a data binding **source**.
+> [!NOTE]
+> Note the important distinction between a data binding **target** and a data binding **source**.
+>
+> The *target* of a binding is to the *left* of the `=`. The *source* is on the *right* of the `=`.
+>
+> The *target* of a binding is the property or event inside the binding punctuation: `[]`, `()` or `[()]`. The *source* is either inside quotes (`" "`) or within an interpolation (`{{}}`).
+>
+> Every member of a **source** directive is automatically available for binding. You don't have to do anything special to access a directive member in a template expression or statement.
+>
+> You have *limited* access to members of a **target** directive. You can only bind to properties that are explicitly identified as *inputs* and *outputs*.
 
-  The *target* of a binding is to the *left* of the `=`.
-  The *source* is on the *right* of the `=`.
-
-  The *target* of a binding is the property or event inside the binding punctuation: `[]`, `()` or `[()]`.
-  The *source* is either inside quotes (`" "`) or within an interpolation (`{{}}`).
-
-  Every member of a **source** directive is automatically available for binding.
-  You don't have to do anything special to access a directive member in a template expression or statement.
-
-  You have *limited* access to members of a **target** directive.
-  You can only bind to properties that are explicitly identified as *inputs* and *outputs*.
-</div>
-
-In the following snippet, `iconUrl` and `onSave` are data-bound members of the `AppComponent`
-and are referenced within quoted syntax to the *right* of the equals&nbsp;(`=`).
+In the following snippet, `iconUrl` and `onSave` are data-bound members of the `AppComponent` and are referenced within quoted syntax to the *right* of the equals&nbsp;(`=`).
 
 ```html
   <img [src]="iconUrl"/>
   <button (click)="onSave()">Save</button>
 ```
 
-They are *neither inputs nor outputs* of the component. They are **sources** for their bindings.
-The targets are the native `<img>` and `<button>` elements.
+They are *neither inputs nor outputs* of the component. They are **sources** for their bindings. The targets are the native `<img>` and `<button>` elements.
 
-Now look at a another snippet in which the `HeroComponent`
-is the **target** of a binding on the *left* of the equals&nbsp;(`=`).
+Now look at a another snippet in which the `HeroComponent` is the **target** of a binding on the *left* of the equals&nbsp;(`=`).
 
 ```html
   <my-hero [hero]="currentHero" (deleteRequest)="deleteHero($event)">
   </my-hero>
 ```
 
-Both `HeroComponent.hero` and `HeroComponent.deleteRequest` are on the **left side** of binding declarations.
-`HeroComponent.hero` is inside brackets; it is the target of a property binding.
-`HeroComponent.deleteRequest` is inside parentheses; it is the target of an event binding.
+Both `HeroComponent.hero` and `HeroComponent.deleteRequest` are on the **left side** of binding declarations. `HeroComponent.hero` is inside brackets; it is the target of a property binding. `HeroComponent.deleteRequest` is inside parentheses; it is the target of an event binding.
 
 ### Declaring input and output properties
 
@@ -1204,8 +1155,7 @@ Target properties must be explicitly marked as inputs or outputs. In the `HeroCo
 
 ### Input or output?
 
-*Input* properties usually receive data values.
-*Output* properties expose event producers, such as [Stream]({{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/Stream-class.html) objects.
+*Input* properties usually receive data values. *Output* properties expose event producers, such as [Stream](https://api.dart.dev/stable/dart-async/Stream-class.html) objects.
 
 The terms *input* and *output* reflect the perspective of the target directive.
 
@@ -1215,27 +1165,19 @@ The terms *input* and *output* reflect the perspective of the target directive.
 
 `HeroComponent.deleteRequest` is an **output** property from the perspective of `HeroComponent` because events stream *out* of that property and toward the handler in a template binding statement.
 
-### Aliasing input/output properties  {#aliasing-io}
+### Aliasing input/output properties
 
 Sometimes the public name of an input/output property should be different from the internal name.
 
-This is frequently the case with [attribute directives](attribute-directives).
-Directive consumers expect to bind to the name of the directive.
-For example, when you apply a directive with a `myClick` selector to a `<div>` tag,
-you expect to bind to an event property that is also called `myClick`.
+This is frequently the case with [attribute directives](attribute-directives.md). Directive consumers expect to bind to the name of the directive. For example, when you apply a directive with a `myClick` selector to a `<div>` tag, you expect to bind to an event property that is also called `myClick`.
 
 ```html
   <div (myClick)="clickMessage=$event" clickable>click with myClick</div>
 ```
 
-However, the directive name is often a poor choice for the name of a property within the directive class.
-The directive name rarely describes what the property does.
-The `myClick` directive name is not a good name for a property that emits click messages.
+However, the directive name is often a poor choice for the name of a property within the directive class. The directive name rarely describes what the property does. The `myClick` directive name is not a good name for a property that emits click messages.
 
-Fortunately, you can create a public name for the property that meets conventional expectations,
-while using a different name internally.
-In the example immediately above, the code binds *through the* `myClick` *alias* to
-the directive's own `clicks` property.
+Fortunately, you can create a public name for the property that meets conventional expectations, while using a different name internally. In the example immediately above, the code binds *through the* `myClick` *alias* to the directive's own `clicks` property.
 
 To specify the alias for the property name, pass the alias into the input/output decorator like this:
 
@@ -1248,17 +1190,13 @@ To specify the alias for the property name, pass the alias into the input/output
 
 ## Template expression operators
 
-The template expression language employs a subset of Dart syntax supplemented with a few special operators
-for specific scenarios. The next sections cover two of these operators: *pipe* and *safe navigation operator*.
+The template expression language employs a subset of Dart syntax supplemented with a few special operators for specific scenarios. The next sections cover two of these operators: *pipe* and *safe navigation operator*.
 
 ### The pipe operator ( | )
 
-The result of an expression might require some transformation before it's ready to use in a binding.
-For example, you might display a number as a currency, force text to uppercase, or filter a list and sort it.
+The result of an expression might require some transformation before it's ready to use in a binding. For example, you might display a number as a currency, force text to uppercase, or filter a list and sort it.
 
-Kelicap [pipes](pipes) are a good choice for small transformations such as these.
-Pipes are simple functions that accept an input value and return a transformed value.
-They're easy to apply within template expressions, using the **pipe operator (`|`)**:
+Kelicap [pipes](pipes.md) are a good choice for small transformations such as these. Pipes are simple functions that accept an input value and return a transformed value. They're easy to apply within template expressions, using the **pipe operator (`|`)**:
 
 ```html
   <div>Title through uppercase pipe: {{title | uppercase}}</div>
@@ -1276,7 +1214,7 @@ You can chain expressions through multiple pipes:
   </div>
 ```
 
-You can also [apply parameters](pipes#parameterizing-a-pipe) to a pipe:
+You can also [apply parameters](pipes.md#parameterizing-a-pipe) to a pipe:
 
 ```html
   <!-- pipe with configuration argument => "February 25, 1970" -->
@@ -1298,13 +1236,9 @@ The generated output looks something like this:
   "rate": 325 }
 ```
 
-### The safe navigation operator ( <? ) and null property paths
+### The safe navigation operator (`?.`) and null property paths
 
-The Kelicap **safe navigation operator (`?.`)**, like the Dart [conditional member
-access]({{site.dartlang}}/guides/language/language-tour#other-operators)
-operator, is a fluent and convenient way to
-guard against null values in property paths.
-Here it is, protecting against a view render failure if the `currentHero` is null.
+The Kelicap **safe navigation operator (`?.`)**, like the Dart [conditional member access](https://dart.dev/guides/language/language-tour#other-operators) operator, is a fluent and convenient way to guard against null values in property paths. Here it is, protecting against a view render failure if the `currentHero` is null.
 
 ```html
   The current hero's name is {{currentHero?.name}}
@@ -1316,11 +1250,9 @@ What happens when the following data bound `title` property is null?
   The title is {{title}}
 ```
 
-The view still renders but the displayed value is blank; you see only "The title is" with nothing after it.
-That is reasonable behavior. At least the app doesn't crash.
+The view still renders but the displayed value is blank; you see only "The title is" with nothing after it. That is reasonable behavior. At least the app doesn't crash.
 
-Suppose the template expression involves a property path, as in this next example
-that displays the `name` of a null hero.
+Suppose the template expression involves a property path, as in this next example that displays the `name` of a null hero.
 
 ```html
 The null hero's name is {{nullHero.name}}
@@ -1328,22 +1260,17 @@ The null hero's name is {{nullHero.name}}
 
 Dart throws an exception, and so does Kelicap:
 
-```nocode
+```text
 EXCEPTION: The null object does not have a getter 'name'.
 ```
 
 Worse, the *entire view disappears*.
 
-This would be reasonable behavior if the `hero` property could never be null.
-If it must never be null and yet it is null,
-that's a programming error that should be caught and fixed.
-Throwing an exception is the right thing to do.
+This would be reasonable behavior if the `hero` property could never be null. If it must never be null and yet it is null, that's a programming error that should be caught and fixed. Throwing an exception is the right thing to do.
 
-On the other hand, null values in the property path might be OK from time to time,
-especially when the data are null now and will arrive eventually.
+On the other hand, null values in the property path might be OK from time to time, especially when the data are null now and will arrive eventually.
 
-While waiting for data, the view should render without complaint, and
-the null property path should display as blank just as the `title` property does.
+While waiting for data, the view should render without complaint, and the null property path should display as blank just as the `title` property does.
 
 Unfortunately, the app crashes when the `currentHero` is null.
 
@@ -1354,12 +1281,9 @@ You could code around that problem with [*ngIf](#ngif).
   <div *ngIf="nullHero != null">The null hero's name is {{nullHero.name}}</div>
 ```
 
-These approaches have merit but can be cumbersome, especially if the property path is long.
-Imagine guarding against a null somewhere in a long property path such as `a.b.c.d`.
+These approaches have merit but can be cumbersome, especially if the property path is long. Imagine guarding against a null somewhere in a long property path such as `a.b.c.d`.
 
-The Kelicap safe navigation operator (`?.`) is a more fluent and convenient way to guard against nulls in property paths.
-The expression bails out when it hits the first null value.
-The display is blank, but the app keeps rolling without errors.
+The Kelicap safe navigation operator (`?.`) is a more fluent and convenient way to guard against nulls in property paths. The expression bails out when it hits the first null value. The display is blank, but the app keeps rolling without errors.
 
 ```html
   <!-- No hero, no problem! -->
@@ -1370,7 +1294,6 @@ It works perfectly with long property paths such as `a?.b?.c?.d`.
 
 ## Summary
 
-You've completed this survey of template syntax.
-Now it's time to put that knowledge to work on your own components and directives.
+You've completed this survey of template syntax. Now it's time to put that knowledge to work on your own components and directives.
 
-[Map]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-core/Map-class.html
+[Map]: https://api.dart.dev/stable/dart-core/Map-class.html

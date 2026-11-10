@@ -39,7 +39,7 @@ By convention, the name of the root component is `AppComponent`.
 
 ![Kelicap libraries](assets/architecture/library-module.png)
 
-Kelicap ships as a collection of libraries within the [**kelicap**](https://pub.dev/packages/kelicap) package. The main Kelicap library is [kelicap]({{site.api}}?package=kelicap), which most app modules import as follows:
+Kelicap ships as a collection of libraries within the [**kelicap**](https://pub.dev/packages/kelicap) package. The main Kelicap library is [kelicap](https://pub.dev/documentation/kelicap/latest?package=kelicap), which most app modules import as follows:
 
 ```dart
   import 'package:kelicap/kelicap.dart';
@@ -77,7 +77,7 @@ You define a component's application logic - what it does to support the view - 
   }
 ```
 
-Kelicap creates, updates, and destroys components as the user moves through the app. Your app can take action at each moment in this lifecycle through optional [lifecycle hooks](lifecycle-hooks), like `ngOnInit()` declared above.
+Kelicap creates, updates, and destroys components as the user moves through the app. Your app can take action at each moment in this lifecycle through optional [lifecycle hooks](lifecycle-hooks.md), like `ngOnInit()` declared above.
 
 ## Templates
 
@@ -93,17 +93,16 @@ A template looks like regular HTML, except for a few differences. Here is a temp
   <p><i>Pick a hero from the list</i></p>
   <ul>
     <li *ngFor="let hero of heroes" (click)="selectHero(hero)">
-      {!{hero.name}!}
+      {{hero.name}}
     </li>
   </ul>
 
   <hero-detail *ngIf="selectedHero != null" [hero]="selectedHero"></hero-detail>
 ```
 
-The template uses typical HTML elements like `<h2>` and  `<p>`. It also includes code that uses Kelicap's [template syntax](template-syntax) like `*ngFor`, `{!{hero.name}}`, `(click)`, `[hero]`, and `<hero-detail>`.
+The template uses typical HTML elements like `<h2>` and  `<p>`. It also includes code that uses Kelicap's [template syntax](template-syntax.md) like `*ngFor`, `{{hero.name}}`, `(click)`, `[hero]`, and `<hero-detail>`.
 
-In the last line of the template, the `<hero-detail>` tag is a custom element that represents a new component, `HeroDetailComponent`. The new component (code not shown) presents facts about the hero that the user selects from the list presented by the `HeroListComponent`. The `HeroDetailComponent` is a **child**
-of the `HeroListComponent`.
+In the last line of the template, the `<hero-detail>` tag is a custom element that represents a new component, `HeroDetailComponent`. The new component (code not shown) presents facts about the hero that the user selects from the list presented by the `HeroListComponent`. The `HeroDetailComponent` is a **child** of the `HeroListComponent`.
 
 ![Component Tree](assets/architecture/component-tree.png)
 
@@ -162,20 +161,20 @@ As the diagram shows, there are four forms of data binding syntax. Each form has
 The `HeroListComponent` [example](#templates) template includes three of the four forms of data binding syntax:
 
 ```dart
-  <li>{!{hero.name}!}</li>
+  <li>{{hero.name}}</li>
   <hero-detail [hero]="selectedHero"></hero-detail>
   <li (click)="selectHero(hero)"></li>
 ```
 
 Here are the three ways that the example uses data binding syntax:
 
-- The `{!{hero.name}}` [*interpolation*](displaying-data#interpolation) displays the component's `hero.name` property value within the `<li>` element.
+- The `{{hero.name}}` [*interpolation*](displaying-data.md#showing-component-properties-with-interpolation) displays the component's `hero.name` property value within the `<li>` element.
 
-- The `[hero]` [*property binding*](template-syntax#property-binding) passes the value of `selectedHero` from the parent `HeroListComponent` to the `hero` property of the child `HeroDetailComponent`.
+- The `[hero]` [*property binding*](template-syntax.md#property-binding--property-) passes the value of `selectedHero` from the parent `HeroListComponent` to the `hero` property of the child `HeroDetailComponent`.
 
-- The `(click)` [*event binding*](user-input#click) calls the component's `selectHero` method when the user clicks a hero's name.
+- The `(click)` [*event binding*](user-input.md#click) calls the component's `selectHero` method when the user clicks a hero's name.
 
-The fourth form of data binding is [*two-way data binding*](template-syntax#two-way). Two-way binding combines property and event binding in a single notation, using the `ngModel` directive. In two-way binding, a data property value flows to the input box from the component as with property binding. The user's changes also flow back to the component, resetting the property to the latest value, as with event binding.
+The fourth form of data binding is [*two-way data binding*](template-syntax.md#two-way-binding---). Two-way binding combines property and event binding in a single notation, using the `ngModel` directive. In two-way binding, a data property value flows to the input box from the component as with property binding. The user's changes also flow back to the component, resetting the property to the latest value, as with event binding.
 
 Here's an example of two-way binding from the `HeroDetailComponent` template:
 
@@ -193,7 +192,7 @@ Data binding plays an important role in communication between a template and its
 
 ## Directives
 
-![Directives](assets/architecture/directives.png)
+![Directives](assets/architecture/directive.png)
 
 Kelicap templates are *dynamic*. When Kelicap renders them, it transforms the DOM according to the instructions given by **directives**. A directive is a class with a `@Directive` annotation. A component is a *directive with a template*; a `@Component` annotation is actually a `@Directive` annotation extended with template-oriented features.
 
@@ -208,8 +207,8 @@ The [example template](#templates) uses two built-in structural directives:
   <hero-detail *ngIf="selectedHero != null"></hero-detail>
 ```
 
-- [`*ngFor`](displaying-data#ngFor) tells Kelicap to stamp out one `<li>` per hero in the `heroes` list.
-- [`*ngIf`](displaying-data#ngIf) includes the `HeroDetail` component only if a selected hero exists.
+- [`*ngFor`](displaying-data.md#showing-a-list-property-with-ngfor) tells Kelicap to stamp out one `<li>` per hero in the `heroes` list.
+- [`*ngIf`](displaying-data.md#conditional-display-with-ngif) includes the `HeroDetail` component only if a selected hero exists.
 
 In Dart, **the only value that is true is the boolean value `true`**; all other values are false. JavaScript and TypeScript, by contrast, treat values such as 1 and most non-null objects as true. For this reason, the JavaScript and TypeScript versions of this app can use just `selectedHero` as the value of the `*ngIf` expression. The Dart version must use a boolean operator such as `!=` instead.
 
@@ -219,7 +218,7 @@ In Dart, **the only value that is true is the boolean value `true`**; all other 
   <input [(ngModel)]="hero.name">
 ```
 
-Kelicap has a few more directives that either alter the layout structure (for example, [ngSwitch](template-syntax#ngSwitch)) or modify aspects of DOM elements and components (for example, [ngStyle](template-syntax#ngStyle) and [ngClass](template-syntax#ngClass)). You can also write your own directives. Components such as `HeroListComponent` are one kind of custom directive. [Custom structural directives](structural-directives#unless) are another.
+Kelicap has a few more directives that either alter the layout structure (for example, [ngSwitch](template-syntax.md#the-ngswitch-directives)) or modify aspects of DOM elements and components (for example, [ngStyle](template-syntax.md#ngstyle) and [ngClass](template-syntax.md#ngclass)). You can also write your own directives. Components such as `HeroListComponent` are one kind of custom directive. [Custom structural directives](structural-directives.md#write-a-structural-directive) are another.
 
 ## Services
 
@@ -267,8 +266,7 @@ Here's a `HeroService` that uses a `Future` to fetch heroes. The `HeroService` d
 
 Component classes should be lean. They don't fetch data from the server, validate user input, or log directly to the console. A component's job is to enable the user experience and nothing more. It mediates between the view (rendered by the template) and the application logic (which often includes some notion of a *model*). A good component presents properties and methods for data binding. It delegates everything nontrivial to services.
 
-Kelicap doesn't *enforce* these principles. It doesn't complain if you write a component with 3000 lines of code that does everything in your app. Kelicap does help you *follow* these principles by making it easy to factor your application logic into services and make those services available to components
-through *dependency injection*.
+Kelicap doesn't *enforce* these principles. It doesn't complain if you write a component with 3000 lines of code that does everything in your app. Kelicap does help you *follow* these principles by making it easy to factor your application logic into services and make those services available to components through *dependency injection*.
 
 ## Dependency injection
 

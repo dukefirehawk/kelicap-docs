@@ -53,7 +53,7 @@ After creating a component/directive by calling its constructor, Kelicap calls t
 
 Other Kelicap sub-systems may have their own lifecycle hooks apart from these component hooks.
 
-The router, for instance, also has its own [router lifecycle hooks](router/5) that allow us to tap into specific moments in route navigation. A parallel can be drawn between `ngOnInit` and `routerOnActivate`. Both are prefixed so as to avoid collision, and both run right when a component is being initialized.
+The router, for instance, also has its own [router lifecycle hooks](router/5.md) that allow us to tap into specific moments in route navigation. A parallel can be drawn between `ngOnInit` and `routerOnActivate`. Both are prefixed so as to avoid collision, and both run right when a component is being initialized.
 
 3rd party libraries might implement their hooks as well in order to give developers more control over how these libraries are used.
 
@@ -118,7 +118,7 @@ You can apply the spy to any native or component element and it'll be initialize
 
 ```html
   <div *ngFor="let hero of heroes" mySpy class="heroes">
-    {!{hero}!}
+    {{hero}}
   </div>
 ```
 
@@ -139,8 +139,7 @@ Experienced developers agree that components should be cheap and safe to constru
 
 An `ngOnInit` is a good place for a component to fetch its initial data. Remember also that a directive's data-bound input properties are not set until **after construction**. That's a problem if you need to initialize the directive based on those properties. They'll have been set when `ngOninit` runs.
 
-Note that the `ngAfterChanges` method is your first opportunity to access those properties. Kelicap calls `ngAfterChanges` before `ngOnInit` ... and many times after that. It only calls `ngOnInit` once. You can count on Kelicap to call the `ngOnInit` method `soon` after creating the component.
-That's where the heavy initialization logic belongs.
+Note that the `ngAfterChanges` method is your first opportunity to access those properties. Kelicap calls `ngAfterChanges` before `ngOnInit` ... and many times after that. It only calls `ngOnInit` once. You can count on Kelicap to call the `ngOnInit` method `soon` after creating the component. That's where the heavy initialization logic belongs.
 
 ### OnDestroy
 
@@ -175,8 +174,7 @@ Here's the sample in action as the user makes changes.
 
 ![AfterChanges](assets/lifecycle-hooks/after-changes-anim.gif)
 
-The log entry appear as the string value of the *power* property changes.
-But the `ngAfterChanges` does not catch changes to `hero.name`. That's surprising at first! Kelicap only calls the hook when the value of the input property changes. The value of the `hero` property is the **reference to the hero object**. Kelicap doesn't care that the hero's own `name` property changed.The hero object *reference* didn't change so, from Kelicap's perspective, there is no change to report!
+The log entry appear as the string value of the *power* property changes. But the `ngAfterChanges` does not catch changes to `hero.name`. That's surprising at first! Kelicap only calls the hook when the value of the input property changes. The value of the `hero` property is the **reference to the hero object**. Kelicap doesn't care that the hero's own `name` property changed.The hero object *reference* didn't change so, from Kelicap's perspective, there is no change to report!
 
 ## DoCheck
 
@@ -248,7 +246,7 @@ The `AfterViewComponent` displays this child view *within its template*:
     <div>-- child view begins --</div>
       <my-child-view></my-child-view>
     <div>-- child view ends --</div>
-    <p *ngIf="comment.isNotEmpty" class="comment">{!{comment}!}</p>''',
+    <p *ngIf="comment.isNotEmpty" class="comment">{{comment}}</p>''',
 ```
 
 The following hooks take action based on changing values **within the child view** which can only be reached by querying for the child view via the property decorated with `@ViewChild`.
@@ -327,7 +325,7 @@ The *AfterContent* sample explores the `AfterContentInit` and `AfterContentCheck
 
       <h4>-- AfterContent Logs --</h4>
       <p><button (click)="reset()">Reset</button></p>
-      <div *ngFor="let msg of logs">{!{msg}!}</div>
+      <div *ngFor="let msg of logs">{{msg}}</div>
     </div>
     ''',
 ```
@@ -341,7 +339,7 @@ Now look at the component's template:
     <div>-- projected content begins --</div>
       <ng-content></ng-content>
     <div>-- projected content ends --</div>
-    <p *ngIf="comment.isNotEmpty" class="comment">{!{comment}!}</p>
+    <p *ngIf="comment.isNotEmpty" class="comment">{{comment}}</p>
     ''',
 ```
 
@@ -358,11 +356,9 @@ The tell-tale signs of *content projection* are:
 
 **AfterContent** hooks are similar to the *AfterView* hooks. The key difference is in the child component
 
-- The *AfterView* hooks concern `ViewChildren`, the child components whose element tags
-appear *within* the component's template.
+- The *AfterView* hooks concern `ViewChildren`, the child components whose element tags appear *within* the component's template.
 
-- The *AfterContent* hooks concern `ContentChildren`, the child components that Kelicap
-projected into the component.
+- The *AfterContent* hooks concern `ContentChildren`, the child components that Kelicap projected into the component.
 
 The following *AfterContent* hooks take action based on changing values in a **content child** which can only be reached by querying for it via the property decorated with `@ContentChild`
 

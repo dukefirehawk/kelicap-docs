@@ -11,7 +11,7 @@ When you’re done, users will be able to navigate the app like this:
 
 ![View navigations](assets/toh/nav-diagram.png)
 
-To satisfy these requirements, you'll add Kelicap’s router to the app. For more information about the router, read the [Routing and Navigation](../user-guide/router.md) page.
+To satisfy these requirements, you'll add Kelicap’s router to the app. For more information about the router, read the [Routing and Navigation](../user-guide/router/README.md) page.
 
 ## Where you left off
 
@@ -99,7 +99,7 @@ Perform these steps:
 The first draft looks like this:
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   import 'src/hero_service.dart';
   import 'src/hero_list_component.dart';
@@ -170,7 +170,7 @@ To tell Kelicap that your app uses the router, pass as an argument to `runApp()`
 
 Open `index.html` and ensure there is a `<base href="...">` element (or a script that dynamically sets this element) at the top of the `<head>` section.
 
-As explained in the [Set the base href](../user-guide/router/1.md#base-href) section of the [Routing and Navigation](../user-guide/router/README.md) page, the example apps use the following script:
+As explained in the [Set the base href](../user-guide/router/1.md#set-the-base-href) section of the [Routing and Navigation](../user-guide/router/README.md) page, the example apps use the following script:
 
 ```html
   <head>
@@ -185,8 +185,7 @@ As explained in the [Set the base href](../user-guide/router/1.md#base-href) sec
 
 ### Configure routes
 
-*Routes* tell the router which views to display when a user clicks a link or
-pastes a URL into the browser address bar.
+*Routes* tell the router which views to display when a user clicks a link or pastes a URL into the browser address bar.
 
 First create a file to hold route paths. Initialize it with this content:
 
@@ -229,17 +228,13 @@ The `Routes.all` field is a list of *route definitions*. It contains only one ro
 
 > Read more about defining routes in the [Routing & Navigation](../user-guide/router/README.md) page.
 
-The Kelicap compiler generates **component factories** behind the scenes when
-you build the app. To access the factory you need to import the generated
-component template file:
+The Kelicap compiler generates **component factories** behind the scenes when you build the app. To access the factory you need to import the generated component template file:
 
 ```dart
   import 'hero_list_component.template.dart' as hero_list_template;
 ```
 
-Until you've built the app, the generated files don't exist. The analyzer
-normally reports a missing import as an error, but we've disabled this error
-using the following configuration:
+Until you've built the app, the generated files don't exist. The analyzer normally reports a missing import as an error, but we've disabled this error using the following configuration:
 
 ```yaml
   analyzer:
@@ -274,12 +269,12 @@ The app component code should look like this:
   @Component(
     // ···
     template: ''' ···
-      [!<router-outlet [routes]="Routes.all"></router-outlet>!]
+      <router-outlet [routes]="Routes.all"></router-outlet>
     ''',
     // ···
-    [!directives: [routerDirectives],!]
+    directives: [routerDirectives],
     providers: [ClassProvider(HeroService)],
-    [!exports: [RoutePaths, Routes],!]
+    exports: [RoutePaths, Routes],
   )
   class AppComponent {
     final title = 'Tour of Heroes';
@@ -305,19 +300,16 @@ Users shouldn't have to paste a route path into the address bar. Instead, add an
 
 Note the `routerLink` [property binding][] in the anchor tag. The [RouterLink][] directive is bound to an expression whose string value that tells the router where to navigate to when the user clicks the link.
 
-Looking back at the route definitions, you can confirm that
-`'heroes'` is the path of the route to the `HeroListComponent`.
+Looking back at the route definitions, you can confirm that `'heroes'` is the path of the route to the `HeroListComponent`.
 
 > The path string isn't visible anymore so this callout isn't really pertinent: Notice that `routerLink` is bound to `/heroes` and not `/#/heroes`, even if your app uses the [HashLocationStrategy] during development.  This uniform use of route paths makes it easy to switch to the [PathLocationStrategy] when deploying in production.
 
-**Refresh the browser**. The browser displays the app title and heroes link,
-but not the heroes list. Click the *Heroes* navigation link. The address bar
-updates to `/#/heroes` (or the equivalent `/#heroes`), and the list of heroes displays.
+**Refresh the browser**. The browser displays the app title and heroes link, but not the heroes list. Click the *Heroes* navigation link. The address bar updates to `/#/heroes` (or the equivalent `/#heroes`), and the list of heroes displays.
 
 `AppComponent` now looks like this:
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
   import 'package:kelicap_router/kelicap_router.dart';
 
   import 'src/hero_service.dart';
@@ -349,7 +341,7 @@ The  *AppComponent* has a router and displays routed views. For this reason, and
 Routing only makes sense when multiple views exist. To add another view, create a placeholder `DashboardComponent`.
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   @Component(
     selector: 'my-dashboard',
@@ -362,8 +354,7 @@ You'll make this component more useful later.
 
 ### Configure the dashboard route
 
-Add a dashboard route similar to the heroes route by adding a path
-and then creating a route definition.
+Add a dashboard route similar to the heroes route by adding a path and then creating a route definition.
 
 ```dart
   static final dashboard = RoutePath(path: 'dashboard');
@@ -452,20 +443,18 @@ Create the template file with this content:
   </div>
 ```
 
-`*ngFor` is used again to iterate over a list of heroes and display their names.
-The extra `<div>` elements will help with styling later.
+`*ngFor` is used again to iterate over a list of heroes and display their names. The extra `<div>` elements will help with styling later.
 
 ### Reusing the *HeroService*
 
-To populate the component's `heroes` list, you can reuse the `HeroService`. Earlier, you removed the `HeroService` from the `providers` list of `HeroListComponent` and added it to the `providers` list of `AppComponent`.
-That move created a singleton `HeroService` instance, available to all components of the app. Kelicap injects `HeroService` and you can use it in the `DashboardComponent`.
+To populate the component's `heroes` list, you can reuse the `HeroService`. Earlier, you removed the `HeroService` from the `providers` list of `HeroListComponent` and added it to the `providers` list of `AppComponent`. That move created a singleton `HeroService` instance, available to all components of the app. Kelicap injects `HeroService` and you can use it in the `DashboardComponent`.
 
 ### Get heroes
 
 In `dashboard_component.dart`, add the following `import` statements.
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
 
   import 'hero.dart';
   import 'hero_service.dart';
@@ -508,8 +497,7 @@ While the details of a selected hero display at the bottom of the `HeroListCompo
 
 ### Routing to a hero detail
 
-You can add a route to the `HeroComponent` in `AppComponent`, where the other routes are defined. The new route is unusual in that you must tell the `HeroComponent` which hero to show. You didn't have to tell the `HeroListComponent` or the `DashboardComponent` anything. Currently, the parent `HeroListComponent` sets the component's `hero` property to a
-hero object with a binding like this:
+You can add a route to the `HeroComponent` in `AppComponent`, where the other routes are defined. The new route is unusual in that you must tell the `HeroComponent` which hero to show. You didn't have to tell the `HeroListComponent` or the `DashboardComponent` anything. Currently, the parent `HeroListComponent` sets the component's `hero` property to a hero object with a binding like this:
 
 ```html
   <my-hero [hero]="selected"></my-hero>
@@ -570,8 +558,8 @@ You didn't add a hero detail link to the template because users don't click a na
 Here's what the `HeroComponent` looks like now:
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
-  import 'package:ngforms/ngforms.dart';
+  import 'package:kelicap/kelicap.dart';
+  import 'package:kelicap_forms/kelicap_forms.dart';
 
   import 'hero.dart';
 
@@ -605,8 +593,7 @@ The template won't change. Hero names will display the same way. The major chang
 
 ### Drop *@Input()*
 
-You will no longer receive the hero in a parent component property binding, so
-you can **remove the `@Input()` annotation** from the `hero` field:
+You will no longer receive the hero in a parent component property binding, so you can **remove the `@Input()` annotation** from the `hero` field:
 
 ```dart
   class HeroComponent {
@@ -616,8 +603,7 @@ you can **remove the `@Input()` annotation** from the `hero` field:
 
 ### Add *onActivate()* life-cycle hook
 
-The new `HeroComponent` will take the `id` parameter from the router's
-state and use the `HeroService` to fetch the hero with that `id`. Add the following imports:
+The new `HeroComponent` will take the `id` parameter from the router's state and use the `HeroService` to fetch the hero with that `id`. Add the following imports:
 
 ```dart
   import 'package:kelicap_router/kelicap_router.dart';
@@ -635,8 +621,7 @@ Inject the `HeroService` and [Location] service into the constructor, saving the
   HeroComponent(this._heroService, this._location);
 ```
 
-To get notified when a hero route is navigated to, make `HeroComponent`
-implement the [OnActivate] interface, and update `hero` from the [onActivate()] [router lifecycle hook]:
+To get notified when a hero route is navigated to, make `HeroComponent` implement the [OnActivate] interface, and update `hero` from the [onActivate()] [router lifecycle hook]:
 
 ```dart
   class HeroComponent implements OnActivate {
@@ -650,8 +635,7 @@ implement the [OnActivate] interface, and update `hero` from the [onActivate()] 
   }
 ```
 
-The hook implementation makes use of the `getId()` helper function that
-extracts the `id` from the [RouterState.parameters] map.
+The hook implementation makes use of the `getId()` helper function that extracts the `id` from the [RouterState.parameters] map.
 
 ```dart
   int? getId(Map<String, String> parameters) {
@@ -664,9 +648,7 @@ The hero ID is a number. Route parameters are always strings. So the route param
 
 ### Add *HeroService.get()*
 
-In `onActivate()`, you used the `get()` method, which `HeroService` doesn't
-have yet. To fix this issue, open `HeroService` and add a `get()` method
-that filters the heroes list from `getAll()` by `id`.
+In `onActivate()`, you used the `get()` method, which `HeroService` doesn't have yet. To fix this issue, open `HeroService` and add a `get()` method that filters the heroes list from `getAll()` by `id`.
 
 ```dart
   Future<Hero> get(int id) async =>
@@ -721,14 +703,11 @@ Update the component metadata with a `templateUrl` pointing to the template file
 
 ## Select a dashboard hero
 
-When a user selects a hero in the dashboard, the app should navigate to a
-`HeroComponent` to allow the user to view and edit the selected hero.
+When a user selects a hero in the dashboard, the app should navigate to a `HeroComponent` to allow the user to view and edit the selected hero.
 
-The dashboard heroes should behave like anchor tags:
-when hovering over a hero name, the target URL should display in the browser status bar and the user should be able to copy the link or open the hero detail view in a new tab.
+The dashboard heroes should behave like anchor tags: when hovering over a hero name, the target URL should display in the browser status bar and the user should be able to copy the link or open the hero detail view in a new tab.
 
-To achieve this, you'll need to make changes to the dashboard component and its
-template.
+To achieve this, you'll need to make changes to the dashboard component and its template.
 
 Update the dashboard component:
 
@@ -744,7 +723,6 @@ Edit the dashboard template:
 
 * Replace the `div` opening and closing tags in the `<div *ngFor...>` element with anchor tags.
 * Add a router link property binding, as shown.
-
 
 ```html
   <a *ngFor="let hero of heroes" class="col-1-4"
@@ -766,18 +744,13 @@ As described in the [Router links](#router-links) section of this page, top-leve
   }
 ```
 
-The `heroUrl()` method generates the string representation of the path using the
-`toUrl()` method, passing route parameter values using a map literal. For
-example, it returns [/heroes/15](localhost:8080/#/heroes/15) when `id` is 15.
+The `heroUrl()` method generates the string representation of the path using the `toUrl()` method, passing route parameter values using a map literal. For example, it returns [/heroes/15](localhost:8080/#/heroes/15) when `id` is 15.
 
 **Refresh the browser** and select a hero from the dashboard; the app navigates to that hero’s details.
 
 ## Select a hero in the *HeroListComponent*
 
-In the `HeroListComponent`,
-the current template exhibits a "master/detail" style with the list of heroes
-at the top and details of the selected hero below.
-
+In the `HeroListComponent`, the current template exhibits a "master/detail" style with the list of heroes at the top and details of the selected hero below.
 
 ```html
   <h2>Heroes</h2>
@@ -827,8 +800,7 @@ After clicking a hero (but don't try now since it won't work yet), users should 
 
 ![Mini Hero Detail](assets/toh/mini-hero-detail.png)
 
-The hero's name is displayed in capital letters because of the `uppercase` pipe
-that's included in the interpolation binding, right after the pipe operator ( | ).
+The hero's name is displayed in capital letters because of the `uppercase` pipe that's included in the interpolation binding, right after the pipe operator ( | ).
 
 ```dart
   {{$pipe.uppercase(selected!.name)}} is my hero
@@ -852,9 +824,7 @@ Pipes are a good way to format strings, currency amounts, dates and other displa
 
 ### Update the *HeroListComponent* class
 
-The `HeroListComponent` navigates to the `HeroesDetailComponent` in response to a button click.
-The button's click event is bound to a `gotoDetail()` method that should navigate *imperatively*
-by telling the router where to go.
+The `HeroListComponent` navigates to the `HeroesDetailComponent` in response to a button click. The button's click event is bound to a `gotoDetail()` method that should navigate *imperatively* by telling the router where to go.
 
 This approach requires the following changes to the component class:
 
@@ -889,9 +859,7 @@ Here's the revised `HeroListComponent` class:
   }
 ```
 
-**Refresh the browser** and start clicking.
-Users can navigate around the app, from the dashboard to hero details and back,
-from heroes list to the mini detail to the hero details and back to the heroes again.
+**Refresh the browser** and start clicking. Users can navigate around the app, from the dashboard to hero details and back, from heroes list to the mini detail to the hero details and back to the heroes again.
 
 You've met all of the navigational requirements that propelled this page.
 
@@ -903,8 +871,7 @@ As you now know, adding the CSS to the component `styles` metadata would obscure
 
 ### Dashboard styles
 
-Create a `dashboard_component.css` file in the `lib/src` folder and reference
-that file in the component metadata's `styleUrls` list.
+Create a `dashboard_component.css` file in the `lib/src` folder and reference that file in the component metadata's `styleUrls` list.
 
 ### Hero detail styles
 
@@ -931,13 +898,11 @@ The router adds the class named by the [RouterLinkActive][] directive to the HTM
 
 ### Global app styles
 
-When you add styles to a component, you keep everything a component needs&mdash;HTML, the CSS, the code&mdash;together in one convenient place.
-It's easy to package it all up and reuse the component somewhere else.
+When you add styles to a component, you keep everything a component needs&mdash;HTML, the CSS, the code&mdash;together in one convenient place. It's easy to package it all up and reuse the component somewhere else.
 
 You can also create styles at the *app level* outside of any component.
 
-The designers provided some basic styles to apply to elements across the entire app. These correspond to the full set of master styles that you installed earlier during [setup](/guide/setup).
-Here's an excerpt:
+The designers provided some basic styles to apply to elements across the entire app. These correspond to the full set of master styles that you installed earlier during [setup](../user-guide/setup.md). Here's an excerpt:
 
 ```html
   @import url(https://fonts.googleapis.com/css?family=Roboto);
@@ -980,7 +945,6 @@ Look at the app now. The dashboard, heroes, and navigation links are styled.
 
 ## App structure and code
 
-Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
 ```terminal
@@ -1016,32 +980,26 @@ Here's what you achieved in this page:
 * You shared the `HeroService` among multiple components.
 * You added the `uppercase` pipe to format data.
 
-Your app should look like this {% example_ref %}.
-
 ### The road ahead
 
-You have much of the foundation you need to build an app.
-You're still missing a key piece: remote data access.
+You have much of the foundation you need to build an app. You're still missing a key piece: remote data access.
 
-In the next page,
-you’ll replace the mock data with data retrieved from a server using http.
+In the next page, you’ll replace the mock data with data retrieved from a server using http.
 
-{%comment%}TODO: Add Recap and What's next sections{%endcomment%}
-
-[Kelicap_router]: {{site.api}}/kelicap_router
-[commonPipes]: {{site.pub-api}}/Kelicap/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap/commonPipes-constant.html
+[kelicap_router]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/
+[commonPipes]: https://pub.dev/documentation/kelicap/latest/kelicap/commonPipes-constant.html
 [master styles]: https://raw.githubusercontent.com/Kelicap/Kelicap.io/master/public/docs/_examples/_boilerplate/src/styles.css
-[Location]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/Location-class.html
-[OnActivate]: {{site.pub-api}}/kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/OnActivate-class.html
-[onActivate()]: /guide/router/5#on-activate
-[property binding]: /guide/template-syntax#property-binding
-[router lifecycle hook]: /guide/router/5
-[RouteDefinition]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouteDefinition-class.html
-[routerDirectives]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerDirectives-constant.html
-[RouterLink]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterLink-class.html
-[RouterLinkActive]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterLinkActive-class.html
-[RouterOutlet]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterOutlet-class.html
-[routerProviders]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProviders-constant.html
-[routerProvidersHash]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/routerProvidersHash-constant.html
-[RouterState.parameters]: {{site.pub-api}}/Kelicap_router/{{site.data.pkg-vers.Kelicap.vers}}/Kelicap_router/RouterState/parameters.html
+[Location]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/Location-class.html
+[OnActivate]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/OnActivate-class.html
+[onActivate()]: ../user-guide/router/5.md#onactivate-and-ondeactivate-interfaces
+[property binding]: ../user-guide/template-syntax.md#property-binding--property-
+[router lifecycle hook]: ../user-guide/router/5.md
+[RouteDefinition]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/RouteDefinition-class.html
+[routerDirectives]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/routerDirectives-constant.html
+[RouterLink]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/RouterLink-class.html
+[RouterLinkActive]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/RouterLinkActive-class.html
+[RouterOutlet]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/RouterOutlet-class.html
+[routerProviders]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/routerProviders-constant.html
+[routerProvidersHash]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/routerProvidersHash-constant.html
+[RouterState.parameters]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/RouterState/parameters.html
 [CanDeactivate]: https://pub.dev/documentation/kelicap_router/latest/kelicap_router/CanDeactivate-class.html

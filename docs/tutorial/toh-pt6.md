@@ -43,8 +43,7 @@ You'll be using the Dart [http] package's client classes to communicate with a s
 
 ### Pubspec updates
 
-Update package dependencies by adding the Dart [http] and
-[stream_transform] packages:
+Update package dependencies by adding the Dart [http] and [stream_transform] packages:
 
 ```yaml
   kelicap: ^1.1.0
@@ -62,7 +61,7 @@ Update package dependencies by adding the Dart [http] and
 Before the app can use `BrowserClient`, you have to register it as a service provider. You should be able to access `BrowserClient` services from anywhere in the app, so provide it through the app's root injector:
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
   import 'package:kelicap_router/kelicap_router.dart';
   import 'package:tour_of_heroes/app_component.template.dart' as ng;
   import 'package:http/browser_client.dart';
@@ -91,7 +90,7 @@ Until you have a web server that can handle requests for hero data, the HTTP cli
 Update `web/main.dart` with this version, which uses the mock service:
 
 ```dart
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
   import 'package:kelicap_router/kelicap_router.dart';
   import 'package:tour_of_heroes/app_component.template.dart' as ng;
   import 'package:tour_of_heroes/in_memory_data_service.dart';
@@ -113,8 +112,7 @@ Update `web/main.dart` with this version, which uses the mock service:
   }
 ```
 
-Replace `BrowserClient`, the service that talks to the remote server, with the in-memory web API service. The in-memory web API service, shown below, is implemented using the `http` library `MockClient` class. All `http` client implementations share a common `Client` interface, so you'll have the app use the `Client` type so that you can freely switch between
-implementations.
+Replace `BrowserClient`, the service that talks to the remote server, with the in-memory web API service. The in-memory web API service, shown below, is implemented using the `http` library `MockClient` class. All `http` client implementations share a common `Client` interface, so you'll have the app use the `Client` type so that you can freely switch between implementations.
 
 ```dart
   import 'dart:async';
@@ -274,8 +272,7 @@ To get the list of heroes, you first make an asynchronous call to `http.get()`. 
 
 > **[Note]** the shape of the data that the server returns. This particular in-memory web API example returns an object with a `data` property. Your API might return something else. Adjust the code to match your web API.
 
-The caller is unaware that you fetched the heroes from the (mock) server.
-It receives a Future of *heroes* just as it did before.
+The caller is unaware that you fetched the heroes from the (mock) server. It receives a Future of *heroes* just as it did before.
 
 ### Error Handling
 
@@ -296,18 +293,13 @@ This is a critical step. You must anticipate HTTP failures, as they happen frequ
   }
 ```
 
-This demo service logs the error to the console; in real life,
-you would handle the error in code. For a demo, this works.
+This demo service logs the error to the console; in real life, you would handle the error in code. For a demo, this works.
 
 The code also includes an error to the caller in a propagated exception, so that the caller can display a proper error message to the user.
 
 ### Get hero by id
 
-When the `HeroComponent` asks the `HeroService` to fetch a hero,
-the `HeroService` currently fetches all heroes and
-filters for the one with the matching `id`.
-That's fine for a simulation, but it's wasteful to ask a real server for all heroes when you only want one.
-Most web APIs support a *get-by-id* request in the form `api/hero/:id` (such as `api/hero/11`).
+When the `HeroComponent` asks the `HeroService` to fetch a hero, the `HeroService` currently fetches all heroes and filters for the one with the matching `id`. That's fine for a simulation, but it's wasteful to ask a real server for all heroes when you only want one. Most web APIs support a *get-by-id* request in the form `api/hero/:id` (such as `api/hero/11`).
 
 Update the `HeroService.get()` method to make a *get-by-id* request:
 
@@ -322,43 +314,31 @@ Update the `HeroService.get()` method to make a *get-by-id* request:
   }
 ```
 
-This request is almost the same as `getAll()`.
-The hero id in the URL identifies which hero the server should update.
+This request is almost the same as `getAll()`. The hero id in the URL identifies which hero the server should update.
 
 Also, the `data` in the response is a single hero object rather than a list.
 
 ### Unchanged *getAll* API
 
-Although you made significant internal changes to `getAll()` and `get()`,
-the public signatures didn't change.
-You still return a Future from both methods.
-You won't have to update any of the components that call them.
+Although you made significant internal changes to `getAll()` and `get()`, the public signatures didn't change. You still return a Future from both methods. You won't have to update any of the components that call them.
 
 Now it's time to add the ability to create and delete heroes.
 
 ## Updating hero details
 
-Try editing a hero's name in the hero detail view.
-As you type, the hero name is updated in the view heading.
-But if you click the Back button, the changes are lost.
+Try editing a hero's name in the hero detail view. As you type, the hero name is updated in the view heading. But if you click the Back button, the changes are lost.
 
-Updates weren't lost before. What changed?
-When the app used a list of mock heroes, updates were applied directly to the
-hero objects within the single, app-wide, shared list. Now that you're fetching data
-from a server, if you want changes to persist, you must write them back to
-the server.
+Updates weren't lost before. What changed? When the app used a list of mock heroes, updates were applied directly to the hero objects within the single, app-wide, shared list. Now that you're fetching data from a server, if you want changes to persist, you must write them back to the server.
 
 ### Add the ability to save hero details
 
-At the end of the hero detail template, add a save button with a `click` event
-binding that invokes a new component method named `save()`.
+At the end of the hero detail template, add a save button with a `click` event binding that invokes a new component method named `save()`.
 
 ```html
   <button (click)="save()">Save</button>
 ```
 
-Add the following `save()` method, which persists hero name changes using the hero service
-`update()` method and then navigates back to the previous view.
+Add the following `save()` method, which persists hero name changes using the hero service `update()` method and then navigates back to the previous view.
 
 ```dart
   Future<void> save() async {
@@ -369,8 +349,7 @@ Add the following `save()` method, which persists hero name changes using the he
 
 ### Add a hero service *update()* method
 
-The overall structure of the `update()` method is similar to that of
-`getAll()`, but it uses an HTTP `put()` to persist server-side changes.
+The overall structure of the `update()` method is similar to that of `getAll()`, but it uses an HTTP `put()` to persist server-side changes.
 
 ```dart
   static final _headers = {'Content-Type': 'application/json'};
@@ -387,21 +366,15 @@ The overall structure of the `update()` method is similar to that of
   }
 ```
 
-To identify which hero the server should update, the hero `id` is encoded in
-the URL. The `put()` body is the JSON string encoding of the hero, obtained by
-calling `JSON.encode`. The body content type
-(`application/json`) is identified in the request header.
+To identify which hero the server should update, the hero `id` is encoded in the URL. The `put()` body is the JSON string encoding of the hero, obtained by calling `JSON.encode`. The body content type (`application/json`) is identified in the request header.
 
-Refresh the browser, change a hero name, save your change,
-and click the browser Back button. Changes should now persist.
+Refresh the browser, change a hero name, save your change, and click the browser Back button. Changes should now persist.
 
 ## Add the ability to add heroes
 
-To add a hero, the app needs the hero's name. You can use an `input`
-element paired with an add button.
+To add a hero, the app needs the hero's name. You can use an `input` element paired with an add button.
 
-Insert the following into the heroes component HTML, just after
-the heading:
+Insert the following into the heroes component HTML, just after the heading:
 
 ```dart
   <div>
@@ -412,8 +385,7 @@ the heading:
   </div>
 ```
 
-In response to a click event, call the component's click handler and then
-clear the input field so that it's ready for another name.
+In response to a click event, call the component's click handler and then clear the input field so that it's ready for another name.
 
 ```dart
   Future<void> add(InputElement event) async {
@@ -425,8 +397,7 @@ clear the input field so that it's ready for another name.
   }
 ```
 
-When the given name is non-blank, the handler delegates creation of the
-named hero to the hero service, and then adds the new hero to the list.
+When the given name is non-blank, the handler delegates creation of the named hero to the hero service, and then adds the new hero to the list.
 
 Implement the `create()` method in the `HeroService` class.
 
@@ -461,17 +432,14 @@ The `<li>` element should now look like this:
   <li *ngFor="let hero of heroes"
       [class.selected]="hero == selected"
       (click)="onSelect(hero)">
-    <span class="badge">{!{hero.id}!}</span>
-    <span>{!{hero.name}!}</span>
+    <span class="badge">{{hero.id}}</span>
+    <span>{{hero.name}}</span>
     <button class="delete"
       (click)="delete(hero, $event)">x</button>
   </li>
 ```
 
-In addition to calling the component's `delete()` method, the delete button's
-click handler code stops the propagation of the click event&mdash;you
-don't want the `<li>` click handler to be triggered because doing so would
-select the hero that the user will delete.
+In addition to calling the component's `delete()` method, the delete button's click handler code stops the propagation of the click event&mdash;you don't want the `<li>` click handler to be triggered because doing so would select the hero that the user will delete.
 
 The logic of the `delete()` handler is a bit trickier:
 
@@ -486,12 +454,9 @@ The logic of the `delete()` handler is a bit trickier:
   }
 ```
 
-Of course you delegate hero deletion to the hero service, but the component
-is still responsible for updating the display: it removes the deleted hero
-from the list and resets the selected hero, if necessary.
+Of course you delegate hero deletion to the hero service, but the component is still responsible for updating the display: it removes the deleted hero from the list and resets the selected hero, if necessary.
 
-To place the delete button at the far right of the hero entry,
-add this CSS:
+To place the delete button at the far right of the hero entry, add this CSS:
 
 ```dart
   button.delete {
@@ -522,20 +487,13 @@ Refresh the browser and try the new delete functionality.
 
 ## Streams
 
-Recall that `HeroService.getAll()` awaits for an `http.get()`
-response and yields a *Future* `List<Hero>`, which is fine when you are only
-interested in a single result.
+Recall that `HeroService.getAll()` awaits for an `http.get()` response and yields a *Future* `List<Hero>`, which is fine when you are only interested in a single result.
 
-But requests aren't always done only once.
-You may start one request,
-cancel it, and make a different request before the server has responded to the first request.
-A *request-cancel-new-request* sequence is difficult to implement with *Futures*, but
-easy with *Streams*.
+But requests aren't always done only once. You may start one request, cancel it, and make a different request before the server has responded to the first request. A *request-cancel-new-request* sequence is difficult to implement with *Futures*, but easy with *Streams*.
 
 ### Add the ability to search by name
 
-You're going to add a *hero search* feature to the Tour of Heroes.
-As the user types a name into a search box, you'll make repeated HTTP requests for heroes filtered by that name.
+You're going to add a *hero search* feature to the Tour of Heroes. As the user types a name into a search box, you'll make repeated HTTP requests for heroes filtered by that name.
 
 Start by creating `HeroSearchService` that sends search queries to the server's web API.
 
@@ -572,8 +530,7 @@ Start by creating `HeroSearchService` that sends search queries to the server's 
   }
 ```
 
-The `_http.get()` call in `HeroSearchService` is similar to the one
-in the `HeroService`, although the URL now has a query string.
+The `_http.get()` call in `HeroSearchService` is similar to the one in the `HeroService`, although the URL now has a query string.
 
 ### HeroSearchComponent
 
@@ -590,7 +547,7 @@ The component template is simple&mdash;just a text box and a list of matching se
     <div>
       <div *ngFor="let hero of $pipe.async(heroes)"
            (click)="gotoDetail(hero)" class="search-result" >
-        {!{hero.name}!}
+        {{hero.name}}
       </div>
     </div>
   </div>
@@ -615,22 +572,18 @@ Also, add styles for the new component.
   }
 ```
 
-As the user types in the search box, a *keyup* event binding calls the component's `search()`
-method with the new search box value. If the user pastes text with mouse actions,
-the *change* event binding is triggered.
+As the user types in the search box, a *keyup* event binding calls the component's `search()` method with the new search box value. If the user pastes text with mouse actions, the *change* event binding is triggered.
 
 As expected, the `*ngFor` repeats hero objects from the component's `heroes` property.
 
-But as you'll soon see, the `heroes` property is now a *Stream* of hero lists, rather than just a hero list.
-The `*ngFor` can't do anything with a `Stream` until you route it through the `async` pipe (`AsyncPipe`).
-The `async` pipe subscribes to the `Stream` and produces the list of heroes to `*ngFor`.
+But as you'll soon see, the `heroes` property is now a *Stream* of hero lists, rather than just a hero list. The `*ngFor` can't do anything with a `Stream` until you route it through the `async` pipe (`AsyncPipe`). The `async` pipe subscribes to the `Stream` and produces the list of heroes to `*ngFor`.
 
 Create the `HeroSearchComponent` class and metadata.
 
 ```dart
   import 'dart:async';
 
-  import 'package:kelicap/Kelicap.dart';
+  import 'package:kelicap/kelicap.dart';
   import 'package:kelicap_router/kelicap_router.dart';
   import 'package:stream_transform/stream_transform.dart';
 
@@ -687,14 +640,11 @@ Focus on `_searchTerms`:
   void search(String term) => _searchTerms.add(term);
 ```
 
-A [StreamController][], as its name implies, is a controller for a [Stream][] that allows you to
-manipulate the underlying stream by adding data to it, for example.
+A [StreamController][], as its name implies, is a controller for a [Stream][] that allows you to manipulate the underlying stream by adding data to it, for example.
 
-In the sample, the underlying stream of strings (`_searchTerms.stream`) represents the hero
-name search patterns entered by the user. Each call to `search()` puts a new string into
-the stream by calling `add()` over the controller.
+In the sample, the underlying stream of strings (`_searchTerms.stream`) represents the hero name search patterns entered by the user. Each call to `search()` puts a new string into the stream by calling `add()` over the controller.
 
-#### Initialize the *heroes* property (*ngOnInit*)  {#ngoninit}
+#### Initialize the *heroes* property (*ngOnInit*)
 
 You can turn the stream of search terms into a stream of `Hero` lists and assign the result to the `heroes` property.
 
@@ -714,22 +664,14 @@ You can turn the stream of search terms into a stream of `Hero` lists and assign
   }
 ```
 
-Passing every user keystroke directly to the `HeroSearchService` would create an excessive amount of HTTP requests,
-taxing server resources and burning through the cellular network data plan.
+Passing every user keystroke directly to the `HeroSearchService` would create an excessive amount of HTTP requests, taxing server resources and burning through the cellular network data plan.
 
-Instead, you can chain `Stream` operators that reduce the request flow to the string `Stream`.
-You'll make fewer calls to the `HeroSearchService` and still get timely results. Here's how:
+Instead, you can chain `Stream` operators that reduce the request flow to the string `Stream`. You'll make fewer calls to the `HeroSearchService` and still get timely results. Here's how:
 
-- `transform(debounce(... 300)))` waits until the flow of search terms pauses for 300
-  milliseconds before passing along the latest string.
-  You'll never make requests more frequently than 300ms.
+- `transform(debounce(... 300)))` waits until the flow of search terms pauses for 300 milliseconds before passing along the latest string. You'll never make requests more frequently than 300ms.
 - `distinct()` ensures that a request is sent only if the filter text changed.
-- `transform(switchMap(...))` calls the search service for each
-  search term that makes it through `debounce()` and `distinct()`.
-  It cancels and discards previous searches, returning only the
-  latest search service stream element.
-- `handleError()` handles errors. The simple example prints the error
-  to the console; a real life app should do better.
+- `transform(switchMap(...))` calls the search service for each search term that makes it through `debounce()` and `distinct()`. It cancels and discards previous searches, returning only the latest search service stream element.
+- `handleError()` handles errors. The simple example prints the error to the console; a real life app should do better.
 
 ### Add the search component to the dashboard
 
@@ -741,7 +683,7 @@ Add the hero search HTML element to the bottom of the `DashboardComponent` templ
     <a *ngFor="let hero of heroes" class="col-1-4"
        [routerLink]="heroUrl(hero.id)">
       <div class="module hero">
-        <h4>{!{hero.name}!}</h4>
+        <h4>{{hero.name}}</h4>
       </div>
     </a>
   </div>
@@ -761,14 +703,12 @@ Finally, import `HeroSearchComponent` from `hero_search_component.dart` and add 
   )
 ```
 
-Run the app again. In the Dashboard, enter some text in the search box.
-If you enter characters that match any existing hero names, you'll see something like this.
+Run the app again. In the Dashboard, enter some text in the search box. If you enter characters that match any existing hero names, you'll see something like this.
 
 ![Hero Search](assets/toh/toh-hero-search.png)
 
 ## App structure and code
 
-Review the sample source code in the {% example_ref %} for this page.
 Verify that you have the following structure:
 
 ```text
@@ -809,10 +749,9 @@ You're at the end of your journey, and you've accomplished a lot.
 
 ## Next step
 
-Return to the [learning path](/guide/learning-kelicap), where
-you can read more about the concepts and practices found in this tutorial.
+Return to the [learning path](../user-guide/learning-kelicap.md), where you can read more about the concepts and practices found in this tutorial.
 
 [http]: https://pub.dev/packages/http
 [stream_transform]: https://pub.dev/packages/stream_transform
-[Stream]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/Stream-class.html
-[StreamController]: {{site.dart_api}}/{{site.data.pkg-vers.SDK.channel}}/dart-async/StreamController-class.html
+[Stream]: https://api.dart.dev/stable/dart-async/Stream-class.html
+[StreamController]: https://api.dart.dev/stable/dart-async/StreamController-class.html
